@@ -25,7 +25,7 @@ export const projects = [
     url: 'https://zumbido.cc', repo: 'https://github.com/neoonzy/zumbido',
   },
   {
-    slug: 'mapeia', title: 'Mapeia', symbol: 'MAP', color: 'blue',
+    slug: 'mapeia', title: 'Mapeia', symbol: 'MAP', image: '/projects/mapeia.jpg', color: 'blue',
     category: { pt: 'PROTOTIPAGEM / IMPACTO URBANO', en: 'PROTOTYPING / URBAN IMPACT' },
     description: {
       pt: 'Proposta de interface para georreferenciamento colaborativo de imóveis abandonados no Recife, conectando relatos da população a dados públicos.',
@@ -50,8 +50,14 @@ export const projects = [
   },
 ]
 
-// Galeria com imagens locais e destinos públicos verificados.
+// Cards originais do Behance, com o projeto Mapeia incluído ao final.
 export const visualProjects = [
-  {slug:'typeee',title:'Typeee',image:'/projects/typeee.png',url:'https://typeee.quest',type:{pt:'Interface / produto digital',en:'Interface / digital product'},alt:{pt:'Captura de tela da interface do Typeee',en:'Screenshot of the Typeee interface'}},
-  {slug:'zumbido',title:'Zumbido.cc',image:'/projects/zumbido.png',url:'https://zumbido.cc',type:{pt:'Design editorial / web',en:'Editorial design / web'},alt:{pt:'Captura da página inicial do Zumbido.cc',en:'Screenshot of the Zumbido.cc homepage'}}
+  {kind:'behance',id:'249376791'}, {kind:'behance',id:'248768295'},
+  {kind:'behance',id:'205419833'}, {kind:'behance',id:'205426665'},
+  {kind:'behance',id:'203290819'}, {kind:'behance',id:'205493055'},
+  {kind:'behance',id:'203507999'}, {kind:'behance',id:'206151039'},
+  {kind:'mapeia',slug:'mapeia',title:'Mapeia',image:'/projects/mapeia.jpg',
+   url:'https://mapeia.figma.site',
+   type:{pt:'UI/UX · Protótipo',en:'UI/UX · Prototype'},
+   alt:{pt:'Interface do Mapeia com mapa do Recife, marcadores e filtros de imóveis abandonados',en:'Mapeia interface with Recife map, property markers and filters'}}
 ]
