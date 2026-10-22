@@ -202,17 +202,15 @@ export default function App() {
           </div>
           <div className="hero-art" aria-hidden="true">
             <div className="art-frame">
-              <div className="art-top"><span>PORTFÓLIO / 2026</span><span>EST. PIAUÍ → RECIFE</span></div>
-              <div className="art-big">LE<span>↗</span></div>
+              <div className="art-top"><span>PORTFOLIO / 2026</span><span>PIAUÍ → RECIFE</span></div>
+              <div className="art-big">LE<span>/26</span></div>
               <div className="art-grid">
-                <div className="art-cell art-cell-orange"><span>DESIGN</span><span>01</span></div>
-                <div className="art-cell art-cell-green"><span>TECNOLOGIA</span><span>02</span></div>
-                <div className="art-cell art-cell-blue"><span>FABRICAÇÃO</span><span>03</span></div>
-                <div className="art-cell art-cell-ink"><span>IDEIAS REAIS</span><span>∞</span></div>
+                <div className="art-cell"><span>01</span><span>DESIGN</span></div>
+                <div className="art-cell"><span>02</span><span>TECNOLOGIA</span></div>
+                <div className="art-cell"><span>03</span><span>FABRICAÇÃO</span></div>
               </div>
+              <div className="art-bottom"><span>FAZER · TESTAR · REFAZER</span><span>↗</span></div>
             </div>
-            <div className="hero-sticker">{c.heroSticker}</div>
-            <div className="decoration decoration-star">✳</div>
           </div>
         </div>
       </section>
@@ -222,7 +220,7 @@ export default function App() {
           <SectionHeading label={c.labelAbout} title={c.aboutTitle} />
           <div className="about-layout">
             <div className="about-highlight">
-              <span className="asterisk">✳</span>
+              <span className="about-index">{c.labelAbout}</span>
               <p>{c.aboutLead}</p>
               <span className="location-tag">↗ {c.based}</span>
             </div>
@@ -254,7 +252,7 @@ export default function App() {
         <div className="shell">
           <SectionHeading label={c.labelProjects} title={c.projectsTitle} intro={c.projectsIntro} />
           <div className="project-grid">{projects.map((project, i) => <article className="project-card" key={project.slug}>
-            <div className={'project-visual visual-' + project.color} aria-hidden="true"><div className="project-visual-top"><span>WORK / 0{i + 1}</span><span>↗</span></div><div className="project-monogram">{project.symbol}</div><div className="visual-bottom">{project.category[lang]}</div></div>
+            <div className="project-visual" aria-hidden="true"><div className="project-visual-top"><span>WORK / 0{i + 1}</span><span>↗</span></div><div className="project-monogram">{project.symbol}</div><div className="visual-bottom">{project.category[lang]}</div></div>
             <div className="project-body">
               <div className="project-meta"><span>{project.category[lang]}</span><span>0{i + 1} / 0{projects.length}</span></div>
               <h3>{project.title}</h3>
@@ -273,7 +271,7 @@ export default function App() {
         <div className="shell">
           <SectionHeading label={c.labelGallery} title={c.galleryTitle} intro={c.galleryIntro} />
           <div className="gallery-grid">{visualProjects.map((item, i) => <article className="gallery-card" key={item.id}>
-            <div className="gallery-heading"><span>{c.galleryCard} / {String(i + 1).padStart(2, '0')}</span><span aria-hidden="true">✳</span></div>
+            <div className="gallery-heading"><span>{c.galleryCard} / {String(i + 1).padStart(2, '0')}</span><span aria-hidden="true">↗</span></div>
             <iframe title={c.galleryCard + ' ' + (i + 1)} src={'https://www.behance.net/embed/project/' + item.id + '?ilo0=1'} loading="lazy" allowFullScreen allow="clipboard-write" referrerPolicy="strict-origin-when-cross-origin" />
             <div className="gallery-footer"><span>BEHANCE · {item.id}</span><a href={'https://www.behance.net/gallery/' + item.id + '/'} target="_blank" rel="noreferrer">{c.galleryFallback}</a></div>
           </article>)}</div>
@@ -301,7 +299,7 @@ export default function App() {
             <p className="contact-email">{email}</p>
           </div>
           <div className="contact-right">
-            <div className="contact-mark" aria-hidden="true">✳</div>
+            <div className="contact-mark" aria-hidden="true">LE<span>.</span></div>
             <h3>{c.socialLabel}</h3>
             {links.map(link => <a key={link.name} href={link.href} target="_blank" rel="noreferrer">{link.name}<span aria-hidden="true">↗</span></a>)}
           </div>

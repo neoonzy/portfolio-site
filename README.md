@@ -4,7 +4,7 @@ Portfolio de **Luis Eduardo Lustosa Brito**, designer, estudante de Sistemas de 
 
 ## Identidade visual
 
-Neobrutalismo editorial: tipografia de alto impacto, bordas espessas, sombras sólidas, contraste forte, cores de destaque, composição responsiva e interações simples. O site oferece português e inglês, com português como idioma padrão.
+Brutalismo minimalista editorial: paleta quase monocromática (off-white, grafite e cinzas), tipografia forte, grids estruturados, linhas finas e espaços amplos. Sem sombras rígidas, adesivos ou cards excessivamente coloridos. O site oferece português e inglês, com português como idioma padrão.
 
 ## Conteúdo
 
