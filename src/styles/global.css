@@ -247,3 +247,54 @@ button { font: inherit; cursor: pointer; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+
+/* Portfolio profissional: foco nos trabalhos, sem monograma pessoal */
+.wordmark{font-size:18px;letter-spacing:-.055em}
+.wordmark-caption{font-size:9px;letter-spacing:.04em}
+.navigation a.is-active::after{transform:scaleX(1)}
+.hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,.9fr);min-height:0;padding-block:80px 92px}
+.hero-title{font-size:clamp(46px,5vw,77px)}
+.hero-title-wrap{margin:26px 0 25px}
+.hero-description{max-width:620px}
+.hero-feature{border:1px solid var(--ink);background:var(--surface);min-width:0}
+.feature-eyebrow{display:block;padding:12px 16px;border-bottom:1px solid var(--rule);font:500 10px/1.4 var(--mono)}
+.hero-feature-link{display:block;position:relative}
+.hero-feature-link img{display:block;width:100%;height:290px;object-fit:cover;object-position:top;background:var(--wash)}
+.hero-feature-link>span{display:flex;justify-content:space-between;gap:15px;padding:14px 16px;border-top:1px solid var(--ink);font:600 13px var(--mono)}
+.hero-feature>p{padding:0 16px 14px;font-size:13px;color:var(--muted)}
+.hero-feature-link:hover img{filter:contrast(1.07)}
+.section{padding-block:clamp(72px,8vw,110px)}
+.section-heading{margin-bottom:45px}
+.experience-card{min-height:255px}
+.project-grid{gap:28px}
+.project-visual{padding:0;min-height:0;position:relative;background:var(--wash)!important}
+.project-visual>img{width:100%;height:275px;object-fit:cover;object-position:top;display:block}
+.project-visual-top{position:absolute;top:0;left:0;right:0;z-index:1;padding:9px 14px;background:var(--paper);border-bottom:1px solid var(--rule)}
+.project-monogram{min-height:275px;display:grid;place-items:center;font-size:clamp(36px,7vw,80px);letter-spacing:-.08em}
+.visual-bottom{padding:10px 14px;background:var(--paper);border-top:1px solid var(--rule)}
+.project-details{margin-top:23px;border-top:1px solid var(--rule);padding-top:14px}
+.project-details summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;font:600 11px var(--mono)}
+.project-details summary::-webkit-details-marker{display:none}
+.project-details[open] summary span{transform:rotate(45deg)}
+.project-details p{padding-top:15px;font-size:14px;line-height:1.65;color:var(--ink-soft)}
+.project-details dl{display:grid;gap:13px;margin:18px 0 0;font-size:13px}
+.project-details dl>div{display:grid;grid-template-columns:100px 1fr;gap:13px;border-top:1px solid var(--rule);padding-top:10px}
+.project-details dt{font:600 10px var(--mono);color:var(--muted)}
+.project-details dd{margin:0}
+.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.gallery-card{transition:border-color .2s;background:var(--surface)}
+.gallery-card:hover{border-color:var(--muted)}
+.gallery-preview{background:var(--wash);overflow:hidden}
+.gallery-preview img{display:block;width:100%;height:310px;object-fit:cover;object-position:top;transition:transform .25s}
+.gallery-card:hover img{transform:scale(1.02)}
+.gallery-footer strong{font:600 17px var(--display);color:var(--ink)}
+.gallery-footer>span{font:500 10px var(--mono)}
+.gallery-all{margin-top:26px}
+.contact-actions{display:flex;flex-wrap:wrap;gap:10px}
+.button-outline-inverse{background:transparent;border-color:#a3a59c;color:var(--surface)}
+.button-outline-inverse:hover{background:var(--surface);color:var(--ink)}
+.contact-identifier{font:600 clamp(33px,4vw,54px)/1.1 var(--display);letter-spacing:-.075em;border-bottom:1px solid #777a71;padding-bottom:26px}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr}.hero-feature{max-width:650px}}
+@media(max-width:680px){.wordmark{font-size:16px}.wordmark-caption{display:none}.hero-grid{padding-block:55px 63px;gap:30px}.hero-title{font-size:clamp(39px,10vw,64px)}.hero-feature-link img{height:215px}.section{padding-block:65px}.experience-card{padding:22px 23px}.gallery-grid{grid-template-columns:1fr;gap:18px}.gallery-preview img{height:230px}.project-visual>img{height:220px}.contact-actions{display:grid}.contact-actions .button{justify-content:space-between}}
+@media(prefers-reduced-motion:reduce){.gallery-preview img{transition:none}}

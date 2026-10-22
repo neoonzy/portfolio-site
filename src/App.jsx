@@ -8,12 +8,12 @@ const content = {
     heroTop: 'OLÁ, EU SOU',
     heroName: 'LUIS EDUARDO',
     heroName2: 'LUSTOSA.',
-    heroText: 'Entre o digital e o físico. Crio interfaces, experimento com fabricação digital e desenvolvo projetos que aproximam tecnologia, cultura e pessoas.',
+    heroText: 'Design de interfaces, desenvolvimento web e prototipagem. Trabalho da ideia à execução, conectando tecnologia, criatividade e soluções para problemas reais.',
     heroAction: 'VER PROJETOS',
     heroSecond: 'FALAR COMIGO',
     heroSticker: 'FAÇO ACONTECER ↗',
     labelAbout: '01 / QUEM SOU',
-    aboutTitle: 'MÃO NA MASSA,\nIDEIAS NA RUA.',
+    aboutTitle: 'SOBRE MIM.',
     aboutLead: 'Designer, estudante de Sistemas de Informação na UFPE e entusiasta da cultura maker.',
     aboutText: 'Sou piauiense, moro em Recife e trabalho na interseção entre design, desenvolvimento front-end, prototipagem 3D e comunicação. Gosto de entender o problema, desenhar uma solução e colocar a mão na massa para fazê-la existir.',
     aboutText2: 'Minha trajetória passa por robótica educacional, laboratórios de fabricação digital, sistemas embarcados e projetos de impacto social. Fora das telas, me interessam fotografia, bicicletas, música, arte de rua e agroecologia.',
@@ -42,8 +42,8 @@ const content = {
     projectVisit: 'ABRIR PROJETO ↗',
     source: 'CÓDIGO ↗',
     labelGallery: '04 / PORTFÓLIO VISUAL',
-    galleryTitle: 'DO RASCUNHO\nAO VISUAL.',
-    galleryIntro: 'Trabalhos publicados no meu Behance e apresentados no portfólio que construí para o CIn. Os cards originais foram mantidos como incorporações.',
+    galleryTitle: 'PORTFÓLIO\nVISUAL.',
+    galleryIntro: 'Seleção visual de projetos autorais e interfaces desenvolvidas. Explore os trabalhos e conheça suas aplicações.',
     galleryCard: 'TRABALHO VISUAL',
     galleryMore: 'VER TODOS NO BEHANCE ↗',
     galleryFallback: 'Abrir no Behance ↗',
@@ -73,12 +73,12 @@ const content = {
     heroTop: "HEY, I'M",
     heroName: 'LUIS EDUARDO',
     heroName2: 'LUSTOSA.',
-    heroText: 'Between digital and physical. I design interfaces, experiment with digital fabrication and build projects bringing technology, culture and people together.',
+    heroText: 'Interface design, web development and prototyping. From idea to execution, I combine technology, creativity and practical problem-solving.',
     heroAction: 'SEE PROJECTS',
     heroSecond: 'GET IN TOUCH',
     heroSticker: 'MAKING IT REAL ↗',
     labelAbout: '01 / ABOUT',
-    aboutTitle: 'HANDS-ON,\nOUT IN THE WORLD.',
+    aboutTitle: 'ABOUT ME.',
     aboutLead: 'Designer, Information Systems student at UFPE and maker culture enthusiast.',
     aboutText: 'Originally from Piauí and now based in Recife, I work across design, front-end development, 3D prototyping and communication. I love understanding a challenge, designing a solution and actually building it.',
     aboutText2: 'My background includes educational robotics, fabrication labs, embedded systems and social impact initiatives. Off-screen, I am into photography, bicycles, music, street art and agroecology.',
@@ -107,8 +107,8 @@ const content = {
     projectVisit: 'VIEW PROJECT ↗',
     source: 'SOURCE ↗',
     labelGallery: '04 / VISUAL WORK',
-    galleryTitle: 'FROM SKETCH\nTO VISUAL.',
-    galleryIntro: 'Work published on my Behance and showcased on the portfolio I made for CIn. The original cards are preserved as embeds.',
+    galleryTitle: 'SELECTED\nVISUALS.',
+    galleryIntro: 'A visual selection of independent projects and interfaces. Explore the work and its applications.',
     galleryCard: 'VISUAL PROJECT',
     galleryMore: 'ALL WORK ON BEHANCE ↗',
     galleryFallback: 'Open on Behance ↗',
@@ -155,6 +155,8 @@ function SectionHeading({ label, title, intro }) {
 export default function App() {
   const [lang, setLang] = useState(() => window.localStorage.getItem('luis-portfolio-language') === 'en' ? 'en' : 'pt')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('')
+  const [emailCopied, setEmailCopied] = useState(false)
   const c = content[lang]
 
   useEffect(() => {
@@ -169,13 +171,24 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) setActiveSection(entry.target.id) }), { rootMargin: '-18% 0px -65% 0px' })
+    ids.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el) })
+    return () => observer.disconnect()
+  }, [])
+
+  const copyEmail = async () => {
+    try { await navigator.clipboard.writeText(email); setEmailCopied(true); setTimeout(() => setEmailCopied(false), 2200) }
+    catch { window.location.href = 'mailto:' + email }
+  }
+
   return <>
     <a className="skip-link" href="#main">{lang === 'pt' ? 'Pular para o conteúdo' : 'Skip to content'}</a>
     <header className="header">
       <div className="shell header-inner">
-        <a href="#top" className="wordmark" onClick={() => setMenuOpen(false)} aria-label="Luis Eduardo Lustosa, início">LE<span className="mark-dot">.</span> <span className="wordmark-caption">LUSTOSA / PORTFOLIO</span></a>
+        <a href="#top" className="wordmark" onClick={() => setMenuOpen(false)} aria-label="Luis Eduardo Lustosa, início">LUIS EDUARDO <span className="wordmark-caption">PORTFÓLIO / 2026</span></a>
         <nav className={menuOpen ? 'navigation is-open' : 'navigation'} id="main-navigation" aria-label={lang === 'pt' ? 'Navegação principal' : 'Main navigation'}>
-          {ids.map(id => <a key={id} href={'#' + id} onClick={() => setMenuOpen(false)}>{c.navigation[id]}</a>)}
+          {ids.map(id => <a key={id} href={'#' + id} className={activeSection === id ? 'is-active' : ''} onClick={() => setMenuOpen(false)}>{c.navigation[id]}</a>)}
         </nav>
         <div className="header-actions">
           <button type="button" className="lang-button" aria-label={c.language} onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}>{lang.toUpperCase()} <span aria-hidden="true">↔</span></button>
@@ -200,17 +213,13 @@ export default function App() {
             </div>
             <a className="scroll-link" href="#about">{c.scroll}</a>
           </div>
-          <div className="hero-art" aria-hidden="true">
-            <div className="art-frame">
-              <div className="art-top"><span>PORTFOLIO / 2026</span><span>PIAUÍ → RECIFE</span></div>
-              <div className="art-big">LE<span>/26</span></div>
-              <div className="art-grid">
-                <div className="art-cell"><span>01</span><span>DESIGN</span></div>
-                <div className="art-cell"><span>02</span><span>TECNOLOGIA</span></div>
-                <div className="art-cell"><span>03</span><span>FABRICAÇÃO</span></div>
-              </div>
-              <div className="art-bottom"><span>FAZER · TESTAR · REFAZER</span><span>↗</span></div>
-            </div>
+          <div className="hero-feature">
+            <span className="feature-eyebrow">01 / {lang === 'pt' ? 'PROJETO EM DESTAQUE' : 'FEATURED WORK'}</span>
+            <a href="#projects" className="hero-feature-link">
+              <img src="/projects/typeee.png" alt={lang === 'pt' ? 'Interface do projeto Typeee' : 'Typeee project interface'} />
+              <span>TYPEEE.QUEST <span aria-hidden="true">↗</span></span>
+            </a>
+            <p>{lang === 'pt' ? 'Produto digital · interface · desenvolvimento' : 'Digital product · interface · development'}</p>
           </div>
         </div>
       </section>
@@ -252,12 +261,13 @@ export default function App() {
         <div className="shell">
           <SectionHeading label={c.labelProjects} title={c.projectsTitle} intro={c.projectsIntro} />
           <div className="project-grid">{projects.map((project, i) => <article className="project-card" key={project.slug}>
-            <div className="project-visual" aria-hidden="true"><div className="project-visual-top"><span>WORK / 0{i + 1}</span><span>↗</span></div><div className="project-monogram">{project.symbol}</div><div className="visual-bottom">{project.category[lang]}</div></div>
+            <div className="project-visual" aria-hidden="true"><div className="project-visual-top"><span>WORK / 0{i + 1}</span><span>↗</span></div>{project.image ? <img src={project.image} alt="" loading="lazy" /> : <div className="project-monogram">{project.title}</div>}<div className="visual-bottom">{project.category[lang]}</div></div>
             <div className="project-body">
               <div className="project-meta"><span>{project.category[lang]}</span><span>0{i + 1} / 0{projects.length}</span></div>
               <h3>{project.title}</h3>
               <p>{project.description[lang]}</p>
               <div className="tags">{project.tags.map(tag => <span className="tag" key={tag}>{tag}</span>)}</div>
+              <details className="project-details"><summary>{lang === 'pt' ? 'SOBRE O PROJETO' : 'ABOUT THIS PROJECT'} <span>+</span></summary><p>{project.details?.[lang] || project.description[lang]}</p><dl><div><dt>{lang === 'pt' ? 'ATUAÇÃO' : 'ROLE'}</dt><dd>{project.role?.[lang] || 'Design / desenvolvimento'}</dd></div></dl></details>
               <div className="project-links">
                 <a href={project.url} target="_blank" rel="noreferrer">{c.projectVisit}</a>
                 {project.repo && <a href={project.repo} target="_blank" rel="noreferrer">{c.source}</a>}
@@ -270,11 +280,11 @@ export default function App() {
       <section className="section gallery-section" id="gallery">
         <div className="shell">
           <SectionHeading label={c.labelGallery} title={c.galleryTitle} intro={c.galleryIntro} />
-          <div className="gallery-grid">{visualProjects.map((item, i) => <article className="gallery-card" key={item.id}>
+          <div className="gallery-grid">{visualProjects.map((item, i) => <a className="gallery-card" key={item.slug} href={item.url} target="_blank" rel="noopener noreferrer">
             <div className="gallery-heading"><span>{c.galleryCard} / {String(i + 1).padStart(2, '0')}</span><span aria-hidden="true">↗</span></div>
-            <iframe title={c.galleryCard + ' ' + (i + 1)} src={'https://www.behance.net/embed/project/' + item.id + '?ilo0=1'} loading="lazy" allowFullScreen allow="clipboard-write" referrerPolicy="strict-origin-when-cross-origin" />
-            <div className="gallery-footer"><span>BEHANCE · {item.id}</span><a href={'https://www.behance.net/gallery/' + item.id + '/'} target="_blank" rel="noreferrer">{c.galleryFallback}</a></div>
-          </article>)}</div>
+            <div className="gallery-preview"><img src={item.image} alt={item.alt[lang]} loading="lazy" /></div>
+            <div className="gallery-footer"><strong>{item.title}</strong><span>{item.type[lang]} ↗</span></div>
+          </a>)}</div>
           <a className="button button-dark gallery-all" href="https://www.behance.net/lustosabr" target="_blank" rel="noreferrer">{c.galleryMore}</a>
         </div>
       </section>
@@ -295,11 +305,11 @@ export default function App() {
             <span className="eyebrow">{c.labelContact}</span>
             <h2 className="section-title contact-title">{br(c.contactTitle)}</h2>
             <p className="contact-description">{c.contactText}</p>
-            <a className="button button-green" href={'mailto:' + email}>{c.emailAction}</a>
+            <div className="contact-actions"><a className="button button-green" href={'mailto:' + email}>{c.emailAction}</a><button className="button button-outline-inverse" type="button" onClick={copyEmail}>{emailCopied ? (lang === 'pt' ? 'COPIADO ✓' : 'COPIED ✓') : (lang === 'pt' ? 'COPIAR E-MAIL ↗' : 'COPY EMAIL ↗')}</button><a className="button button-outline-inverse" href="http://lattes.cnpq.br/2980803847545519" target="_blank" rel="noopener noreferrer">{c.cv}</a></div>
             <p className="contact-email">{email}</p>
           </div>
           <div className="contact-right">
-            <div className="contact-mark" aria-hidden="true">LE<span>.</span></div>
+            <p className="contact-identifier">LUIS EDUARDO<br />LUSTOSA</p>
             <h3>{c.socialLabel}</h3>
             {links.map(link => <a key={link.name} href={link.href} target="_blank" rel="noreferrer">{link.name}<span aria-hidden="true">↗</span></a>)}
           </div>
@@ -310,7 +320,7 @@ export default function App() {
     <footer className="footer">
       <div className="shell footer-inner">
         <span>© {new Date().getFullYear()} LUIS EDUARDO LUSTOSA</span>
-        <span>{c.copy}</span>
+        <span>{lang === 'pt' ? 'DESIGN · DESENVOLVIMENTO · PROTOTIPAGEM' : 'DESIGN · DEVELOPMENT · PROTOTYPING'}</span>
         <a href="#top">{c.top}</a>
       </div>
     </footer>
