@@ -1,58 +1,50 @@
-// Projects shown in the "Projects" section. Leave the array empty to show the
-// "coming soon" message. Each project has:
-//
-// {
-//   title: { en, pt },
-//   description: { en, pt },
-//   role: { en, pt },                      // optional
-//   tags: ['Python', 'React'],
-//   repo: 'https://github.com/...',        // optional
-//   demo: 'https://...',                   // optional
-//   demoLabel: { en: 'Video', pt: 'Vídeo' } // optional, defaults to "Live demo"
-// }
-
+// Projetos autorais e trabalhos documentados pelo próprio Luis Eduardo.
 export const projects = [
   {
-    title: { en: 'Farmpedia', pt: 'Farmpedia' },
+    slug: 'typeee', title: 'Typeee', symbol: 'TYPE', color: 'green',
+    category: { pt: 'JOGO / DESENVOLVIMENTO WEB', en: 'GAME / WEB DEVELOPMENT' },
     description: {
-      en: 'A Stardew Valley encyclopedia and farm manager, with game catalog lookup and full CRUD over your property.',
-      pt: 'Uma enciclopédia de Stardew Valley e gerenciador de fazenda, com consulta ao catálogo do jogo e CRUD completo da sua propriedade.',
+      pt: 'Jogo de digitação com treinos, partidas competitivas, ranking e perfis públicos. Um laboratório de produto, interface e experiência de uso.',
+      en: 'A typing game with training modes, competitive matches, leaderboards and public profiles. A playground for product, interface and user experience.',
     },
-    role: {
-      en: 'Full-stack developer, ideator, architect',
-      pt: 'Desenvolvedora full-stack, idealizadora, arquiteta',
-    },
-    tags: ['C++', 'SQLite', 'JavaScript', 'HTML/CSS'],
-    repo: 'https://github.com/gaabileite/farmpedia',
-    demo: 'https://gaabileite.github.io/farmpedia/',
+    tags: ['React', 'UX', 'Game design'],
+    url: 'https://typeee.quest', repo: 'https://github.com/neoonzy/typeee',
   },
   {
-    title: { en: 'Cryptonames', pt: 'Cryptonames' },
+    slug: 'zumbido', title: 'Zumbido.cc', symbol: 'ZZZ', color: 'orange',
+    category: { pt: 'ARQUIVO / CULTURA CICLISTA', en: 'ARCHIVE / CYCLING CULTURE' },
     description: {
-      en: 'A game inspired by Codenames that combines quick thinking and connections between different fields of knowledge, in both co-op and competitive modes. It runs on a server with multiple simultaneous matches.',
-      pt: 'Um jogo, inspirado em Codenames, que combina pensamento rápido e conexão entre diferentes áreas do conhecimento, tanto em co-op como competitivo. Funciona em server, com múltiplas partidas simultâneas.',
+      pt: 'Arquivo independente de bicicleta, fotografia, deslocamentos e som. Um projeto editorial e cicloativista que começa na rua.',
+      en: 'An independent archive of bicycles, photography, movement and sound. An editorial and cycling-activist project rooted in the streets.',
     },
-    role: {
-      en: 'Full-stack developer, ideator, architect and deployer',
-      pt: 'Desenvolvedora full-stack, idealizadora, arquiteta e deployer',
-    },
-    tags: ['C++', 'SQLite', 'JavaScript', 'HTML/CSS'],
-    repo: 'https://github.com/gaabileite/cryptonames',
-    demo: 'https://playcryptonames.cc/',
+    tags: ['Editorial', 'Web', 'Fotografia'],
+    url: 'https://zumbido.cc', repo: 'https://github.com/neoonzy/zumbido',
   },
   {
-    title: { en: 'Safecrack PRO', pt: 'Safecrack PRO' },
+    slug: 'mapeia', title: 'Mapeia', symbol: 'MAP', color: 'blue',
+    category: { pt: 'PROTOTIPAGEM / IMPACTO URBANO', en: 'PROTOTYPING / URBAN IMPACT' },
     description: {
-      en: 'A digital safe for the Altera DE2-115 board. The four-digit password (0–9) is entered one digit at a time with push buttons and checked by a finite state machine (FSM); the result is signaled by the LEDs.',
-      pt: 'Cofre digital para a placa Altera DE2-115. A senha de quatro dígitos (0–9) é composta um dígito por vez com push buttons e verificada por uma máquina de estados finitos (FSM); o resultado é sinalizado pelos LEDs.',
+      pt: 'Proposta de interface para georreferenciamento colaborativo de imóveis abandonados no Recife, conectando relatos da população a dados públicos.',
+      en: 'An interface concept for collaborative mapping of abandoned properties in Recife, connecting community reports and public data.',
     },
-    role: {
-      en: 'Developer, ideator, architect',
-      pt: 'Desenvolvedora, idealizadora, arquiteta',
-    },
-    tags: ['SystemVerilog'],
-    repo: 'https://github.com/gaabileite/safecrack-project',
-    demo: 'https://youtu.be/_vgWMApheu0?si=FNMOXqHvSTn_HW01',
-    demoLabel: { en: 'Video', pt: 'Vídeo' },
+    tags: ['UI/UX', 'Figma', 'Cidade'],
+    url: 'https://mapeia.figma.site',
   },
+  {
+    slug: 'monan', title: 'Monan', symbol: '3D', color: 'pink',
+    category: { pt: 'MODELAGEM / PROTOTIPAGEM 3D', en: 'MODELING / 3D PROTOTYPING' },
+    description: {
+      pt: 'Participação em projeto interdisciplinar com criação de modelos e protótipos físicos, integrando fabricação digital e tecnologia de impacto social.',
+      en: 'Contributed models and physical prototypes to an interdisciplinary project bringing together digital fabrication and social-impact technology.',
+    },
+    tags: ['3D', 'Fabricação digital', 'UFPE'],
+    url: 'http://lattes.cnpq.br/2980803847545519',
+  },
+]
+
+// Cards incorporados do portfólio original de Luis Eduardo (neoonzy/portfolio).
+export const visualProjects = [
+  { id: '249376791' }, { id: '248768295' }, { id: '205419833' },
+  { id: '205426665' }, { id: '203290819' }, { id: '205493055' },
+  { id: '203507999' }, { id: '206151039' },
 ]
