@@ -280,11 +280,17 @@ export default function App() {
       <section className="section gallery-section" id="gallery">
         <div className="shell">
           <SectionHeading label={c.labelGallery} title={c.galleryTitle} intro={c.galleryIntro} />
-          <div className="gallery-grid">{visualProjects.map((item, i) => <a className="gallery-card" key={item.slug} href={item.url} target="_blank" rel="noopener noreferrer">
-            <div className="gallery-heading"><span>{c.galleryCard} / {String(i + 1).padStart(2, '0')}</span><span aria-hidden="true">↗</span></div>
-            <div className="gallery-preview"><img src={item.image} alt={item.alt[lang]} loading="lazy" /></div>
-            <div className="gallery-footer"><strong>{item.title}</strong><span>{item.type[lang]} ↗</span></div>
-          </a>)}</div>
+          <div className="gallery-grid">
+            {visualProjects.map((item, i) => item.kind === 'behance' ? <article className="gallery-card" key={item.id}>
+              <div className="gallery-heading"><span>{c.galleryCard} / {String(i + 1).padStart(2, '0')}</span><span aria-hidden="true">↗</span></div>
+              <iframe title={'Behance ' + item.id} src={'https://www.behance.net/embed/project/' + item.id + '?ilo0=1'} loading="lazy" allowFullScreen allow="clipboard-write" referrerPolicy="strict-origin-when-cross-origin" />
+              <div className="gallery-footer"><span>BEHANCE · {item.id}</span><a href={'https://www.behance.net/gallery/' + item.id + '/'} target="_blank" rel="noopener noreferrer">{c.galleryFallback}</a></div>
+            </article> : <a className="gallery-card gallery-mapeia" key={item.slug} href={item.url} target="_blank" rel="noopener noreferrer">
+              <div className="gallery-heading"><span>{c.galleryCard} / {String(i + 1).padStart(2, '0')}</span><span aria-hidden="true">↗</span></div>
+              <div className="gallery-preview"><img src={item.image} alt={item.alt[lang]} loading="lazy" /></div>
+              <div className="gallery-footer"><strong>{item.title}</strong><span>{item.type[lang]} ↗</span></div>
+            </a>)}
+          </div>
           <a className="button button-dark gallery-all" href="https://www.behance.net/lustosabr" target="_blank" rel="noreferrer">{c.galleryMore}</a>
         </div>
       </section>
