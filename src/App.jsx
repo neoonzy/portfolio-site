@@ -313,6 +313,7 @@ export default function App() {
             <p className="contact-description">{c.contactText}</p>
             <div className="contact-actions"><a className="button button-green" href={'mailto:' + email}>{c.emailAction}</a><button className="button button-outline-inverse" type="button" onClick={copyEmail}>{emailCopied ? (lang === 'pt' ? 'COPIADO ✓' : 'COPIED ✓') : (lang === 'pt' ? 'COPIAR E-MAIL ↗' : 'COPY EMAIL ↗')}</button><a className="button button-outline-inverse" href="http://lattes.cnpq.br/2980803847545519" target="_blank" rel="noopener noreferrer">{c.cv}</a></div>
             <p className="contact-email">{email}</p>
+            <p className="contact-email" style={{ marginTop: 8 }}><a href="tel:+5589999206144" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: 3 }} aria-label={lang === 'pt' ? 'Ligar para +55 89 99920-6144' : 'Call +55 89 99920-6144'}>+55 89 99920-6144</a></p>
           </div>
           <div className="contact-right">
             <p className="contact-identifier">LUIS EDUARDO<br />LUSTOSA</p>
