@@ -230,6 +230,7 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
       dragging = null
       wake()
     }
+    const onPointerLeave = () => { pointer = null }
     const onResize = () => {
       // A resized text layout requires new original glyph bounds.
       reset()
@@ -245,7 +246,7 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
     cover.addEventListener('pointerup', release)
     cover.addEventListener('pointercancel', release)
     cover.addEventListener('lostpointercapture', lost)
-    cover.addEventListener('pointerleave', () => { pointer = null })
+    cover.addEventListener('pointerleave', onPointerLeave)
     window.addEventListener('resize', onResize)
     window.addEventListener('blur', onBlur)
     reduce.addEventListener('change', onPreference)
@@ -261,6 +262,7 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
       cover.removeEventListener('pointerup', release)
       cover.removeEventListener('pointercancel', release)
       cover.removeEventListener('lostpointercapture', lost)
+      cover.removeEventListener('pointerleave', onPointerLeave)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('blur', onBlur)
       reduce.removeEventListener('change', onPreference)
