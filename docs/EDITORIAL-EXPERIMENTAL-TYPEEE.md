@@ -1,53 +1,41 @@
-# Refinamento editorial experimental — Hero + Typeee
+# Refino da homepage — foco editorial
 
-## Intenção
+## Decisão de design atualizada
 
-Experimentar a sensibilidade de microinteração de [rauno.me](https://rauno.me/) sem copiar o layout: hierarquia tipográfica limpa, movimento intencional, reação ao ponteiro, alternância explícita de estados, e detalhes discretos.
+Após revisão visual, foram retirados o estudo de movimento geométrico, o parallax do nome e a animação de abertura em cortinas. A homepage **carrega imediatamente**, sem splash, sem overlay e sem entrada cinematográfica.
 
-O objetivo continua profissional: visitantes devem identificar rapidamente a pessoa, o trabalho, os projetos e o contato.
+A direção continua editorial e experimental pela composição: tipografia grande, hierarquia assimétrica, bastante espaço em branco e um índice de projetos real.
 
-## Alterações realizadas
+## Interação útil
 
-- `ResponsiveHero`: abertura com duas cortinas breves, tipografia com entrada sequenciada, parallax suave do nome e diagrama que reage à posição do ponteiro. Os três botões **Observar / Desenhar / Construir** alteram forma, texto e composição, também por teclado e toque.
-- O efeito de abertura é decorativo, `pointer-events:none`, marcado `aria-hidden` e omitido quando `prefers-reduced-motion:reduce`.
-- `StudioPanel`: a única demo é o Typeee Classic. Não é um iframe nem uma partida conectada ao ranking; é uma amostra local independente de 30 segundos, com avanço por espaço, timer após primeira tecla, WPM, precisão, combo, pontos, reinício e resultado.
-- `experimental.css`: regras com prefixo `typeee-` para não contaminar o restante do portfólio; conserva a apresentação de projetos em grade e o caderno editorial.
+O índice da primeira tela mostra **Typeee, Zumbido.cc, Mapeia e Monan**, com número, categoria, resumo e link original. Passar o ponteiro, focar com teclado ou tocar em um título atualiza o projeto em destaque.
 
-## Fonte da identidade do Typeee
+O bloco usa os dados já existentes em `src/data/projects.js`; não há métricas ou cases fictícios. Também não depende de rastrear o movimento do ponteiro nem de rolagem animada.
 
-A interface do Typeee foi reconstruída a partir dos arquivos **atuais** do próprio projeto (`neoonzy/typeee`, ramo `main`) — `design.md`, `src/App.tsx` e `src/styles.css`. O recorte replica a linguagem da arena Classic:
+## Typeee
 
-- fundo papel `#F0EEE7`;
-- arena `#171717`;
-- ação/entrada `#008A35`;
-- destaque, acerto e marcador `#FFCC00`;
-- erro `#F4A49B` com sublinhado;
-- `Archivo Black` para títulos/métricas e `IBM Plex Mono` para UI e digitação;
-- HUD de quatro métricas e palavra atual sublinhada.
+A seção Experimente permanece limitada ao Typeee e reproduz o estilo da arena Classic usando referências do repositório `neoonzy/typeee`:
+- `Archivo Black` e `IBM Plex Mono`;
+- papel `#F0EEE7`, arena `#171717`, verde `#008A35`, amarelo `#FFCC00`;
+- HUD (tempo, WPM, precisão, combo), digitação por palavras, 30 segundos e resultado.
 
-A demo **não** executa o motor completo nem reproduz o ranking, login ou XP do site original. Seus dados não são enviados ou salvos.
+É uma **demonstração local**, não compartilha ranking, autenticação ou estatísticas oficiais. Nenhum código confidencial, segredo ou configuração de produção foi incorporado.
 
-## Como validar
+## Preservado
 
-```bash
-npm ci
-npm run build
-npm run dev
-```
+- Projetos na prática com a apresentação em grade;
+- Caderno de processo refinado;
+- Navegação rápida por `/`;
+- Tradução PT/EN, contato e apresentação profissional;
+- Fotografia autoral fora da homepage.
 
-- [ ] Abrir a homepage: texto emerge sem travar teclado ou clique.
-- [ ] Mover o ponteiro e alternar os 3 botões no estudo geométrico.
-- [ ] Com `prefers-reduced-motion`, evitar as cortinas, parallax e movimento.
-- [ ] Conferir nome, botões, menus, busca por `/` e links em PT/EN.
-- [ ] Comparar visual da demo com a arena Classic do Typeee real.
-- [ ] Digitar palavras, pressionar espaço, corrigir com Backspace e acompanhar HUD.
-- [ ] Aguardar 30 segundos após a primeira tecla e usar o botão de reiniciar.
-- [ ] Em iPhone/Android, verificar teclado virtual, viewport e visibilidade do input.
-- [ ] Revisar no desktop, tablet e larguras 320/360/390/768/1440.
-- [ ] Verificar contraste, foco visível, hover e estabilidade dos elementos ao digitar.
+## QA pendente além do build
 
-## O que não foi alterado
+- [ ] Examinar visualmente em desktop/tablet/celular;
+- [ ] Testar títulos por mouse, toque e foco de teclado;
+- [ ] Testar alternância PT/EN, links de projetos e seleção;
+- [ ] Verificar contraste e foco visível;
+- [ ] Conferir digitação no Typeee com teclado físico e mobile;
+- [ ] Confirmar ausência de overflow em 320/360/390px e suporte a movimento reduzido.
 
-Fotografia autoral permanece fora do portfólio; o grid de projetos, o caderno de processo, Behance, currículo e contato continuam presentes. Nenhum arquivo do projeto privado Typeee foi copiado para o portfólio: a reconstrução usa a identidade visual e um motor local simplificado.
-
-Esta branch é experimental e **não** altera `main`.
+Não fazer merge na `main` antes da aprovação visual.
