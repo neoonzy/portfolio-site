@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { projects, visualProjects } from './data/projects.js'
 import StudioPanel from './components/StudioPanel.jsx'
 import FieldNotes from './components/FieldNotes.jsx'
@@ -6,6 +6,7 @@ import ResponsiveHero from './components/ResponsiveHero.jsx'
 import QuickNavigator from './components/QuickNavigator.jsx'
 import FloatingProjectPreview from './components/FloatingProjectPreview.jsx'
 import LayoutGridOverlay from './components/LayoutGridOverlay.jsx'
+import MobileSectionIndicator from './components/MobileSectionIndicator.jsx'
 
 const content = {
   pt: {
@@ -159,6 +160,7 @@ function SectionHeading({ label, title, intro }) {
 }
 
 export default function App() {
+  const quickNavigatorRef = useRef(null)
   const [lang, setLang] = useState(() => window.localStorage.getItem('luis-portfolio-language') === 'en' ? 'en' : 'pt')
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('')
@@ -237,7 +239,7 @@ export default function App() {
           {ids.map(id => <a key={id} href={'#' + id} className={activeSection === id ? 'is-active' : ''} onClick={() => setMenuOpen(false)}>{c.navigation[id]}</a>)}
         </nav>
         <div className="header-actions">
-          <QuickNavigator lang={lang} onNavigate={() => setMenuOpen(false)} />
+          <QuickNavigator ref={quickNavigatorRef} lang={lang} onNavigate={() => setMenuOpen(false)} />
           <button type="button" className={'grid-toggle' + (gridEnabled ? ' is-on' : '')}
             aria-label={lang === 'pt' ? (gridEnabled ? 'Desligar grade de construção' : 'Ligar grade de construção') : (gridEnabled ? 'Hide layout grid' : 'Show layout grid')}
             aria-pressed={gridEnabled} title={lang === 'pt' ? 'Grade do layout · G' : 'Layout grid · G'}
@@ -250,6 +252,7 @@ export default function App() {
         </div>
       </div>
     </header>
+    <MobileSectionIndicator lang={lang} onOpenIndex={() => quickNavigatorRef.current?.open()} />
 
     <main id="main">
       <ResponsiveHero lang={lang} c={c} email={email}
