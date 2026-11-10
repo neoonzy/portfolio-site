@@ -1,189 +1,298 @@
-import { useEffect, useRef } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import {
+  createGlyphBody, FIXED_STEP, glyphHit, kickGlyph, settled, stepGlyphWorld,
+} from '../lib/glyphPhysics.js'
 
-const TEXT = ['LUIS/', 'EDUARDO']
-const GLYPHS = TEXT.join('').split('')
-const clamp = (n, min, max) => Math.max(min, Math.min(max, n))
+const WORDS = ['LUIS/', 'EDUARDO']
+const count = WORDS.join('').length
+const clamp = (x, low, high) => Math.min(high, Math.max(low, x))
 
 /**
- * One readable title, with spring physics applied to its individual glyphs.
- * Inert on touch, and entirely motion-free for prefers-reduced-motion.
- * DOM styles are updated in rAF instead of re-rendering React at 60fps.
+ * DOM lettering at rest; individual rigid bodies after mouse impact.
+ * Their collision floor is the rule immediately under the open cover space,
+ * so falling glyphs never descend into the projects index.
  */
-export default function KineticWordmark({ lang }) {
-  const root = useRef(null)
-  const letters = useRef([])
-  const metrics = useRef([])
-  const bodies = useRef(GLYPHS.map(() => ({ x: 0, y: 0, r: 0, vx: 0, vy: 0, vr: 0 })))
-  const pointer = useRef({ x: 0, y: 0, active: false })
-  const dragging = useRef(null)
-  const raf = useRef(0)
+const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
+  const rootRef = useRef(null)
+  const glyphRefs = useRef([])
+  const controllerRef = useRef({ dropAll: () => {}, reset: () => {} })
+
+  useImperativeHandle(ref, () => ({
+    dropAll: () => controllerRef.current.dropAll(),
+    reset: () => controllerRef.current.reset(),
+  }), [])
 
   useEffect(() => {
-    const node = root.current
-    const media = window.matchMedia('(hover: hover) and (pointer: fine)')
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (!node) return
+    const title = rootRef.current
+    const cover = title?.closest('.print-cover')
+    const runway = cover?.querySelector('.print-physics-runway')
+    const glyphs = glyphRefs.current
+    if (!title || !cover || !runway || glyphs.length !== count) return
 
-    const measure = () => {
-      metrics.current = letters.current.map((letter, i) => {
-        const rect = letter?.getBoundingClientRect()
-        const body = bodies.current[i]
-        return rect
-          ? { x: rect.left + rect.width / 2 - body.x, y: rect.top + rect.height / 2 - body.y }
-          : { x: 0, y: 0 }
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const bodies = []
+    let bounds = { left: 0, right: 0, top: 0, floor: 0 }
+    let frame = 0
+    let previous = 0
+    let accumulator = 0
+    let quietFrames = 0
+    let duration = 0
+    let dragging = null
+    let pointer = null
+    let mounted = true
+
+    const position = event => {
+      const rect = cover.getBoundingClientRect()
+      return { x: event.clientX - rect.left, y: event.clientY - rect.top }
+    }
+
+    const render = () => {
+      bodies.forEach((body, i) => {
+        if (!glyphs[i]) return
+        if (!body.active) {
+          glyphs[i].style.transform = ''
+          glyphs[i].style.zIndex = ''
+        } else {
+          const dx = body.x - body.homeX
+          const dy = body.y - body.homeY
+          glyphs[i].style.transform = `translate3d(${dx.toFixed(2)}px,${dy.toFixed(2)}px,0) rotate(${body.angle.toFixed(4)}rad)`
+          glyphs[i].style.zIndex = String(10 + i)
+        }
       })
     }
 
-    const step = () => {
-      raf.current = 0
-      const animate = media.matches && !reduced.matches
-      const p = pointer.current
-      const drag = dragging.current
-      let moving = false
-      bodies.current.forEach((body, i) => {
-        const center = metrics.current[i]
-        if (!center || !letters.current[i]) return
-
-        let tx = 0
-        let ty = 0
-        let tr = 0
-        if (animate && p.active) {
-          const dx = center.x - p.x
-          const dy = center.y - p.y
-          const distance = Math.hypot(dx, dy)
-          const radius = 175
-          if (distance < radius && distance > .1) {
-            const force = Math.pow(1 - distance / radius, 1.75)
-            tx = dx / distance * force * 22
-            ty = dy / distance * force * 16
-            tr = clamp(-dx / radius * force * 14, -7, 7)
-          }
-        }
-        if (animate && drag?.index === i) {
-          tx = clamp(drag.dx, -65, 65)
-          ty = clamp(drag.dy, -52, 52)
-          tr = clamp(drag.dx * .12, -9, 9)
-        }
-        if (!animate) { tx = 0; ty = 0; tr = 0 }
-        body.vx = (body.vx + (tx - body.x) * .16) * .73
-        body.vy = (body.vy + (ty - body.y) * .16) * .73
-        body.vr = (body.vr + (tr - body.r) * .14) * .74
-        body.x += body.vx
-        body.y += body.vy
-        body.r += body.vr
-        letters.current[i].style.transform = `translate3d(${body.x.toFixed(2)}px,${body.y.toFixed(2)}px,0) rotate(${body.r.toFixed(2)}deg)`
-
-        if (Math.abs(body.x - tx) + Math.abs(body.y - ty) + Math.abs(body.r - tr) +
-          Math.abs(body.vx) + Math.abs(body.vy) + Math.abs(body.vr) > .07) moving = true
-      })
-      if (moving) raf.current = window.requestAnimationFrame(step)
+    const pause = () => {
+      window.cancelAnimationFrame(frame)
+      frame = 0
+      previous = 0
+      accumulator = 0
     }
-    const wake = () => { if (!raf.current) raf.current = window.requestAnimationFrame(step) }
 
-    const enter = (event) => {
-      if (!media.matches || reduced.matches) return
-      measure()
-      pointer.current = { x: event.clientX, y: event.clientY, active: true }
-      wake()
-    }
-    const move = (event) => {
-      if (!media.matches || reduced.matches) return
-      pointer.current = { x: event.clientX, y: event.clientY, active: true }
-      if (dragging.current) {
-        const d = dragging.current
-        d.dx = event.clientX - d.startX
-        d.dy = event.clientY - d.startY
+    const reset = () => {
+      pause()
+      dragging = null
+      pointer = null
+      quietFrames = 0
+      duration = 0
+      glyphs.forEach(glyph => { glyph.style.transform = ''; glyph.style.zIndex = '' })
+      const coverRect = cover.getBoundingClientRect()
+      const floorRect = runway.getBoundingClientRect()
+      bounds = {
+        left: 6,
+        right: Math.max(24, coverRect.width - 6),
+        top: 0,
+        floor: Math.max(80, floorRect.bottom - coverRect.top - 1),
       }
-      wake()
-    }
-    const leave = () => {
-      if (dragging.current) return
-      pointer.current.active = false
-      wake()
-    }
-    const down = (event) => {
-      if (!media.matches || reduced.matches || event.button !== 0) return
-      const target = event.target.closest('[data-glyph]')
-      if (!target) return
-      event.preventDefault()
-      measure()
-      const index = Number(target.dataset.glyph)
-      dragging.current = { index, id: event.pointerId, startX: event.clientX, startY: event.clientY, dx: 0, dy: 0 }
-      node.setPointerCapture(event.pointerId)
-      pointer.current.active = false
-      wake()
-    }
-    const up = (event) => {
-      if (!dragging.current || dragging.current.id !== event.pointerId) return
-      dragging.current = null
-      pointer.current.active = false
-      if (node.hasPointerCapture(event.pointerId)) node.releasePointerCapture(event.pointerId)
-      wake()
-    }
-    const lostCapture = () => {
-      if (!dragging.current) return
-      dragging.current = null
-      pointer.current.active = false
-      wake()
-    }
-    const disable = () => {
-      pointer.current.active = false
-      dragging.current = null
-      if (reduced.matches || !media.matches) {
-        window.cancelAnimationFrame(raf.current)
-        raf.current = 0
-        bodies.current.forEach((body, i) => {
-          Object.assign(body, { x: 0, y: 0, r: 0, vx: 0, vy: 0, vr: 0 })
-          if (letters.current[i]) letters.current[i].style.transform = ''
-        })
-      } else wake()
+      bodies.length = 0
+      glyphs.forEach((glyph, i) => {
+        const rect = glyph.getBoundingClientRect()
+        bodies.push(createGlyphBody(
+          rect.left - coverRect.left + rect.width / 2,
+          rect.top - coverRect.top + rect.height / 2,
+          rect.width * .78,
+          rect.height * .73,
+          i,
+        ))
+      })
     }
 
-    node.addEventListener('pointerenter', enter)
-    node.addEventListener('pointermove', move)
-    node.addEventListener('pointerleave', leave)
-    node.addEventListener('pointerdown', down)
-    node.addEventListener('pointerup', up)
-    node.addEventListener('pointercancel', up)
-    node.addEventListener('lostpointercapture', lostCapture)
-    window.addEventListener('resize', measure)
-    media.addEventListener('change', disable)
-    reduced.addEventListener('change', disable)
-    measure()
-    document.fonts?.ready.then(() => { if (root.current === node) measure() })
+    const animate = now => {
+      frame = 0
+      if (reduce.matches) { reset(); return }
+      if (!previous) previous = now
+      accumulator += Math.min((now - previous) / 1000, .045)
+      previous = now
+      let steps = 0
+      while (accumulator >= FIXED_STEP && steps < 6) {
+        stepGlyphWorld(bodies, bounds, FIXED_STEP)
+        accumulator -= FIXED_STEP
+        steps += 1
+      }
+      render()
+
+      if (!dragging && settled(bodies)) quietFrames += 1
+      else quietFrames = 0
+      duration += 1
+      if (quietFrames < 75 && duration < 2400) frame = window.requestAnimationFrame(animate)
+      else pause()
+    }
+
+    const wake = () => {
+      if (reduce.matches) return
+      quietFrames = 0
+      duration = 0
+      if (!frame) frame = window.requestAnimationFrame(animate)
+    }
+
+    const dropAll = () => {
+      if (reduce.matches) return
+      bodies.forEach((body, i) => {
+        if (body.active) return
+        kickGlyph(body, (i - (bodies.length - 1) / 2) * 22, -40, body.x + (i % 2 ? 6 : -6))
+      })
+      wake()
+    }
+
+    controllerRef.current = { dropAll, reset }
+
+    const pick = (event, x, y) => {
+      const target = event.target instanceof Element ? event.target.closest('[data-glyph]') : null
+      if (target && title.contains(target)) return bodies[Number(target.dataset.glyph)] || null
+      // Pick a fallen letter by its rotated body, even outside the original h1.
+      for (let i = bodies.length - 1; i >= 0; i -= 1) {
+        if (bodies[i].active && glyphHit(bodies[i], x, y, 5)) return bodies[i]
+      }
+      return null
+    }
+
+    const onDown = event => {
+      if (reduce.matches || event.button !== 0) return
+      const p = position(event)
+      const body = pick(event, p.x, p.y)
+      if (!body) return
+      event.preventDefault()
+      body.active = true
+      body.held = true
+      body.vx = 0
+      body.vy = 0
+      body.omega = 0
+      dragging = {
+        id: event.pointerId,
+        body,
+        offsetX: body.x - p.x,
+        offsetY: body.y - p.y,
+        px: p.x,
+        py: p.y,
+        timestamp: event.timeStamp,
+        vx: 0,
+        vy: 0,
+      }
+      cover.setPointerCapture(event.pointerId)
+      pointer = null
+      wake()
+    }
+
+    const onMove = event => {
+      if (reduce.matches) return
+      const p = position(event)
+      if (dragging && event.pointerId === dragging.id) {
+        const d = dragging
+        const dt = Math.max(.008, (event.timeStamp - d.timestamp) / 1000)
+        d.vx = clamp((p.x - d.px) / dt, -900, 900)
+        d.vy = clamp((p.y - d.py) / dt, -900, 900)
+        d.px = p.x
+        d.py = p.y
+        d.timestamp = event.timeStamp
+        d.body.x = clamp(p.x + d.offsetX, bounds.left + d.body.w / 2, bounds.right - d.body.w / 2)
+        d.body.y = clamp(p.y + d.offsetY, bounds.top + d.body.h / 2, bounds.floor - d.body.h / 2)
+        d.body.angle = clamp(d.vx / 150, -0.28, .28)
+        render()
+        wake()
+        return
+      }
+
+      if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') return
+      const time = event.timeStamp
+      const delta = pointer
+        ? Math.max(.008, (time - pointer.time) / 1000)
+        : .016
+      const vx = pointer ? clamp((p.x - pointer.x) / delta, -1200, 1200) : 0
+      const vy = pointer ? clamp((p.y - pointer.y) / delta, -1200, 1200) : 0
+      pointer = { x: p.x, y: p.y, time }
+
+      const speed = Math.hypot(vx, vy)
+      if (speed < 35) return
+      let hit = false
+      bodies.forEach(body => {
+        if (body.held || time - body.lastHit < 115 || !glyphHit(body, p.x, p.y, 10)) return
+        body.lastHit = time
+        kickGlyph(body, vx, vy, p.x)
+        hit = true
+      })
+      if (hit) wake()
+    }
+
+    const release = event => {
+      if (!dragging || event.pointerId !== dragging.id) return
+      const d = dragging
+      d.body.held = false
+      d.body.vx = d.vx * .78
+      d.body.vy = d.vy * .78 - 90
+      d.body.omega = clamp(d.vx * .006, -5, 5)
+      dragging = null
+      pointer = null
+      if (cover.hasPointerCapture(event.pointerId)) cover.releasePointerCapture(event.pointerId)
+      wake()
+    }
+    const lost = () => {
+      if (!dragging) return
+      dragging.body.held = false
+      dragging = null
+      wake()
+    }
+    const onResize = () => {
+      // A resized text layout requires new original glyph bounds.
+      reset()
+    }
+    const onPreference = () => { if (reduce.matches) reset() }
+    const onBlur = () => {
+      if (dragging) { dragging.body.held = false; dragging = null; wake() }
+      pointer = null
+    }
+
+    cover.addEventListener('pointerdown', onDown)
+    cover.addEventListener('pointermove', onMove, { passive: true })
+    cover.addEventListener('pointerup', release)
+    cover.addEventListener('pointercancel', release)
+    cover.addEventListener('lostpointercapture', lost)
+    cover.addEventListener('pointerleave', () => { pointer = null })
+    window.addEventListener('resize', onResize)
+    window.addEventListener('blur', onBlur)
+    reduce.addEventListener('change', onPreference)
+    reset()
+    document.fonts?.ready.then(() => { if (mounted) reset() })
 
     return () => {
-      window.cancelAnimationFrame(raf.current)
-      node.removeEventListener('pointerenter', enter)
-      node.removeEventListener('pointermove', move)
-      node.removeEventListener('pointerleave', leave)
-      node.removeEventListener('pointerdown', down)
-      node.removeEventListener('pointerup', up)
-      node.removeEventListener('pointercancel', up)
-      node.removeEventListener('lostpointercapture', lostCapture)
-      window.removeEventListener('resize', measure)
-      media.removeEventListener('change', disable)
-      reduced.removeEventListener('change', disable)
+      mounted = false
+      pause()
+      controllerRef.current = { dropAll: () => {}, reset: () => {} }
+      cover.removeEventListener('pointerdown', onDown)
+      cover.removeEventListener('pointermove', onMove)
+      cover.removeEventListener('pointerup', release)
+      cover.removeEventListener('pointercancel', release)
+      cover.removeEventListener('lostpointercapture', lost)
+      window.removeEventListener('resize', onResize)
+      window.removeEventListener('blur', onBlur)
+      reduce.removeEventListener('change', onPreference)
+      glyphs.forEach(glyph => {
+        if (!glyph) return
+        glyph.style.transform = ''
+        glyph.style.zIndex = ''
+      })
     }
   }, [])
 
   let offset = 0
   return (
-    <h1 id="hero-title" className="print-wordmark kinetic-wordmark" ref={root} aria-label="LUIS/EDUARDO">
-      {TEXT.map((line, groupIndex) => {
-        const start = offset
-        offset += line.length
-        return <span key={groupIndex} className="kinetic-word" aria-hidden="true">
-          {Array.from(line).map((char, i) => (
-            <span
-              key={start + i}
-              ref={node => { letters.current[start + i] = node }}
-              data-glyph={start + i}
-              className={'kinetic-glyph' + (char === '/' ? ' kinetic-slash' : '')}
-            >{char}</span>
-          ))}
-        </span>
+    <h1 ref={rootRef} id="hero-title" className="print-wordmark kinetic-wordmark" aria-label="LUIS/EDUARDO">
+      {WORDS.map((part, group) => {
+        const first = offset
+        offset += part.length
+        return (
+          <span className="kinetic-word" key={group} aria-hidden="true">
+            {Array.from(part).map((char, index) => (
+              <span
+                key={first + index}
+                ref={node => { glyphRefs.current[first + index] = node }}
+                data-glyph={first + index}
+                className={'kinetic-glyph' + (char === '/' ? ' kinetic-slash' : '')}
+              >{char}</span>
+            ))}
+          </span>
+        )
       })}
     </h1>
   )
-}
+})
+
+export default KineticWordmark
