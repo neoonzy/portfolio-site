@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { projects } from '../data/projects.js'
-import MagneticStamp from './MagneticStamp.jsx'
+import KineticWordmark from './KineticWordmark.jsx'
 
 /**
  * Graphic editorial front page inspired by Swiss grids and printed portfolios.
@@ -24,15 +24,12 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
 
         <div className="print-cover">
           <div className="print-identity">
-            <h1 id="hero-title" className="print-wordmark">
-              <span>LUIS<span className="print-separator">/</span></span>
-              <span>EDUARDO</span>
-            </h1>
+            <KineticWordmark lang={lang} />
             <div className="print-identity-caption">
               <span>LUIS EDUARDO LUSTOSA</span>
               <span>DESIGN & DEVELOPMENT</span>
               <span>BASED IN RECIFE, BR</span>
-              <span>2026 ©</span>
+              <span>{pt ? 'TIPOGRAFIA INTERATIVA ↗' : 'INTERACTIVE TYPE ↗'}</span>
             </div>
           </div>
 
@@ -50,14 +47,7 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
                 <a href={'mailto:' + email}>{pt ? 'CONTATO' : 'CONTACT'} ↗</a>
               </div>
             </div>
-            <div className="print-cover-art">
-              <div className="print-linework" aria-hidden="true">
-                <div className="print-linework-cutout" />
-                <span className="print-linework-code">LEL — 01</span>
-              </div>
-              <MagneticStamp lang={lang} />
-              <span className="print-art-caption">{pt ? 'ARRASTE O CARIMBO / SOLTE PARA VOLTAR' : 'DRAG THE STAMP / RELEASE TO SPRING BACK'}</span>
-            </div>
+
           </div>
         </div>
 
