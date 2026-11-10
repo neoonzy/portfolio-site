@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { projects, visualProjects } from './data/projects.js'
 import StudioPanel from './components/StudioPanel.jsx'
 import FieldNotes from './components/FieldNotes.jsx'
+import HeroPlayground from './components/HeroPlayground.jsx'
+import QuickNavigator from './components/QuickNavigator.jsx'
 
 const content = {
   pt: {
@@ -193,6 +195,7 @@ export default function App() {
           {ids.map(id => <a key={id} href={'#' + id} className={activeSection === id ? 'is-active' : ''} onClick={() => setMenuOpen(false)}>{c.navigation[id]}</a>)}
         </nav>
         <div className="header-actions">
+          <QuickNavigator lang={lang} onNavigate={() => setMenuOpen(false)} />
           <button type="button" className="lang-button" aria-label={c.language} onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}>{lang.toUpperCase()} <span aria-hidden="true">↔</span></button>
           <button type="button" className="menu-button" aria-label={c.menu} aria-controls="main-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? '✕' : '☰'}</button>
         </div>
@@ -214,7 +217,19 @@ export default function App() {
               <a className="button button-dark" href="#projects">{c.heroAction}<span aria-hidden="true">↗</span></a>
               <a className="button button-light" href={'mailto:' + email}>{c.heroSecond}<span aria-hidden="true">↗</span></a>
             </div>
-            <a className="scroll-link" href="#about">{c.scroll}</a>
+            <div className="hero-secondary-links"><a className="scroll-link" href="#about">{c.scroll}</a><a className="hero-lab-anchor" href="#lab">{lang === 'pt' ? 'TESTAR O TYPEEE ↗' : 'TRY TYPEEE ↗'}</a></div>
+          </div>
+          <HeroPlayground lang={lang} />
+        </div>
+      </section>
+
+      <section className="lab-band" id="lab" aria-labelledby="lab-title">
+        <div className="shell lab-band-grid">
+          <div className="lab-band-copy">
+            <span className="eyebrow">{lang === 'pt' ? 'EXPERIMENTE / 001' : 'EXPERIMENT / 001'}</span>
+            <h2 id="lab-title">{lang === 'pt' ? <>UM POUCO DE <em>TYPEEE.</em></> : <>A TASTE OF <em>TYPEEE.</em></>}</h2>
+            <p>{lang === 'pt' ? 'Um pequeno desafio de digitação para você conhecer um dos meus projetos sem sair desta página.' : 'A tiny typing challenge to get a feel for one of my projects without leaving this page.'}</p>
+            <a href="#projects">{lang === 'pt' ? 'CONHECER OS PROJETOS ↗' : 'DISCOVER THE PROJECTS ↗'}</a>
           </div>
           <StudioPanel lang={lang} />
         </div>

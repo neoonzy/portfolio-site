@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - feat/oficina-editorial-interativa
+      - feat/arquivo-fotografico-autoral
   pull_request:
     branches:
       - main
+      - feat/oficina-editorial-interativa
 
 jobs:
   build:
