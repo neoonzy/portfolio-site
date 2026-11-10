@@ -9,10 +9,10 @@ const clamp = (x, low, high) => Math.min(high, Math.max(low, x))
 
 /**
  * DOM lettering at rest; individual rigid bodies after mouse impact.
- * Their collision floor is the rule immediately under the open cover space,
- * so falling glyphs never descend into the projects index.
+ * Real editorial labels act as collision platforms, while the bottom edge
+ * of the entire hero section is the final floor.
  */
-const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
+const KineticWordmark = forwardRef(function KineticWordmark({ lang }, ref) {
   const rootRef = useRef(null)
   const glyphRefs = useRef([])
   const controllerRef = useRef({ reset: () => {} })
@@ -298,12 +298,14 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
         glyph.style.pointerEvents = ''
       })
     }
-  }, [])
+  }, [lang])
 
   let offset = 0
   return (
     <h1 ref={rootRef} id="hero-title" className="print-wordmark kinetic-wordmark"
-      tabIndex={0} aria-label="LUIS/EDUARDO. Pressione Enter ou espaço para soltar uma letra.">
+      tabIndex={0} aria-label={lang === 'en'
+        ? 'LUIS/EDUARDO. Press Enter or Space to release one letter at a time.'
+        : 'LUIS/EDUARDO. Pressione Enter ou espaço para soltar uma letra.'}>
       {WORDS.map((part, group) => {
         const first = offset
         offset += part.length
