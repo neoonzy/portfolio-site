@@ -338,7 +338,7 @@ body { background:var(--paper); }
   font:600 10px/1.5 var(--mono);letter-spacing:.06em;
   padding-top:12px;
 }
-.editorial-interlude p {
+.editorial-interlude h2 {
   margin:0;
   max-width:1120px;
   font:500 clamp(55px,7.4vw,122px)/1.01 var(--display);
