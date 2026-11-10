@@ -10,7 +10,7 @@ const clamp = (x, low, high) => Math.min(high, Math.max(low, x))
 /**
  * DOM lettering at rest; individual rigid bodies after mouse impact.
  * Real editorial labels act as collision platforms, while the bottom edge
- * of the entire hero section is the final floor.
+ * immediately before the selected-work index is the final floor.
  */
 const KineticWordmark = forwardRef(function KineticWordmark({ lang }, ref) {
   const rootRef = useRef(null)
@@ -25,8 +25,9 @@ const KineticWordmark = forwardRef(function KineticWordmark({ lang }, ref) {
     const title = rootRef.current
     const cover = title?.closest('.print-cover')
     const section = title?.closest('.print-hero')
+    const workIndex = section?.querySelector('.print-index')
     const glyphs = glyphRefs.current
-    if (!title || !cover || !section || glyphs.length !== count) return
+    if (!title || !cover || !section || !workIndex || glyphs.length !== count) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
     const bodies = []
@@ -79,12 +80,12 @@ const KineticWordmark = forwardRef(function KineticWordmark({ lang }, ref) {
       duration = 0
       glyphs.forEach(glyph => { glyph.style.transform = ''; glyph.style.zIndex = ''; glyph.style.pointerEvents = '' })
       const coverRect = cover.getBoundingClientRect()
-      const sectionRect = section.getBoundingClientRect()
+      const indexRect = workIndex.getBoundingClientRect()
       bounds = {
         left: 6,
         right: Math.max(24, coverRect.width - 6),
         top: 0,
-        floor: Math.max(80, sectionRect.bottom - coverRect.top - 3),
+        floor: Math.max(80, indexRect.top - coverRect.top - 3),
       }
       keyboardIndex = 0
       bodies.length = 0
