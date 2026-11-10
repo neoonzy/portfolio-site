@@ -12,6 +12,7 @@ on:
       - feat/hero-kinetic-typography
       - feat/hero-gravity-letters
       - feat/hero-layout-collisions
+      - feat/grid-true-collision-scope-shortcuts
   pull_request:
     branches:
       - main
