@@ -5,6 +5,7 @@ on:
     branches:
       - feat/oficina-editorial-interativa
       - feat/arquivo-fotografico-autoral
+      - feat/arquivo-fotografico-autoral
   pull_request:
     branches:
       - main
