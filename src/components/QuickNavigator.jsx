@@ -1,9 +1,9 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { chapters } from '../data/chapters.js'
 
 const sections = chapters
 
-const QuickNavigator = forwardRef(function QuickNavigator({ lang, onNavigate }, ref) {
+export default function QuickNavigator({ lang, onNavigate }) {
   const dialogRef = useRef(null)
   const inputRef = useRef(null)
   const [query, setQuery] = useState('')
@@ -21,8 +21,6 @@ const QuickNavigator = forwardRef(function QuickNavigator({ lang, onNavigate }, 
     setIsOpen(true)
     window.requestAnimationFrame(() => inputRef.current?.focus())
   }
-  useImperativeHandle(ref, () => ({ open }))
-
   const close = () => {
     if (dialogRef.current?.open) dialogRef.current.close()
     setIsOpen(false)
@@ -131,6 +129,4 @@ const QuickNavigator = forwardRef(function QuickNavigator({ lang, onNavigate }, 
       </dialog>
     </>
   )
-})
-
-export default QuickNavigator
+}
