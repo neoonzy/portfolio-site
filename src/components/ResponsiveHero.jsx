@@ -30,34 +30,18 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
               <span>LUIS EDUARDO LUSTOSA</span>
               <span>DESIGN & DEVELOPMENT</span>
               <span>BASED IN RECIFE, BR</span>
-              <span>{pt ? 'EMPURRE / ARRASTE AS LETRAS ↓' : 'NUDGE / DRAG THE LETTERS ↓'}</span>
-            </div>
-          </div>
-
-          <div className="print-physics-runway" aria-hidden="true" />
-          <div className="print-physics-toolbar">
-            <span className="print-physics-instruction">
-              {pt ? 'TOQUE NAS LETRAS COM O PONTEIRO, ARRASTE E SOLTE. ELAS CAEM ATÉ ESTA LINHA.' : 'NUDGE THE LETTERS, DRAG AND RELEASE. THEY FALL TO THIS LINE.'}
-            </span>
-            <span className="print-physics-reduced">{pt ? 'MOVIMENTO DESATIVADO NESTE DISPOSITIVO' : 'MOTION IS DISABLED ON THIS DEVICE'}</span>
-            <div className="print-physics-actions">
-              <button type="button" className="print-physics-drop" onClick={() => lettersRef.current?.dropAll()}>
-                {pt ? 'DERRUBAR TUDO' : 'DROP ALL'} <span aria-hidden="true">↓</span>
-              </button>
-              <button type="button" onClick={() => lettersRef.current?.reset()}>
-                {pt ? 'REORGANIZAR' : 'RESET TYPE'} <span aria-hidden="true">↺</span>
-              </button>
+              <button className="print-physics-reset" type="button" onClick={() => lettersRef.current?.reset()}>{pt ? 'REORGANIZAR ↺' : 'RESET LETTERS ↺'}</button>
             </div>
           </div>
 
           <div className="print-cover-lower">
             <div className="print-cover-years">
-              <span>{pt ? 'PROJETOS / PROCESSOS' : 'WORK / PROCESS'}</span>
+              <span data-physics-obstacle="projects">{pt ? 'PROJETOS / PROCESSOS' : 'WORK / PROCESS'}</span>
               <strong>2024—<br/>2026</strong>
               <a href="#projects">{pt ? 'VER TRABALHOS' : 'SELECTED WORK'} <span aria-hidden="true">↗</span></a>
             </div>
             <div className="print-cover-statement">
-              <span className="print-minilabel">/ {pt ? 'SOBRE' : 'ABOUT'}</span>
+              <span className="print-minilabel" data-physics-obstacle="about">/ {pt ? 'SOBRE' : 'ABOUT'}</span>
               <p>{c.heroText}</p>
               <div className="print-cover-statement-links">
                 <a href="#about">{pt ? 'MAIS SOBRE MIM' : 'ABOUT ME'} ↗</a>
