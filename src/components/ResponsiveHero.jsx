@@ -30,7 +30,7 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
               <span>LUIS EDUARDO LUSTOSA</span>
               <span>DESIGN & DEVELOPMENT</span>
               <span>BASED IN RECIFE, BR</span>
-              <span>{pt ? 'TIPOGRAFIA INTERATIVA ↗' : 'INTERACTIVE TYPE ↗'}</span>
+              <span>{pt ? 'EMPURRE / ARRASTE AS LETRAS ↓' : 'NUDGE / DRAG THE LETTERS ↓'}</span>
             </div>
           </div>
 
