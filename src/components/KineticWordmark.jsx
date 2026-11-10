@@ -146,7 +146,8 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
     }
 
     const onDown = event => {
-      if (reduce.matches || event.button !== 0) return
+      // Keep touch scrolling natural; mobile visitors can use DROP ALL.
+      if (reduce.matches || event.button !== 0 || (event.pointerType !== 'mouse' && event.pointerType !== 'pen')) return
       const p = position(event)
       const body = pick(event, p.x, p.y)
       if (!body) return
