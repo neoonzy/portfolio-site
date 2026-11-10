@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
-  createGlyphBody, FIXED_STEP, glyphHit, kickGlyph, settled, stepGlyphWorld,
+  createGlyphBody, createStaticObstacle, FIXED_STEP, glyphHit, kickGlyph, settled, stepGlyphWorld,
 } from '../src/lib/glyphPhysics.js'
 
 const bounds = { left: 0, right: 600, top: 0, floor: 410 }
@@ -60,4 +60,19 @@ test('hit testing accounts for rotation and circle radius', () => {
   assert.equal(glyphHit(body, body.x, body.y), true)
   assert.equal(glyphHit(body, 350, 350, 5), false)
   assert.equal(glyphHit(body, body.x + 12, body.y + 12, 6), true)
+})
+
+test('falling letters collide with immovable editorial text before reaching section floor', () => {
+  const textLabel = createStaticObstacle(220, 235, 180, 25, 'projects/process')
+  const letter = createGlyphBody(220, 72, 42, 60)
+  kickGlyph(letter, 0, 0, letter.x)
+  const original = { x: textLabel.x, y: textLabel.y }
+  for (let i = 0; i < 560; i += 1) {
+    stepGlyphWorld([letter], { left: 0, right: 500, top: 0, floor: 900 }, FIXED_STEP, [textLabel])
+  }
+  assert.equal(textLabel.active, false)
+  assert.deepEqual([textLabel.x, textLabel.y], [original.x, original.y])
+  assert.ok(letter.y > letter.homeY, 'letter falls')
+  assert.ok(letter.y + letter.h / 2 <= textLabel.y - textLabel.h / 2 + 2, 'letter rests on label')
+  assert.ok(letter.y < 300, 'letter does not fall through label to the section floor')
 })
