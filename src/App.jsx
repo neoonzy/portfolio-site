@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { projects, visualProjects } from './data/projects.js'
+import StudioPanel from './components/StudioPanel.jsx'
+import FieldNotes from './components/FieldNotes.jsx'
 
 const content = {
   pt: {
-    navigation: { about: 'Sobre', experience: 'Trajetória', projects: 'Projetos', gallery: 'Design', skills: 'Ferramentas', contact: 'Contato' },
+    navigation: { about: 'Sobre', experience: 'Trajetória', projects: 'Projetos', notes: 'Processos', gallery: 'Design', skills: 'Ferramentas', contact: 'Contato' },
     eyebrow: 'RECIFE, BRASIL  /  DESIGN + TECNOLOGIA',
     heroTop: 'OLÁ, EU SOU',
     heroName: 'LUIS EDUARDO',
@@ -41,20 +43,20 @@ const content = {
     projectsIntro: 'Interfaces, iniciativas independentes e experiências que misturam o técnico e o criativo.',
     projectVisit: 'ABRIR PROJETO ↗',
     source: 'CÓDIGO ↗',
-    labelGallery: '04 / PORTFÓLIO VISUAL',
+    labelGallery: '05 / PORTFÓLIO VISUAL',
     galleryTitle: 'PORTFÓLIO\nVISUAL.',
     galleryIntro: 'Seleção visual de projetos autorais e interfaces desenvolvidas. Explore os trabalhos e conheça suas aplicações.',
     galleryCard: 'TRABALHO VISUAL',
     galleryMore: 'VER TODOS NO BEHANCE ↗',
     galleryFallback: 'Abrir no Behance ↗',
-    labelSkills: '05 / CAIXA DE FERRAMENTAS',
+    labelSkills: '06 / CAIXA DE FERRAMENTAS',
     skillsTitle: 'O QUE EU\nUSO E FAÇO.',
     skills: [
       { title: 'INTERFACES & WEB', items: ['Figma', 'UI/UX Design', 'React', 'JavaScript', 'HTML / CSS', 'Styled Components', 'Material UI'] },
       { title: 'OFICINA & PROTÓTIPOS', items: ['Modelagem 3D', 'Fusion 360', 'SketchUp', 'Impressão 3D', 'Corte a laser', 'Arduino', 'Raspberry Pi'] },
       { title: 'CRIAÇÃO & COMUNICAÇÃO', items: ['Identidade visual', 'Fotografia', 'Produção de conteúdo', 'Diagramação', 'Comunicação de projetos'] },
     ],
-    labelContact: '06 / CONTATO',
+    labelContact: '07 / CONTATO',
     contactTitle: 'TEM UMA IDEIA?\nBORA FAZER.',
     contactText: 'Aberto a conversas, projetos e colaborações entre design, tecnologia, fabricação digital e iniciativas culturais.',
     emailAction: 'ME MANDA UM E-MAIL ↗',
@@ -68,7 +70,7 @@ const content = {
     sourceLabel: 'Projetos do portfólio CIn',
   },
   en: {
-    navigation: { about: 'About', experience: 'Journey', projects: 'Projects', gallery: 'Design', skills: 'Toolbox', contact: 'Contact' },
+    navigation: { about: 'About', experience: 'Journey', projects: 'Projects', notes: 'Process', gallery: 'Design', skills: 'Toolbox', contact: 'Contact' },
     eyebrow: 'RECIFE, BRAZIL  /  DESIGN + TECHNOLOGY',
     heroTop: "HEY, I'M",
     heroName: 'LUIS EDUARDO',
@@ -106,20 +108,20 @@ const content = {
     projectsIntro: 'Interfaces, independent initiatives and experiments combining technical and creative practice.',
     projectVisit: 'VIEW PROJECT ↗',
     source: 'SOURCE ↗',
-    labelGallery: '04 / VISUAL WORK',
+    labelGallery: '05 / VISUAL WORK',
     galleryTitle: 'SELECTED\nVISUALS.',
     galleryIntro: 'A visual selection of independent projects and interfaces. Explore the work and its applications.',
     galleryCard: 'VISUAL PROJECT',
     galleryMore: 'ALL WORK ON BEHANCE ↗',
     galleryFallback: 'Open on Behance ↗',
-    labelSkills: '05 / TOOLBOX',
+    labelSkills: '06 / TOOLBOX',
     skillsTitle: 'TOOLS &\nPRACTICE.',
     skills: [
       { title: 'INTERFACES & WEB', items: ['Figma', 'UI/UX Design', 'React', 'JavaScript', 'HTML / CSS', 'Styled Components', 'Material UI'] },
       { title: 'MAKING & PROTOTYPES', items: ['3D modeling', 'Fusion 360', 'SketchUp', '3D printing', 'Laser cutting', 'Arduino', 'Raspberry Pi'] },
       { title: 'DESIGN & COMMUNICATION', items: ['Brand identity', 'Photography', 'Content creation', 'Editorial layout', 'Project communications'] },
     ],
-    labelContact: '06 / CONTACT',
+    labelContact: '07 / CONTACT',
     contactTitle: 'GOT AN IDEA?\nLET’S MAKE IT.',
     contactText: 'Open to projects and collaborations across design, technology, digital fabrication and culture.',
     emailAction: 'SEND ME AN EMAIL ↗',
@@ -134,7 +136,7 @@ const content = {
   },
 }
 
-const ids = ['about', 'experience', 'projects', 'gallery', 'skills', 'contact']
+const ids = ['about', 'experience', 'projects', 'notes', 'gallery', 'skills', 'contact']
 const links = [
   { name: 'GITHUB', href: 'https://github.com/neoonzy' },
   { name: 'BEHANCE', href: 'https://www.behance.net/lustosabr' },
@@ -207,20 +209,14 @@ export default function App() {
               <h1 id="hero-title" className="hero-title"><span>{c.heroName}</span><span>{c.heroName2}</span></h1>
             </div>
             <p className="hero-description">{c.heroText}</p>
+            <div className="hero-roles" aria-label={lang === 'pt' ? 'Áreas de atuação' : 'Fields of practice'}><span>DESIGN</span><span>{lang === 'pt' ? 'CÓDIGO' : 'CODE'}</span><span>{lang === 'pt' ? 'OFICINA' : 'WORKSHOP'}</span></div>
             <div className="actions">
               <a className="button button-dark" href="#projects">{c.heroAction}<span aria-hidden="true">↗</span></a>
               <a className="button button-light" href={'mailto:' + email}>{c.heroSecond}<span aria-hidden="true">↗</span></a>
             </div>
             <a className="scroll-link" href="#about">{c.scroll}</a>
           </div>
-          <div className="hero-feature">
-            <span className="feature-eyebrow">01 / {lang === 'pt' ? 'PROJETO EM DESTAQUE' : 'FEATURED WORK'}</span>
-            <a href="#projects" className="hero-feature-link">
-              <img src="/projects/typeee.png" alt={lang === 'pt' ? 'Interface do projeto Typeee' : 'Typeee project interface'} />
-              <span>TYPEEE.QUEST <span aria-hidden="true">↗</span></span>
-            </a>
-            <p>{lang === 'pt' ? 'Produto digital · interface · desenvolvimento' : 'Digital product · interface · development'}</p>
-          </div>
+          <StudioPanel lang={lang} />
         </div>
       </section>
 
@@ -276,6 +272,8 @@ export default function App() {
           </article>)}</div>
         </div>
       </section>
+
+      <FieldNotes lang={lang} />
 
       <section className="section gallery-section" id="gallery">
         <div className="shell">
