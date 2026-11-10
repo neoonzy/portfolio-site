@@ -6,9 +6,9 @@ const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
 /**
  * Mobile-only chapter marker that follows the document, not a separate menu.
  * rAF throttles measurements; percentage is quantized to limit React updates.
- * Clicks reuse the existing /atalhos dialog through onOpenIndex.
+ * The only visible UI is a 2px progress line beneath the sticky header.
  */
-export default function MobileSectionIndicator({ lang, onOpenIndex }) {
+export default function MobileSectionIndicator({ lang }) {
   const barRef = useRef(null)
   const [reading, setReading] = useState({ index: 0, percent: 0 })
   const pt = lang === 'pt'
@@ -24,7 +24,7 @@ export default function MobileSectionIndicator({ lang, onOpenIndex }) {
       frame = 0
       if (!mobile.matches) return
       const headerHeight = header?.getBoundingClientRect().height ?? 68
-      const barHeight = barRef.current?.getBoundingClientRect().height ?? 48
+      const barHeight = barRef.current?.getBoundingClientRect().height ?? 2
       const readerLine = headerHeight + barHeight + 8
 
       let index = 0
@@ -69,27 +69,15 @@ export default function MobileSectionIndicator({ lang, onOpenIndex }) {
   }, [])
 
   const chapterName = current[lang]
-  const label = pt
-    ? `Seção ${reading.index + 1} de ${chapters.length}: ${chapterName}. Abrir índice de navegação.`
-    : `Section ${reading.index + 1} of ${chapters.length}: ${chapterName}. Open navigation index.`
+  const ariaLabel = pt
+    ? `Progresso em ${chapterName}, seção ${reading.index + 1} de ${chapters.length}`
+    : `Progress through ${chapterName}, section ${reading.index + 1} of ${chapters.length}`
 
   return (
-    <nav className="mobile-chapter-indicator" ref={barRef}
-      aria-label={pt ? 'Localização no portfólio' : 'Portfolio reading position'}>
-      <button type="button" className="mobile-chapter-button"
-        onClick={onOpenIndex} aria-controls="quick-nav" aria-haspopup="dialog"
-        aria-label={label}>
-        <span className="mobile-chapter-counter">
-          {String(reading.index + 1).padStart(2, '0')}
-          <span aria-hidden="true"> / </span>
-          {String(chapters.length).padStart(2, '0')}
-        </span>
-        <span className="mobile-chapter-name">{pt ? current.shortPt : current.shortEn}</span>
-        <span className="mobile-chapter-action" aria-hidden="true">{pt ? 'ÍNDICE' : 'INDEX'} ↗</span>
-      </button>
-      <div className="mobile-chapter-track" aria-hidden="true">
-        <span style={{ width: `${reading.percent}%` }} />
-      </div>
-    </nav>
+    <div className="mobile-chapter-indicator" ref={barRef}
+      role="progressbar" aria-label={ariaLabel}
+      aria-valuemin={0} aria-valuemax={100} aria-valuenow={reading.percent}>
+      <span className="mobile-chapter-fill" style={{ width: `${reading.percent}%` }} />
+    </div>
   )
 }
