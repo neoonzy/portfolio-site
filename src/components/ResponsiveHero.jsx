@@ -37,6 +37,7 @@ export default function ResponsiveHero({ lang, c, email }) {
     element.style.setProperty('--react-y', (y * 100).toFixed(2) + '%')
     element.style.setProperty('--shift-x', ((x - .5) * 18).toFixed(1) + 'px')
     element.style.setProperty('--shift-y', ((y - .5) * 14).toFixed(1) + 'px')
+    element.style.setProperty('--shift-last-x', ((.5 - x) * 4).toFixed(1) + 'px')
   }
   const reset = () => {
     const element = heroRef.current
@@ -45,6 +46,7 @@ export default function ResponsiveHero({ lang, c, email }) {
     element.style.setProperty('--react-y','50%')
     element.style.setProperty('--shift-x','0px')
     element.style.setProperty('--shift-y','0px')
+    element.style.setProperty('--shift-last-x','0px')
   }
 
   return (
