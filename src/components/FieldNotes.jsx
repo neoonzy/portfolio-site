@@ -1,6 +1,6 @@
 const translations = {
   pt: {
-    label: '04 / CADERNO DE PROCESSO',
+    label: '05 / CADERNO DE PROCESSO',
     title: ['NÃO É SÓ', 'O RESULTADO.'],
     intro: 'Um pouco do raciocínio e dos materiais por trás das coisas que faço. Projetos em diferentes escalas, do pixel à matéria.',
     items: [
@@ -11,7 +11,7 @@ const translations = {
     caption: 'SELEÇÃO DE PROCESSOS / DOCUMENTAÇÃO EM EXPANSÃO'
   },
   en: {
-    label: '04 / PROCESS NOTEBOOK',
+    label: '05 / PROCESS NOTEBOOK',
     title: ['MORE THAN', 'THE OUTCOME.'],
     intro: 'A glimpse into the thinking and materials behind my work. Projects at different scales, from pixels to physical objects.',
     items: [
