@@ -27,6 +27,19 @@ export function createGlyphBody(x, y, width, height, id = 0) {
   }
 }
 
+export function createStaticObstacle(x, y, width, height, id = 'obstacle') {
+  return {
+    id, x, y,
+    w: Math.max(6, width),
+    h: Math.max(8, height),
+    mass: Infinity,
+    inertia: Infinity,
+    angle: 0,
+    vx: 0, vy: 0, omega: 0,
+    active: false, held: false, static: true,
+  }
+}
+
 function axes(body) {
   const cos = Math.cos(body.angle), sin = Math.sin(body.angle)
   return [{ x: cos, y: sin }, { x: -sin, y: cos }]
@@ -69,7 +82,7 @@ function velocityAt(body, radius) {
 }
 
 function inverse(body) {
-  if (!body.active || body.held) return { mass: 0, inertia: 0 }
+  if (!body.active || body.held || body.static) return { mass: 0, inertia: 0 }
   return { mass: 1 / body.mass, inertia: 1 / body.inertia }
 }
 
@@ -89,8 +102,8 @@ function resolvePair(a, b) {
   // Anchored letters wake when another glyph falls into them.
   const approach = dot({ x: b.vx - a.vx, y: b.vy - a.vy }, n)
   if (approach < -25 && hit.overlap > .5) {
-    if (!a.active) a.active = true
-    if (!b.active) b.active = true
+    if (!a.active && !a.static) a.active = true
+    if (!b.active && !b.static) b.active = true
   }
 
   const ai = inverse(a), bi = inverse(b)
@@ -163,7 +176,7 @@ function resolveBounds(body, bounds) {
   }
 }
 
-export function stepGlyphWorld(bodies, bounds, dt = FIXED_STEP) {
+export function stepGlyphWorld(bodies, bounds, dt = FIXED_STEP, obstacles = []) {
   const step = clamp(dt, 0, 1 / 30)
   for (const body of bodies) {
     if (!body.active || body.held) continue
@@ -184,6 +197,7 @@ export function stepGlyphWorld(bodies, bounds, dt = FIXED_STEP) {
       for (let j = i + 1; j < bodies.length; j += 1) {
         resolvePair(bodies[i], bodies[j])
       }
+      for (const obstacle of obstacles) resolvePair(bodies[i], obstacle)
     }
   }
   // A final boundary pass keeps the pile above the floor after letter collisions.
