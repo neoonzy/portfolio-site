@@ -205,18 +205,6 @@ export default function App() {
     <main id="main">
       <ResponsiveHero lang={lang} c={c} email={email} />
 
-      <section className="lab-band" id="lab" aria-labelledby="lab-title">
-        <div className="shell lab-band-grid">
-          <div className="lab-band-copy">
-            <span className="eyebrow">{lang === 'pt' ? 'EXPERIMENTE / 001' : 'EXPERIMENT / 001'}</span>
-            <h2 id="lab-title">{lang === 'pt' ? <>UM POUCO DE <em>TYPEEE.</em></> : <>A TASTE OF <em>TYPEEE.</em></>}</h2>
-            <p>{lang === 'pt' ? 'Um pequeno desafio de digitação para você conhecer um dos meus projetos sem sair desta página.' : 'A tiny typing challenge to get a feel for one of my projects without leaving this page.'}</p>
-            <a href="#projects">{lang === 'pt' ? 'CONHECER OS PROJETOS ↗' : 'DISCOVER THE PROJECTS ↗'}</a>
-          </div>
-          <StudioPanel lang={lang} />
-        </div>
-      </section>
-
       <section className="section about-section" id="about">
         <div className="shell">
           <SectionHeading label={c.labelAbout} title={c.aboutTitle} />
@@ -236,6 +224,16 @@ export default function App() {
             <h3>{c.educationTitle}</h3>
             <div className="education-list">{c.education.map(item => <div className="education-item" key={item[0]}><span>{item[0]}</span><strong>{item[1]}</strong><span>{item[2]}</span></div>)}</div>
           </div>
+        </div>
+      </section>
+
+      <section className="editorial-interlude" aria-labelledby="interlude-title">
+        <div className="shell">
+          <span className="interlude-label">{lang === 'pt' ? 'ENTRE DISCIPLINAS / NOTA 001' : 'BETWEEN DISCIPLINES / NOTE 001'}</span>
+          <h2 id="interlude-title">
+            {lang === 'pt' ? <>ENTRE A <em>TELA</em> E O <em>MUNDO.</em></> : <>BETWEEN THE <em>SCREEN</em> AND THE <em>WORLD.</em></>}
+          </h2>
+          <span className="interlude-footer">{lang === 'pt' ? 'PROJETAR · TESTAR · FAZER EXISTIR' : 'DESIGN · TEST · MAKE IT REAL'}</span>
         </div>
       </section>
 
@@ -267,6 +265,18 @@ export default function App() {
               </div>
             </div>
           </article>)}</div>
+        </div>
+      </section>
+
+      <section className="lab-band" id="lab" aria-labelledby="lab-title">
+        <div className="shell lab-band-grid">
+          <div className="lab-band-copy">
+            <span className="eyebrow">{lang === 'pt' ? 'EXPERIMENTE / 001' : 'EXPERIMENT / 001'}</span>
+            <h2 id="lab-title">{lang === 'pt' ? <>UM POUCO DE <em>TYPEEE.</em></> : <>A TASTE OF <em>TYPEEE.</em></>}</h2>
+            <p>{lang === 'pt' ? 'Um pequeno desafio de digitação para você conhecer um dos meus projetos sem sair desta página.' : 'A tiny typing challenge to get a feel for one of my projects without leaving this page.'}</p>
+            <a href="#projects">{lang === 'pt' ? 'CONHECER OS PROJETOS ↗' : 'DISCOVER THE PROJECTS ↗'}</a>
+          </div>
+          <StudioPanel lang={lang} />
         </div>
       </section>
 
