@@ -1,7 +1,7 @@
 /*
- * EDITION 008 / Mobile editorial reading marker.
- * A small page index, not a second navigation bar.
- * Visible only at smartphone widths, directly below the existing header.
+ * Edition 008 / Mobile chapter progress, minimal revision.
+ * Only a 2px progress line, directly below the existing sticky header.
+ * No second toolbar, extra label, or unnecessary tap target.
  */
 .mobile-chapter-indicator { display:none; }
 
@@ -12,77 +12,24 @@
     top:68px;
     z-index:29;
     width:100%;
-    background:rgba(248,248,247,.98);
-    color:#181818;
-    border-bottom:1px solid #c8c8c5;
-    -webkit-backdrop-filter:blur(8px);
-    backdrop-filter:blur(8px);
-  }
-  .mobile-chapter-button {
-    display:grid;
-    grid-template-columns:49px minmax(0,1fr) auto;
-    align-items:center;
-    gap:12px;
-    width:100%;
-    min-height:43px;
-    padding:9px 16px 8px;
-    border:0;
-    border-radius:0;
-    background:transparent;
-    color:#181818;
-    text-align:left;
-    cursor:pointer;
-  }
-  .mobile-chapter-button:hover,
-  .mobile-chapter-button:focus-visible { background:#efefed; }
-  .mobile-chapter-counter,
-  .mobile-chapter-name,
-  .mobile-chapter-action {
-    font:600 10px/1.5 var(--mono);
-    letter-spacing:-.02em;
-    white-space:nowrap;
-  }
-  .mobile-chapter-counter { color:#555; }
-  .mobile-chapter-counter>span { color:#a2a29e; }
-  .mobile-chapter-name {
-    min-width:0;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    color:#151515;
-    font-size:11px;
-    font-weight:600;
-    letter-spacing:.015em;
-  }
-  .mobile-chapter-action { justify-self:end;color:#51514e; }
-  .mobile-chapter-track {
-    position:relative;
     height:2px;
-    margin:0 16px;
-    background:#d6d6d2;
+    background:#d2d2cf;
     overflow:hidden;
     pointer-events:none;
   }
-  .mobile-chapter-track>span {
+  .mobile-chapter-fill {
     display:block;
+    width:0;
     height:100%;
-    background:#191919;
+    background:#171717;
     transition:width 90ms linear;
   }
-
-  /* Anchor navigation respects both fixed navigation layers. */
-  html { scroll-padding-top:122px; }
+  /* Offset anchor navigation for header (68px) + reading bar (2px). */
+  html { scroll-padding-top:78px; }
   main section[id] { scroll-margin-top:0; }
   .lab-band { scroll-margin-top:0; }
 }
-@media(max-width:365px) {
-  .mobile-chapter-button { gap:7px;padding-inline:12px;grid-template-columns:46px minmax(0,1fr) auto; }
-  .mobile-chapter-track { margin-inline:12px; }
-  .mobile-chapter-action { font-size:9px; }
-}
+
 @media(prefers-reduced-motion:reduce) {
-  .mobile-chapter-track>span { transition:none; }
-  .mobile-chapter-indicator {
-    -webkit-backdrop-filter:none;
-    backdrop-filter:none;
-  }
+  .mobile-chapter-fill { transition:none; }
 }
