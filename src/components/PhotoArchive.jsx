@@ -124,7 +124,7 @@ export default function PhotoArchive({ lang }) {
             <h2 className="section-title" id="photography-title">{c.title.split('\n').map((line) => <span key={line}>{line}</span>)}</h2>
             <p className="section-intro">{c.description}</p>
           </div>
-          <span className="photography-heading-index">01 — 06 / 2026</span>
+          <span className="photography-heading-index">N° 01 — 06</span>
         </div>
 
         <div className="photo-archive-grid">
