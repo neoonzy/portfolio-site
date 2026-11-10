@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { projects } from '../data/projects.js'
 import KineticWordmark from './KineticWordmark.jsx'
 
@@ -9,6 +9,7 @@ import KineticWordmark from './KineticWordmark.jsx'
  */
 export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPreviewFocus, onPreviewLeave }) {
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const lettersRef = useRef(null)
   const selected = projects[selectedIndex]
   const pt = lang === 'pt'
 
@@ -24,12 +25,28 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
 
         <div className="print-cover">
           <div className="print-identity">
-            <KineticWordmark lang={lang} />
+            <KineticWordmark lang={lang} ref={lettersRef} />
             <div className="print-identity-caption">
               <span>LUIS EDUARDO LUSTOSA</span>
               <span>DESIGN & DEVELOPMENT</span>
               <span>BASED IN RECIFE, BR</span>
-              <span>{pt ? 'TIPOGRAFIA INTERATIVA ↗' : 'INTERACTIVE TYPE ↗'}</span>
+              <span>{pt ? 'EMPURRE / ARRASTE AS LETRAS ↓' : 'NUDGE / DRAG THE LETTERS ↓'}</span>
+            </div>
+          </div>
+
+          <div className="print-physics-runway" aria-hidden="true" />
+          <div className="print-physics-toolbar">
+            <span className="print-physics-instruction">
+              {pt ? 'TOQUE NAS LETRAS COM O PONTEIRO, ARRASTE E SOLTE. ELAS CAEM ATÉ ESTA LINHA.' : 'NUDGE THE LETTERS, DRAG AND RELEASE. THEY FALL TO THIS LINE.'}
+            </span>
+            <span className="print-physics-reduced">{pt ? 'MOVIMENTO DESATIVADO NESTE DISPOSITIVO' : 'MOTION IS DISABLED ON THIS DEVICE'}</span>
+            <div className="print-physics-actions">
+              <button type="button" className="print-physics-drop" onClick={() => lettersRef.current?.dropAll()}>
+                {pt ? 'DERRUBAR TUDO' : 'DROP ALL'} <span aria-hidden="true">↓</span>
+              </button>
+              <button type="button" onClick={() => lettersRef.current?.reset()}>
+                {pt ? 'REORGANIZAR' : 'RESET TYPE'} <span aria-hidden="true">↺</span>
+              </button>
             </div>
           </div>
 
