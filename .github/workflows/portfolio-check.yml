@@ -1,0 +1,38 @@
+name: Portfolio checks
+
+on:
+  push:
+    branches:
+      - feat/oficina-editorial-interativa
+      - feat/arquivo-fotografico-autoral
+      - feat/hero-experimental-typeee-fiel
+      - feat/editorial-white-space-v2
+      - feat/editorial-grotesk-grid
+      - feat/interactive-previews-grid-physics
+      - feat/hero-kinetic-typography
+      - feat/hero-gravity-letters
+      - feat/hero-layout-collisions
+      - feat/grid-true-collision-scope-shortcuts
+  pull_request:
+    branches:
+      - main
+      - feat/oficina-editorial-interativa
+
+jobs:
+  build:
+    name: Build and verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Unit test glyph physics
+        run: node --test tests/glyphPhysics.test.mjs
+      - name: Production build
+        run: npm run build

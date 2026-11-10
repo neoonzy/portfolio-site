@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react'
 import { projects, visualProjects } from './data/projects.js'
+import StudioPanel from './components/StudioPanel.jsx'
+import FieldNotes from './components/FieldNotes.jsx'
+import ResponsiveHero from './components/ResponsiveHero.jsx'
+import QuickNavigator from './components/QuickNavigator.jsx'
+import FloatingProjectPreview from './components/FloatingProjectPreview.jsx'
+import LayoutGridOverlay from './components/LayoutGridOverlay.jsx'
 
 const content = {
   pt: {
-    navigation: { about: 'Sobre', experience: 'Trajetória', projects: 'Projetos', gallery: 'Design', skills: 'Ferramentas', contact: 'Contato' },
+    navigation: { about: 'Sobre', experience: 'Trajetória', projects: 'Projetos', notes: 'Processos', gallery: 'Design', skills: 'Ferramentas', contact: 'Contato' },
     eyebrow: 'RECIFE, BRASIL  /  DESIGN + TECNOLOGIA',
     heroTop: 'OLÁ, EU SOU',
     heroName: 'LUIS EDUARDO',
@@ -41,20 +47,20 @@ const content = {
     projectsIntro: 'Interfaces, iniciativas independentes e experiências que misturam o técnico e o criativo.',
     projectVisit: 'ABRIR PROJETO ↗',
     source: 'CÓDIGO ↗',
-    labelGallery: '04 / PORTFÓLIO VISUAL',
+    labelGallery: '05 / PORTFÓLIO VISUAL',
     galleryTitle: 'PORTFÓLIO\nVISUAL.',
     galleryIntro: 'Seleção visual de projetos autorais e interfaces desenvolvidas. Explore os trabalhos e conheça suas aplicações.',
     galleryCard: 'TRABALHO VISUAL',
     galleryMore: 'VER TODOS NO BEHANCE ↗',
     galleryFallback: 'Abrir no Behance ↗',
-    labelSkills: '05 / CAIXA DE FERRAMENTAS',
+    labelSkills: '06 / CAIXA DE FERRAMENTAS',
     skillsTitle: 'O QUE EU\nUSO E FAÇO.',
     skills: [
       { title: 'INTERFACES & WEB', items: ['Figma', 'UI/UX Design', 'React', 'JavaScript', 'HTML / CSS', 'Styled Components', 'Material UI'] },
       { title: 'OFICINA & PROTÓTIPOS', items: ['Modelagem 3D', 'Fusion 360', 'SketchUp', 'Impressão 3D', 'Corte a laser', 'Arduino', 'Raspberry Pi'] },
       { title: 'CRIAÇÃO & COMUNICAÇÃO', items: ['Identidade visual', 'Fotografia', 'Produção de conteúdo', 'Diagramação', 'Comunicação de projetos'] },
     ],
-    labelContact: '06 / CONTATO',
+    labelContact: '07 / CONTATO',
     contactTitle: 'TEM UMA IDEIA?\nBORA FAZER.',
     contactText: 'Aberto a conversas, projetos e colaborações entre design, tecnologia, fabricação digital e iniciativas culturais.',
     emailAction: 'ME MANDA UM E-MAIL ↗',
@@ -68,7 +74,7 @@ const content = {
     sourceLabel: 'Projetos do portfólio CIn',
   },
   en: {
-    navigation: { about: 'About', experience: 'Journey', projects: 'Projects', gallery: 'Design', skills: 'Toolbox', contact: 'Contact' },
+    navigation: { about: 'About', experience: 'Journey', projects: 'Projects', notes: 'Process', gallery: 'Design', skills: 'Toolbox', contact: 'Contact' },
     eyebrow: 'RECIFE, BRAZIL  /  DESIGN + TECHNOLOGY',
     heroTop: "HEY, I'M",
     heroName: 'LUIS EDUARDO',
@@ -106,20 +112,20 @@ const content = {
     projectsIntro: 'Interfaces, independent initiatives and experiments combining technical and creative practice.',
     projectVisit: 'VIEW PROJECT ↗',
     source: 'SOURCE ↗',
-    labelGallery: '04 / VISUAL WORK',
+    labelGallery: '05 / VISUAL WORK',
     galleryTitle: 'SELECTED\nVISUALS.',
     galleryIntro: 'A visual selection of independent projects and interfaces. Explore the work and its applications.',
     galleryCard: 'VISUAL PROJECT',
     galleryMore: 'ALL WORK ON BEHANCE ↗',
     galleryFallback: 'Open on Behance ↗',
-    labelSkills: '05 / TOOLBOX',
+    labelSkills: '06 / TOOLBOX',
     skillsTitle: 'TOOLS &\nPRACTICE.',
     skills: [
       { title: 'INTERFACES & WEB', items: ['Figma', 'UI/UX Design', 'React', 'JavaScript', 'HTML / CSS', 'Styled Components', 'Material UI'] },
       { title: 'MAKING & PROTOTYPES', items: ['3D modeling', 'Fusion 360', 'SketchUp', '3D printing', 'Laser cutting', 'Arduino', 'Raspberry Pi'] },
       { title: 'DESIGN & COMMUNICATION', items: ['Brand identity', 'Photography', 'Content creation', 'Editorial layout', 'Project communications'] },
     ],
-    labelContact: '06 / CONTACT',
+    labelContact: '07 / CONTACT',
     contactTitle: 'GOT AN IDEA?\nLET’S MAKE IT.',
     contactText: 'Open to projects and collaborations across design, technology, digital fabrication and culture.',
     emailAction: 'SEND ME AN EMAIL ↗',
@@ -134,7 +140,7 @@ const content = {
   },
 }
 
-const ids = ['about', 'experience', 'projects', 'gallery', 'skills', 'contact']
+const ids = ['about', 'experience', 'projects', 'notes', 'gallery', 'skills', 'contact']
 const links = [
   { name: 'GITHUB', href: 'https://github.com/neoonzy' },
   { name: 'BEHANCE', href: 'https://www.behance.net/lustosabr' },
@@ -157,6 +163,9 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('')
   const [emailCopied, setEmailCopied] = useState(false)
+  const [gridEnabled, setGridEnabled] = useState(false)
+  const [projectView, setProjectView] = useState('grid')
+  const [preview, setPreview] = useState(null)
   const c = content[lang]
 
   useEffect(() => {
@@ -177,6 +186,43 @@ export default function App() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const onKeyDown = event => {
+      if (event.key.toLowerCase() !== 'g' || event.ctrlKey || event.metaKey || event.altKey || event.repeat) return
+      const element = event.target
+      if (element instanceof HTMLElement && (element.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName))) return
+      if (document.querySelector('dialog[open]')) return
+      event.preventDefault()
+      setGridEnabled(value => !value)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
+
+  useEffect(() => {
+    const close = () => setPreview(null)
+    window.addEventListener('scroll', close, { passive: true })
+    return () => window.removeEventListener('scroll', close)
+  }, [])
+
+  const onPreviewEnter = (project, event) => {
+    // Touch devices keep the page clean and retain normal project navigation.
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    setPreview({ project, mode: 'pointer', x: event.clientX, y: event.clientY })
+  }
+  const onPreviewFocus = (project, event) => {
+    const bounds = event.currentTarget.getBoundingClientRect()
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    setPreview({
+      project,
+      mode: 'focus',
+      x: bounds.right,
+      y: bounds.top,
+      anchor: { left: bounds.left, right: bounds.right, top: bounds.top, bottom: bounds.bottom },
+    })
+  }
+  const onPreviewLeave = () => setPreview(null)
+
   const copyEmail = async () => {
     try { await navigator.clipboard.writeText(email); setEmailCopied(true); setTimeout(() => setEmailCopied(false), 2200) }
     catch { window.location.href = 'mailto:' + email }
@@ -191,6 +237,14 @@ export default function App() {
           {ids.map(id => <a key={id} href={'#' + id} className={activeSection === id ? 'is-active' : ''} onClick={() => setMenuOpen(false)}>{c.navigation[id]}</a>)}
         </nav>
         <div className="header-actions">
+          <QuickNavigator lang={lang} onNavigate={() => setMenuOpen(false)} />
+          <button type="button" className={'grid-toggle' + (gridEnabled ? ' is-on' : '')}
+            aria-label={lang === 'pt' ? (gridEnabled ? 'Desligar grade de construção' : 'Ligar grade de construção') : (gridEnabled ? 'Hide layout grid' : 'Show layout grid')}
+            aria-pressed={gridEnabled} title={lang === 'pt' ? 'Grade do layout · G' : 'Layout grid · G'}
+            onClick={() => setGridEnabled(value => !value)}>
+            <span className="grid-toggle-icon" aria-hidden="true"><i/><i/><i/><i/></span>
+            <span>GRID {gridEnabled ? 'ON' : 'OFF'}</span>
+          </button>
           <button type="button" className="lang-button" aria-label={c.language} onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}>{lang.toUpperCase()} <span aria-hidden="true">↔</span></button>
           <button type="button" className="menu-button" aria-label={c.menu} aria-controls="main-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? '✕' : '☰'}</button>
         </div>
@@ -198,31 +252,8 @@ export default function App() {
     </header>
 
     <main id="main">
-      <section className="hero" id="top" aria-labelledby="hero-title">
-        <div className="shell hero-grid">
-          <div className="hero-copy">
-            <div className="hero-label"><span className="status-dot" />{c.eyebrow}</div>
-            <div className="hero-title-wrap">
-              <p className="hero-kicker">{c.heroTop}</p>
-              <h1 id="hero-title" className="hero-title"><span>{c.heroName}</span><span>{c.heroName2}</span></h1>
-            </div>
-            <p className="hero-description">{c.heroText}</p>
-            <div className="actions">
-              <a className="button button-dark" href="#projects">{c.heroAction}<span aria-hidden="true">↗</span></a>
-              <a className="button button-light" href={'mailto:' + email}>{c.heroSecond}<span aria-hidden="true">↗</span></a>
-            </div>
-            <a className="scroll-link" href="#about">{c.scroll}</a>
-          </div>
-          <div className="hero-feature">
-            <span className="feature-eyebrow">01 / {lang === 'pt' ? 'PROJETO EM DESTAQUE' : 'FEATURED WORK'}</span>
-            <a href="#projects" className="hero-feature-link">
-              <img src="/projects/typeee.png" alt={lang === 'pt' ? 'Interface do projeto Typeee' : 'Typeee project interface'} />
-              <span>TYPEEE.QUEST <span aria-hidden="true">↗</span></span>
-            </a>
-            <p>{lang === 'pt' ? 'Produto digital · interface · desenvolvimento' : 'Digital product · interface · development'}</p>
-          </div>
-        </div>
-      </section>
+      <ResponsiveHero lang={lang} c={c} email={email}
+        onPreviewEnter={onPreviewEnter} onPreviewFocus={onPreviewFocus} onPreviewLeave={onPreviewLeave} />
 
       <section className="section about-section" id="about">
         <div className="shell">
@@ -246,6 +277,16 @@ export default function App() {
         </div>
       </section>
 
+      <section className="editorial-interlude" aria-labelledby="interlude-title">
+        <div className="shell">
+          <span className="interlude-label">{lang === 'pt' ? 'ENTRE DISCIPLINAS / NOTA 001' : 'BETWEEN DISCIPLINES / NOTE 001'}</span>
+          <h2 id="interlude-title">
+            {lang === 'pt' ? <>ENTRE A <em>TELA</em> E O <em>MUNDO.</em></> : <>BETWEEN THE <em>SCREEN</em> AND THE <em>WORLD.</em></>}
+          </h2>
+          <span className="interlude-footer">{lang === 'pt' ? 'PROJETAR · TESTAR · FAZER EXISTIR' : 'DESIGN · TEST · MAKE IT REAL'}</span>
+        </div>
+      </section>
+
       <section className="section experience-section" id="experience">
         <div className="shell">
           <SectionHeading label={c.labelExperience} title={c.experienceTitle} intro={c.experienceIntro} />
@@ -260,11 +301,22 @@ export default function App() {
       <section className="section projects-section" id="projects">
         <div className="shell">
           <SectionHeading label={c.labelProjects} title={c.projectsTitle} intro={c.projectsIntro} />
-          <div className="project-grid">{projects.map((project, i) => <article className="project-card" key={project.slug}>
+          <div className="project-view-tools">
+            <span>{lang === 'pt' ? 'EXIBIÇÃO / SELECIONE UM FORMATO' : 'DISPLAY / CHOOSE A FORMAT'}</span>
+            <div className="project-view-switch" role="group" aria-label={lang === 'pt' ? 'Formato de apresentação dos projetos' : 'Project presentation layout'}>
+              <button type="button" aria-pressed={projectView === 'grid'} className={projectView === 'grid' ? 'is-active' : ''}
+                onClick={() => setProjectView('grid')}>{lang === 'pt' ? '▦ GRADE' : '▦ GRID'}</button>
+              <button type="button" aria-pressed={projectView === 'list'} className={projectView === 'list' ? 'is-active' : ''}
+                onClick={() => setProjectView('list')}>{lang === 'pt' ? '≡ ÍNDICE' : '≡ INDEX'}</button>
+            </div>
+          </div>
+          <div className={'project-grid' + (projectView === 'list' ? ' is-list' : '')}>{projects.map((project, i) => <article className="project-card" key={project.slug}>
             <div className="project-visual" aria-hidden="true"><div className="project-visual-top"><span>WORK / 0{i + 1}</span><span>↗</span></div>{project.image ? <img src={project.image} alt="" loading="lazy" /> : <div className="project-monogram">{project.title}</div>}<div className="visual-bottom">{project.category[lang]}</div></div>
             <div className="project-body">
               <div className="project-meta"><span>{project.category[lang]}</span><span>0{i + 1} / 0{projects.length}</span></div>
-              <h3>{project.title}</h3>
+              <h3><a className="project-preview-link" href={project.url} target="_blank" rel="noopener noreferrer"
+                onMouseEnter={event => onPreviewEnter(project, event)} onMouseLeave={onPreviewLeave}
+                onFocus={event => onPreviewFocus(project, event)} onBlur={onPreviewLeave}>{project.title}</a></h3>
               <p>{project.description[lang]}</p>
               <div className="tags">{project.tags.map(tag => <span className="tag" key={tag}>{tag}</span>)}</div>
               <details className="project-details"><summary>{lang === 'pt' ? 'SOBRE O PROJETO' : 'ABOUT THIS PROJECT'} <span>+</span></summary><p>{project.details?.[lang] || project.description[lang]}</p><dl><div><dt>{lang === 'pt' ? 'ATUAÇÃO' : 'ROLE'}</dt><dd>{project.role?.[lang] || 'Design / desenvolvimento'}</dd></div></dl></details>
@@ -276,6 +328,20 @@ export default function App() {
           </article>)}</div>
         </div>
       </section>
+
+      <section className="lab-band" id="lab" aria-labelledby="lab-title">
+        <div className="shell lab-band-grid">
+          <div className="lab-band-copy">
+            <span className="eyebrow">{lang === 'pt' ? 'EXPERIMENTE / 001' : 'EXPERIMENT / 001'}</span>
+            <h2 id="lab-title">{lang === 'pt' ? <>UM POUCO DE <em>TYPEEE.</em></> : <>A TASTE OF <em>TYPEEE.</em></>}</h2>
+            <p>{lang === 'pt' ? 'Um pequeno desafio de digitação para você conhecer um dos meus projetos sem sair desta página.' : 'A tiny typing challenge to get a feel for one of my projects without leaving this page.'}</p>
+            <a href="#projects">{lang === 'pt' ? 'CONHECER OS PROJETOS ↗' : 'DISCOVER THE PROJECTS ↗'}</a>
+          </div>
+          <StudioPanel lang={lang} />
+        </div>
+      </section>
+
+      <FieldNotes lang={lang} />
 
       <section className="section gallery-section" id="gallery">
         <div className="shell">
@@ -323,6 +389,9 @@ export default function App() {
         </div>
       </section>
     </main>
+
+    <LayoutGridOverlay enabled={gridEnabled} />
+    <FloatingProjectPreview preview={preview} lang={lang} />
 
     <footer className="footer">
       <div className="shell footer-inner">

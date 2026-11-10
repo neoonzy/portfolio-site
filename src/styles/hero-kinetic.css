@@ -1,0 +1,116 @@
+/*
+ * EDITION 004 / Kinetic type + weighted project previews.
+ * Type remains the hero: no illustration, image, preload or decorative widget.
+ */
+.print-cover-lower {
+  grid-template-columns:minmax(0,.76fr) minmax(0,.87fr) minmax(0,.8fr);
+  gap:clamp(40px,5.4vw,100px);
+  margin-top:clamp(170px,24vw,405px);
+  padding-bottom:clamp(75px,8vw,140px);
+}
+.print-cover-statement {
+  grid-column:2;
+  max-width:465px;
+}
+.print-cover-years { grid-column:1; }
+.print-identity-caption span:last-child { color:#5c5c58; }
+.kinetic-wordmark {
+  cursor:default;
+  user-select:none;
+  -webkit-user-select:none;
+  isolation:isolate;
+}
+.kinetic-wordmark .kinetic-word {
+  display:inline-flex;
+  white-space:nowrap;
+  align-items:baseline;
+}
+.kinetic-wordmark .kinetic-glyph {
+  position:relative;
+  display:inline-block;
+  transform-origin:50% 65%;
+  white-space:pre;
+  will-change:transform;
+  touch-action:pan-y;
+}
+@media(hover:hover) and (pointer:fine) {
+  .kinetic-wordmark .kinetic-glyph { cursor:grab; }
+  .kinetic-wordmark .kinetic-glyph:active { cursor:grabbing; }
+}
+.floating-project-preview {
+  transform-origin:center;
+  border-color:#171717;
+  box-shadow:6px 9px 0 rgba(0,0,0,.10),0 20px 42px rgba(0,0,0,.07);
+}
+@media(max-width:1120px) {
+  .print-cover-lower { grid-template-columns:minmax(0,.9fr) minmax(0,1.05fr) minmax(0,.5fr); }
+}
+@media(max-width:900px) {
+  .print-cover-lower {
+    grid-template-columns:1fr 1fr;
+    gap:clamp(35px,6vw,62px);
+    margin-top:clamp(145px,18vw,210px);
+    padding-bottom:clamp(54px,7vw,90px);
+  }
+}
+@media(max-width:680px) {
+  .print-cover-lower {
+    grid-template-columns:1fr;
+    gap:64px;
+    margin-top:clamp(120px,27vw,205px);
+    padding-bottom:65px;
+  }
+  .print-cover-years,.print-cover-statement { grid-column:1; }
+  .print-cover-statement { max-width:570px; }
+  .print-identity-caption span:last-child { display:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .kinetic-wordmark .kinetic-glyph {
+    transform:none!important;
+    will-change:auto;
+    cursor:default;
+  }
+  .floating-project-preview { transform-origin:center; }
+}
+
+
+/* The letters can now fall across the existing editorial hero.
+   Their obstacles are the Projects/Process and /About labels, not
+   a new canvas or artificial floor. */
+.print-hero { overflow:visible; }
+.print-cover {
+  position:relative;
+  z-index:2;
+}
+.print-identity {
+  position:relative;
+  z-index:3;
+  overflow:visible;
+}
+.kinetic-wordmark {
+  position:relative;
+  overflow:visible;
+}
+.kinetic-wordmark .kinetic-glyph {
+  transform-origin:50% 50%;
+  touch-action:pan-y;
+}
+.print-physics-reset {
+  justify-self:end;
+  min-height:30px;
+  padding:4px 0 4px 8px;
+  border:0;
+  border-bottom:1px solid #777;
+  background:transparent;
+  color:#353535;
+  cursor:pointer;
+  white-space:nowrap;
+  text-align:right;
+  font:600 9px/1.35 var(--mono);
+}
+.print-physics-reset:hover { border-color:#111;color:#000; }
+.print-physics-reset:focus-visible { outline:2px solid #111;outline-offset:3px; }
+[data-physics-obstacle] { position:relative; }
+@media(max-width:680px) {
+  .print-physics-reset { grid-column:2;grid-row:2; }
+}
