@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { projects, visualProjects } from './data/projects.js'
 import StudioPanel from './components/StudioPanel.jsx'
 import FieldNotes from './components/FieldNotes.jsx'
-import HeroPlayground from './components/HeroPlayground.jsx'
+import ResponsiveHero from './components/ResponsiveHero.jsx'
 import QuickNavigator from './components/QuickNavigator.jsx'
 
 const content = {
@@ -203,25 +203,7 @@ export default function App() {
     </header>
 
     <main id="main">
-      <section className="hero" id="top" aria-labelledby="hero-title">
-        <div className="shell hero-grid">
-          <div className="hero-copy">
-            <div className="hero-label"><span className="status-dot" />{c.eyebrow}</div>
-            <div className="hero-title-wrap">
-              <p className="hero-kicker">{c.heroTop}</p>
-              <h1 id="hero-title" className="hero-title"><span>{c.heroName}</span><span>{c.heroName2}</span></h1>
-            </div>
-            <p className="hero-description">{c.heroText}</p>
-            <div className="hero-roles" aria-label={lang === 'pt' ? 'Áreas de atuação' : 'Fields of practice'}><span>DESIGN</span><span>{lang === 'pt' ? 'CÓDIGO' : 'CODE'}</span><span>{lang === 'pt' ? 'OFICINA' : 'WORKSHOP'}</span></div>
-            <div className="actions">
-              <a className="button button-dark" href="#projects">{c.heroAction}<span aria-hidden="true">↗</span></a>
-              <a className="button button-light" href={'mailto:' + email}>{c.heroSecond}<span aria-hidden="true">↗</span></a>
-            </div>
-            <div className="hero-secondary-links"><a className="scroll-link" href="#about">{c.scroll}</a><a className="hero-lab-anchor" href="#lab">{lang === 'pt' ? 'TESTAR O TYPEEE ↗' : 'TRY TYPEEE ↗'}</a></div>
-          </div>
-          <HeroPlayground lang={lang} />
-        </div>
-      </section>
+      <ResponsiveHero lang={lang} c={c} email={email} />
 
       <section className="lab-band" id="lab" aria-labelledby="lab-title">
         <div className="shell lab-band-grid">

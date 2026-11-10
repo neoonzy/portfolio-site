@@ -1,90 +1,187 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-const language = {
+const DURATION = 30
+const WORD_SETS = {
+  pt: [
+    'cidade', 'ideia', 'movimento', 'projeto', 'teclado', 'cultura', 'criar', 'tempo',
+    'design', 'caminho', 'oficina', 'arquivo', 'imagem', 'codigo', 'experiencia', 'rua',
+    'tecnologia', 'pesquisa', 'ritmo', 'prototipo', 'inventar', 'explorar', 'construir', 'pessoas',
+  ],
+  en: [
+    'city', 'idea', 'motion', 'project', 'keyboard', 'culture', 'create', 'time',
+    'design', 'journey', 'studio', 'archive', 'image', 'code', 'experience', 'street',
+    'technology', 'research', 'rhythm', 'prototype', 'invent', 'explore', 'build', 'people',
+  ],
+}
+
+const copy = {
   pt: {
-    eyebrow: 'TYPEEE.QUEST / MINI DESAFIO',
-    title: 'Uma frase. Um teclado. Valendo.',
-    instructions: 'Experimente um pedacinho do Typeee aqui mesmo. Sem conta, sem cronômetro obrigatório.',
-    sentences: ['ideias boas viram coisas reais.', 'a cidade também é um laboratório.', 'tudo começa com uma pergunta.'],
-    input: 'Digite o texto acima',
-    placeholder: 'Comece a digitar…',
-    accuracy: 'PRECISÃO',
-    progress: 'PROGRESSO',
-    restart: 'REINICIAR',
-    next: 'OUTRA FRASE',
-    done: 'Boa! Desafio concluído.',
-    error: 'Algumas letras estão diferentes. Você pode corrigir.',
-    link: 'JOGAR NO TYPEEE',
-    foot: 'UMA AMOSTRA DO PROJETO / TYPEEE',
+    heading: 'KEEP', subheading: 'TYPING', eyebrow: '01 / CLASSIC — PT-BR — 30S', run: 'SOLO RUN',
+    solo: 'PARTIDA SOLO', word: 'PALAVRA', time: 'TIME LEFT', speed: 'SPEED', accuracy: 'ACCURACY',
+    combo: 'COMBO', text: 'TEXTO', idle: 'O TEMPO COMEÇA NA PRIMEIRA TECLA',
+    running: 'DIGITE A PALAVRA E PRESSIONE ESPAÇO', typing: 'SUA DIGITAÇÃO',
+    placeholder: 'toque aqui e comece a digitar...', help: 'ERROU? USE BACKSPACE. ESPAÇO AVANÇA PARA A PRÓXIMA PALAVRA.',
+    reset: 'REINICIAR', points: 'PTS', best: 'BEST COMBO', disclaimer: 'MINI DEMO · PARTIDA LOCAL · NÃO OFICIAL',
+    finished: 'BOA PARTIDA.', result: 'TEMPO ESGOTADO / MINI DEMO', again: 'TENTAR DE NOVO', visit: 'JOGAR NO TYPEEE',
   },
   en: {
-    eyebrow: 'TYPEEE.QUEST / MINI CHALLENGE',
-    title: 'One sentence. One keyboard. Go.',
-    instructions: 'Try a little piece of Typeee right here. No account, no countdown required.',
-    sentences: ['good ideas become real things.', 'the city is also a workshop.', 'everything starts with a question.'],
-    input: 'Type the sentence above',
-    placeholder: 'Start typing…',
-    accuracy: 'ACCURACY',
-    progress: 'PROGRESS',
-    restart: 'RESTART',
-    next: 'NEW SENTENCE',
-    done: 'Nice! Challenge completed.',
-    error: 'A few characters differ. You can correct them.',
-    link: 'PLAY TYPEEE',
-    foot: 'A SMALL TASTE OF THE PROJECT / TYPEEE',
+    heading: 'KEEP', subheading: 'TYPING', eyebrow: '01 / CLASSIC — EN — 30S', run: 'SOLO RUN',
+    solo: 'SOLO GAME', word: 'WORD', time: 'TIME LEFT', speed: 'SPEED', accuracy: 'ACCURACY',
+    combo: 'COMBO', text: 'TEXT', idle: 'TIMER STARTS ON THE FIRST KEY',
+    running: 'TYPE THE WORD, THEN PRESS SPACE', typing: 'YOUR TYPING',
+    placeholder: 'tap here and start typing...', help: 'BACKSPACE TO CORRECT. SPACE TO GO TO THE NEXT WORD.',
+    reset: 'RESTART', points: 'PTS', best: 'BEST COMBO', disclaimer: 'MINI DEMO · LOCAL SESSION · UNRANKED',
+    finished: 'GOOD GAME.', result: 'TIME IS UP / MINI DEMO', again: 'TRY AGAIN', visit: 'PLAY TYPEEE',
   },
 }
 
-export default function StudioPanel({ lang }) {
-  const [round, setRound] = useState(0)
-  const [typed, setTyped] = useState('')
-  const c = language[lang] || language.pt
-  const target = Array.from(c.sentences[round])
-  const entered = Array.from(typed)
-  const correct = entered.reduce((count, letter, i) => count + (letter === target[i] ? 1 : 0), 0)
-  const accuracy = entered.length ? Math.round(correct / entered.length * 100) : 100
-  const progress = Math.round(entered.length / target.length * 100)
-  const complete = typed === c.sentences[round]
-  const hasMistakes = correct !== entered.length
+function initialGame() {
+  return { phase: 'idle', index: 0, draft: '', total: 0, correct: 0, combo: 0, bestCombo: 0, points: 0, remaining: DURATION }
+}
 
-  useEffect(() => { setTyped(''); setRound(0) }, [lang])
+function wordAccuracy(draft, word) {
+  const characters = Array.from(draft)
+  const expected = Array.from(word)
+  return characters.reduce((sum, char, i) => sum + (char === expected[i] ? 1 : 0), 0)
+}
+
+export default function StudioPanel({ lang }) {
+  const c = copy[lang] || copy.pt
+  const words = WORD_SETS[lang] || WORD_SETS.pt
+  const [game, setGame] = useState(initialGame)
+  const startedAt = useRef(null)
+  const inputRef = useRef(null)
+  const gameRef = useRef(game)
+  gameRef.current = game
+
+  useEffect(() => { startedAt.current = null; setGame(initialGame()) }, [lang])
+
+  useEffect(() => {
+    if (game.phase !== 'running') return
+    const interval = window.setInterval(() => {
+      const remaining = Math.max(0, DURATION - (Date.now() - startedAt.current) / 1000)
+      setGame(previous => previous.phase !== 'running' ? previous : ({
+        ...previous,
+        remaining,
+        phase: remaining === 0 ? 'finished' : previous.phase,
+      }))
+    }, 120)
+    return () => window.clearInterval(interval)
+  }, [game.phase])
+
+  const activeWord = words[game.index % words.length]
+  const liveCorrect = wordAccuracy(game.draft, activeWord)
+  const elapsed = game.phase === 'idle' ? 0 : Math.max(.001, DURATION - game.remaining)
+  const wpm = Math.max(0, Math.round((game.correct + liveCorrect) / 5 / (elapsed / 60))) || 0
+  const accuracy = game.total + game.draft.length
+    ? Math.round((game.correct + liveCorrect) / (game.total + game.draft.length) * 100)
+    : 100
+  const visibleWords = useMemo(() => Array.from({ length: 14 }, (_, n) => words[(game.index + n) % words.length]), [words, game.index])
+
+  const restart = () => {
+    startedAt.current = null
+    setGame(initialGame())
+    if (document.activeElement === inputRef.current) inputRef.current?.focus()
+  }
+
+  const onChange = (event) => {
+    if (gameRef.current.phase === 'finished') return
+    const raw = event.target.value
+    if (gameRef.current.phase === 'idle' && raw.length > 0) {
+      startedAt.current = Date.now()
+    }
+    const current = gameRef.current
+    if (raw.includes(' ')) {
+      const typedWord = raw.split(' ')[0]
+      if (!typedWord) { setGame(previous => ({ ...previous, draft: '' })); return }
+      const word = words[current.index % words.length]
+      const correct = wordAccuracy(typedWord, word)
+      const matched = typedWord === word
+      setGame(previous => ({
+        ...previous,
+        phase: previous.phase === 'idle' ? 'running' : previous.phase,
+        draft: '',
+        index: previous.index + 1,
+        total: previous.total + Array.from(typedWord).length,
+        correct: previous.correct + correct,
+        combo: matched ? previous.combo + 1 : 0,
+        bestCombo: Math.max(previous.bestCombo, matched ? previous.combo + 1 : 0),
+        points: previous.points + (matched ? word.length * 10 : correct * 3),
+      }))
+    } else {
+      setGame(previous => ({
+        ...previous,
+        phase: previous.phase === 'idle' && raw.length ? 'running' : previous.phase,
+        draft: raw,
+      }))
+    }
+  }
 
   return (
-    <div className="studio-typeee" aria-label={lang === 'pt' ? 'Mini desafio de digitação Typeee' : 'Typeee mini typing challenge'}>
-      <div className="studio-typeee-bar"><span>{c.eyebrow}</span><span className="studio-typeee-dot">● LIVE</span></div>
-      <div className="studio-typeee-body">
-        <div className="studio-typeee-heading">
-          <strong>{c.title}</strong>
-          <p>{c.instructions}</p>
-        </div>
-        <div className="studio-typeee-console">
-          <div className="studio-typeee-top"><span>INPUT / 0{round + 1}</span><span>{target.length} CHAR.</span></div>
-          <p className="studio-typeee-target" aria-label={c.sentences[round]}>
-            {target.map((letter, i) => <span key={i} aria-hidden="true"
-              className={i < entered.length ? (letter === entered[i] ? 'is-correct' : 'is-error') : ''}>{letter}</span>)}
-          </p>
-          <label htmlFor="studio-typeee-input">{c.input}</label>
-          <input id="studio-typeee-input" value={typed} type="text" maxLength={target.length}
-            autoComplete="off" autoCapitalize="off" spellCheck={false} autoCorrect="off"
-            placeholder={c.placeholder} onChange={(event) => setTyped(event.target.value)} />
-          <div className="studio-typeee-progress" role="progressbar" aria-label={c.progress}
-            aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}>
-            <span style={{ width: progress + '%' }} />
+    <div className="typeee-embed" aria-label={lang === 'pt' ? 'Demonstração do modo Classic do Typeee' : 'Typeee Classic mode demo'}>
+      <div className="typeee-embed-top">
+        <a className="typeee-brand" href="https://typeee.quest" target="_blank" rel="noopener noreferrer" aria-label="Abrir Typeee">typeee<span>/</span></a>
+        <span>EST. 2026 — THE TYPING CLUB</span>
+        <span className="typeee-embed-demo">DEMO / 001</span>
+      </div>
+      <div className="typeee-breadcrumb"><span>{c.eyebrow}</span><span>{c.run}</span></div>
+      <div className="typeee-arena">
+        {game.phase === 'finished' ? (
+          <div className="typeee-embed-result" role="status">
+            <span className="typeee-caption">{c.result}</span>
+            <h3>{c.finished}<span>/</span></h3>
+            <div className="typeee-result-metrics">
+              <div><span>WPM</span><strong>{wpm}</strong></div>
+              <div><span>ACC.</span><strong>{accuracy}%</strong></div>
+              <div><span>{c.best}</span><strong>{game.bestCombo}×</strong></div>
+            </div>
+            <button type="button" className="typeee-result-restart" onClick={restart}>{c.again} <span aria-hidden="true">↗</span></button>
           </div>
-          <div className="studio-typeee-meta">
-            <span>{c.accuracy} <b>{accuracy}%</b></span><span>{c.progress} <b>{progress}%</b></span>
-          </div>
-          <div className="studio-typeee-actions">
-            <button type="button" onClick={() => setTyped('')}>{c.restart} ↺</button>
-            <button type="button" onClick={() => { setRound(i => (i + 1) % c.sentences.length); setTyped('') }}>{c.next} ↗</button>
-          </div>
-          <p className="studio-typeee-feedback" role="status">
-            {complete ? c.done : hasMistakes ? c.error : '\u00a0'}
-          </p>
-        </div>
-        <div className="studio-typeee-bottom"><span>{c.foot}</span>
-          <a href="https://typeee.quest" target="_blank" rel="noopener noreferrer">{c.link} ↗</a>
-        </div>
+        ) : (
+          <>
+            <div className="typeee-arena-header">
+              <h3>{c.heading}<span>{c.subheading}<i>.</i></span></h3>
+              <span>{c.solo}<br/>{c.word} {String(game.index + 1).padStart(3,'0')}</span>
+            </div>
+            <div className="typeee-hud" aria-label={lang === 'pt' ? 'Estatísticas da partida' : 'Game stats'}>
+              <div><span>{c.time}</span><strong>{String(Math.ceil(game.remaining)).padStart(2,'0')}<small>S</small></strong></div>
+              <div><span>{c.speed}</span><strong>{wpm}<small>WPM</small></strong></div>
+              <div><span>{c.accuracy}</span><strong>{accuracy}<small>%</small></strong></div>
+              <div><span>{c.combo}</span><strong>{game.combo}<small>X</small></strong></div>
+            </div>
+            <div className="typeee-meter" role="progressbar" aria-label={c.time} aria-valuemin={0} aria-valuemax={DURATION} aria-valuenow={Math.round(DURATION - game.remaining)}>
+              <span style={{ width: ((DURATION - game.remaining) / DURATION * 100) + '%' }} />
+            </div>
+            <div className="typeee-typing">
+              <div className="typeee-caption"><span>{c.text} / {String(game.index + 1).padStart(3,'0')}</span><span>{game.phase === 'idle' ? c.idle : c.running}</span></div>
+              <div className="typeee-words" aria-label={visibleWords.join(' ')}>
+                {visibleWords.map((word,n) => (
+                  <span key={game.index + '-' + n} className={'typeee-word' + (n === 0 ? ' is-active' : '')} aria-hidden="true">
+                    {Array.from(word).map((char,i) => (
+                      <span key={i} className={n !== 0 || game.draft[i] === undefined ? '' : game.draft[i] === char ? 'is-correct' : 'is-incorrect'}>{char}</span>
+                    ))}
+                    {n === 0 && game.draft.length > word.length && <span className="is-incorrect">{game.draft.slice(word.length)}</span>}
+                  </span>
+                ))}
+              </div>
+              <label htmlFor="typeee-preview-input" className="typeee-typing-label">{c.typing}</label>
+              <input id="typeee-preview-input" ref={inputRef} type="text" value={game.draft}
+                autoComplete="off" autoCapitalize="off" autoCorrect="off" spellCheck={false}
+                onChange={onChange} className="typeee-input" placeholder={c.placeholder}
+                aria-describedby="typeee-preview-help"
+                onPaste={e => e.preventDefault()} onDrop={e => e.preventDefault()} />
+              <p id="typeee-preview-help" className="typeee-help">{c.help}</p>
+            </div>
+            <div className="typeee-arena-footer">
+              <div><span>{c.points} / {game.points}</span><span>{c.best} / {game.bestCombo}</span></div>
+              <button type="button" onClick={restart}>↻ {c.reset}</button>
+            </div>
+          </>
+        )}
+      </div>
+      <div className="typeee-embed-bottom">
+        <span>{c.disclaimer}</span>
+        <a href="https://typeee.quest" target="_blank" rel="noopener noreferrer">{c.visit} ↗</a>
       </div>
     </div>
   )
