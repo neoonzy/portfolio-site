@@ -4,6 +4,8 @@ import StudioPanel from './components/StudioPanel.jsx'
 import FieldNotes from './components/FieldNotes.jsx'
 import ResponsiveHero from './components/ResponsiveHero.jsx'
 import QuickNavigator from './components/QuickNavigator.jsx'
+import FloatingProjectPreview from './components/FloatingProjectPreview.jsx'
+import LayoutGridOverlay from './components/LayoutGridOverlay.jsx'
 
 const content = {
   pt: {
@@ -161,6 +163,9 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('')
   const [emailCopied, setEmailCopied] = useState(false)
+  const [gridEnabled, setGridEnabled] = useState(false)
+  const [projectView, setProjectView] = useState('grid')
+  const [preview, setPreview] = useState(null)
   const c = content[lang]
 
   useEffect(() => {
@@ -181,6 +186,43 @@ export default function App() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const onKeyDown = event => {
+      if (event.key.toLowerCase() !== 'g' || event.ctrlKey || event.metaKey || event.altKey || event.repeat) return
+      const element = event.target
+      if (element instanceof HTMLElement && (element.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName))) return
+      if (document.querySelector('dialog[open]')) return
+      event.preventDefault()
+      setGridEnabled(value => !value)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
+
+  useEffect(() => {
+    const close = () => setPreview(null)
+    window.addEventListener('scroll', close, { passive: true })
+    return () => window.removeEventListener('scroll', close)
+  }, [])
+
+  const onPreviewEnter = (project, event) => {
+    // Touch devices keep the page clean and retain normal project navigation.
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    setPreview({ project, mode: 'pointer', x: event.clientX, y: event.clientY })
+  }
+  const onPreviewFocus = (project, event) => {
+    const bounds = event.currentTarget.getBoundingClientRect()
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    setPreview({
+      project,
+      mode: 'focus',
+      x: bounds.right,
+      y: bounds.top,
+      anchor: { left: bounds.left, right: bounds.right, top: bounds.top, bottom: bounds.bottom },
+    })
+  }
+  const onPreviewLeave = () => setPreview(null)
+
   const copyEmail = async () => {
     try { await navigator.clipboard.writeText(email); setEmailCopied(true); setTimeout(() => setEmailCopied(false), 2200) }
     catch { window.location.href = 'mailto:' + email }
@@ -196,6 +238,13 @@ export default function App() {
         </nav>
         <div className="header-actions">
           <QuickNavigator lang={lang} onNavigate={() => setMenuOpen(false)} />
+          <button type="button" className={'grid-toggle' + (gridEnabled ? ' is-on' : '')}
+            aria-label={lang === 'pt' ? (gridEnabled ? 'Desligar grade de construção' : 'Ligar grade de construção') : (gridEnabled ? 'Hide layout grid' : 'Show layout grid')}
+            aria-pressed={gridEnabled} title={lang === 'pt' ? 'Grade do layout · G' : 'Layout grid · G'}
+            onClick={() => setGridEnabled(value => !value)}>
+            <span className="grid-toggle-icon" aria-hidden="true"><i/><i/><i/><i/></span>
+            <span>GRID {gridEnabled ? 'ON' : 'OFF'}</span>
+          </button>
           <button type="button" className="lang-button" aria-label={c.language} onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}>{lang.toUpperCase()} <span aria-hidden="true">↔</span></button>
           <button type="button" className="menu-button" aria-label={c.menu} aria-controls="main-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? '✕' : '☰'}</button>
         </div>
@@ -203,7 +252,8 @@ export default function App() {
     </header>
 
     <main id="main">
-      <ResponsiveHero lang={lang} c={c} email={email} />
+      <ResponsiveHero lang={lang} c={c} email={email}
+        onPreviewEnter={onPreviewEnter} onPreviewFocus={onPreviewFocus} onPreviewLeave={onPreviewLeave} />
 
       <section className="section about-section" id="about">
         <div className="shell">
@@ -251,11 +301,22 @@ export default function App() {
       <section className="section projects-section" id="projects">
         <div className="shell">
           <SectionHeading label={c.labelProjects} title={c.projectsTitle} intro={c.projectsIntro} />
-          <div className="project-grid">{projects.map((project, i) => <article className="project-card" key={project.slug}>
+          <div className="project-view-tools">
+            <span>{lang === 'pt' ? 'EXIBIÇÃO / SELECIONE UM FORMATO' : 'DISPLAY / CHOOSE A FORMAT'}</span>
+            <div className="project-view-switch" role="group" aria-label={lang === 'pt' ? 'Formato de apresentação dos projetos' : 'Project presentation layout'}>
+              <button type="button" aria-pressed={projectView === 'grid'} className={projectView === 'grid' ? 'is-active' : ''}
+                onClick={() => setProjectView('grid')}>{lang === 'pt' ? '▦ GRADE' : '▦ GRID'}</button>
+              <button type="button" aria-pressed={projectView === 'list'} className={projectView === 'list' ? 'is-active' : ''}
+                onClick={() => setProjectView('list')}>{lang === 'pt' ? '≡ ÍNDICE' : '≡ INDEX'}</button>
+            </div>
+          </div>
+          <div className={'project-grid' + (projectView === 'list' ? ' is-list' : '')}>{projects.map((project, i) => <article className="project-card" key={project.slug}>
             <div className="project-visual" aria-hidden="true"><div className="project-visual-top"><span>WORK / 0{i + 1}</span><span>↗</span></div>{project.image ? <img src={project.image} alt="" loading="lazy" /> : <div className="project-monogram">{project.title}</div>}<div className="visual-bottom">{project.category[lang]}</div></div>
             <div className="project-body">
               <div className="project-meta"><span>{project.category[lang]}</span><span>0{i + 1} / 0{projects.length}</span></div>
-              <h3>{project.title}</h3>
+              <h3><a className="project-preview-link" href={project.url} target="_blank" rel="noopener noreferrer"
+                onMouseEnter={event => onPreviewEnter(project, event)} onMouseLeave={onPreviewLeave}
+                onFocus={event => onPreviewFocus(project, event)} onBlur={onPreviewLeave}>{project.title}</a></h3>
               <p>{project.description[lang]}</p>
               <div className="tags">{project.tags.map(tag => <span className="tag" key={tag}>{tag}</span>)}</div>
               <details className="project-details"><summary>{lang === 'pt' ? 'SOBRE O PROJETO' : 'ABOUT THIS PROJECT'} <span>+</span></summary><p>{project.details?.[lang] || project.description[lang]}</p><dl><div><dt>{lang === 'pt' ? 'ATUAÇÃO' : 'ROLE'}</dt><dd>{project.role?.[lang] || 'Design / desenvolvimento'}</dd></div></dl></details>
@@ -328,6 +389,9 @@ export default function App() {
         </div>
       </section>
     </main>
+
+    <LayoutGridOverlay enabled={gridEnabled} />
+    <FloatingProjectPreview preview={preview} lang={lang} />
 
     <footer className="footer">
       <div className="shell footer-inner">
