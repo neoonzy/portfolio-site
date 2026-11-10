@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import { projects, visualProjects } from './data/projects.js'
 import StudioPanel from './components/StudioPanel.jsx'
 import FieldNotes from './components/FieldNotes.jsx'
-import PhotoArchive from './components/PhotoArchive.jsx'
+import HeroPlayground from './components/HeroPlayground.jsx'
+import QuickNavigator from './components/QuickNavigator.jsx'
 
 const content = {
   pt: {
-    navigation: { about: 'Sobre', experience: 'Trajetória', projects: 'Projetos', photography: 'Fotografia', notes: 'Processos', gallery: 'Design', skills: 'Ferramentas', contact: 'Contato' },
+    navigation: { about: 'Sobre', experience: 'Trajetória', projects: 'Projetos', notes: 'Processos', gallery: 'Design', skills: 'Ferramentas', contact: 'Contato' },
     eyebrow: 'RECIFE, BRASIL  /  DESIGN + TECNOLOGIA',
     heroTop: 'OLÁ, EU SOU',
     heroName: 'LUIS EDUARDO',
@@ -44,20 +45,20 @@ const content = {
     projectsIntro: 'Interfaces, iniciativas independentes e experiências que misturam o técnico e o criativo.',
     projectVisit: 'ABRIR PROJETO ↗',
     source: 'CÓDIGO ↗',
-    labelGallery: '06 / PORTFÓLIO VISUAL',
+    labelGallery: '05 / PORTFÓLIO VISUAL',
     galleryTitle: 'PORTFÓLIO\nVISUAL.',
     galleryIntro: 'Seleção visual de projetos autorais e interfaces desenvolvidas. Explore os trabalhos e conheça suas aplicações.',
     galleryCard: 'TRABALHO VISUAL',
     galleryMore: 'VER TODOS NO BEHANCE ↗',
     galleryFallback: 'Abrir no Behance ↗',
-    labelSkills: '07 / CAIXA DE FERRAMENTAS',
+    labelSkills: '06 / CAIXA DE FERRAMENTAS',
     skillsTitle: 'O QUE EU\nUSO E FAÇO.',
     skills: [
       { title: 'INTERFACES & WEB', items: ['Figma', 'UI/UX Design', 'React', 'JavaScript', 'HTML / CSS', 'Styled Components', 'Material UI'] },
       { title: 'OFICINA & PROTÓTIPOS', items: ['Modelagem 3D', 'Fusion 360', 'SketchUp', 'Impressão 3D', 'Corte a laser', 'Arduino', 'Raspberry Pi'] },
       { title: 'CRIAÇÃO & COMUNICAÇÃO', items: ['Identidade visual', 'Fotografia', 'Produção de conteúdo', 'Diagramação', 'Comunicação de projetos'] },
     ],
-    labelContact: '08 / CONTATO',
+    labelContact: '07 / CONTATO',
     contactTitle: 'TEM UMA IDEIA?\nBORA FAZER.',
     contactText: 'Aberto a conversas, projetos e colaborações entre design, tecnologia, fabricação digital e iniciativas culturais.',
     emailAction: 'ME MANDA UM E-MAIL ↗',
@@ -71,7 +72,7 @@ const content = {
     sourceLabel: 'Projetos do portfólio CIn',
   },
   en: {
-    navigation: { about: 'About', experience: 'Journey', projects: 'Projects', photography: 'Photography', notes: 'Process', gallery: 'Design', skills: 'Toolbox', contact: 'Contact' },
+    navigation: { about: 'About', experience: 'Journey', projects: 'Projects', notes: 'Process', gallery: 'Design', skills: 'Toolbox', contact: 'Contact' },
     eyebrow: 'RECIFE, BRAZIL  /  DESIGN + TECHNOLOGY',
     heroTop: "HEY, I'M",
     heroName: 'LUIS EDUARDO',
@@ -109,20 +110,20 @@ const content = {
     projectsIntro: 'Interfaces, independent initiatives and experiments combining technical and creative practice.',
     projectVisit: 'VIEW PROJECT ↗',
     source: 'SOURCE ↗',
-    labelGallery: '06 / VISUAL WORK',
+    labelGallery: '05 / VISUAL WORK',
     galleryTitle: 'SELECTED\nVISUALS.',
     galleryIntro: 'A visual selection of independent projects and interfaces. Explore the work and its applications.',
     galleryCard: 'VISUAL PROJECT',
     galleryMore: 'ALL WORK ON BEHANCE ↗',
     galleryFallback: 'Open on Behance ↗',
-    labelSkills: '07 / TOOLBOX',
+    labelSkills: '06 / TOOLBOX',
     skillsTitle: 'TOOLS &\nPRACTICE.',
     skills: [
       { title: 'INTERFACES & WEB', items: ['Figma', 'UI/UX Design', 'React', 'JavaScript', 'HTML / CSS', 'Styled Components', 'Material UI'] },
       { title: 'MAKING & PROTOTYPES', items: ['3D modeling', 'Fusion 360', 'SketchUp', '3D printing', 'Laser cutting', 'Arduino', 'Raspberry Pi'] },
       { title: 'DESIGN & COMMUNICATION', items: ['Brand identity', 'Photography', 'Content creation', 'Editorial layout', 'Project communications'] },
     ],
-    labelContact: '08 / CONTACT',
+    labelContact: '07 / CONTACT',
     contactTitle: 'GOT AN IDEA?\nLET’S MAKE IT.',
     contactText: 'Open to projects and collaborations across design, technology, digital fabrication and culture.',
     emailAction: 'SEND ME AN EMAIL ↗',
@@ -137,7 +138,7 @@ const content = {
   },
 }
 
-const ids = ['about', 'experience', 'projects', 'photography', 'notes', 'gallery', 'skills', 'contact']
+const ids = ['about', 'experience', 'projects', 'notes', 'gallery', 'skills', 'contact']
 const links = [
   { name: 'GITHUB', href: 'https://github.com/neoonzy' },
   { name: 'BEHANCE', href: 'https://www.behance.net/lustosabr' },
@@ -194,6 +195,7 @@ export default function App() {
           {ids.map(id => <a key={id} href={'#' + id} className={activeSection === id ? 'is-active' : ''} onClick={() => setMenuOpen(false)}>{c.navigation[id]}</a>)}
         </nav>
         <div className="header-actions">
+          <QuickNavigator lang={lang} onNavigate={() => setMenuOpen(false)} />
           <button type="button" className="lang-button" aria-label={c.language} onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}>{lang.toUpperCase()} <span aria-hidden="true">↔</span></button>
           <button type="button" className="menu-button" aria-label={c.menu} aria-controls="main-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? '✕' : '☰'}</button>
         </div>
@@ -215,18 +217,9 @@ export default function App() {
               <a className="button button-dark" href="#projects">{c.heroAction}<span aria-hidden="true">↗</span></a>
               <a className="button button-light" href={'mailto:' + email}>{c.heroSecond}<span aria-hidden="true">↗</span></a>
             </div>
-            <div className="hero-secondary-links"><a className="scroll-link" href="#about">{c.scroll}</a><a className="hero-lab-anchor" href="#lab">{lang === 'pt' ? 'EXPLORAR O LABORATÓRIO ↗' : 'EXPLORE THE LAB ↗'}</a></div>
+            <div className="hero-secondary-links"><a className="scroll-link" href="#about">{c.scroll}</a><a className="hero-lab-anchor" href="#lab">{lang === 'pt' ? 'TESTAR O TYPEEE ↗' : 'TRY TYPEEE ↗'}</a></div>
           </div>
-          <figure className="hero-photo">
-            <div className="hero-photo-frame">
-              <img src="/photography/luz-curral.webp" width="850" height="567" fetchPriority="high" alt={lang === 'pt' ? 'Pessoa de costas entre animais sob luz dourada e poeira suspensa' : 'A person among animals, photographed from behind in golden light and dust'} />
-              <span className="hero-photo-mark" aria-hidden="true">LE / 001</span>
-            </div>
-            <figcaption>
-              <span>{lang === 'pt' ? 'OLHAR / FOTOGRAFIA' : 'OBSERVATIONS / PHOTOGRAPHY'}</span>
-              <span>{lang === 'pt' ? 'UM ARQUIVO EM CONSTRUÇÃO' : 'AN ARCHIVE IN PROGRESS'}</span>
-            </figcaption>
-          </figure>
+          <HeroPlayground lang={lang} />
         </div>
       </section>
 
@@ -234,8 +227,8 @@ export default function App() {
         <div className="shell lab-band-grid">
           <div className="lab-band-copy">
             <span className="eyebrow">{lang === 'pt' ? 'EXPERIMENTE / 001' : 'EXPERIMENT / 001'}</span>
-            <h2 id="lab-title">{lang === 'pt' ? <>UM SITE PARA <em>EXPLORAR.</em></> : <>A SITE TO <em>EXPLORE.</em></>}</h2>
-            <p>{lang === 'pt' ? 'Nem todo trabalho cabe em uma imagem. Algumas ideias ficam melhores quando você pode tocar, digitar ou mudar a perspectiva.' : 'Not every project fits inside a picture. Some ideas work better when you can touch, type or change the perspective.'}</p>
+            <h2 id="lab-title">{lang === 'pt' ? <>UM POUCO DE <em>TYPEEE.</em></> : <>A TASTE OF <em>TYPEEE.</em></>}</h2>
+            <p>{lang === 'pt' ? 'Um pequeno desafio de digitação para você conhecer um dos meus projetos sem sair desta página.' : 'A tiny typing challenge to get a feel for one of my projects without leaving this page.'}</p>
             <a href="#projects">{lang === 'pt' ? 'CONHECER OS PROJETOS ↗' : 'DISCOVER THE PROJECTS ↗'}</a>
           </div>
           <StudioPanel lang={lang} />
@@ -294,8 +287,6 @@ export default function App() {
           </article>)}</div>
         </div>
       </section>
-
-      <PhotoArchive lang={lang} />
 
       <FieldNotes lang={lang} />
 
