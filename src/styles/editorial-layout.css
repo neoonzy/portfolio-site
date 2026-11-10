@@ -91,7 +91,7 @@ body { background:var(--paper); }
   gap:10px;
 }
 .print-cover-years>span,
-.print-minilabel,.print-cover-statement-links,.print-art-caption,
+.print-minilabel,.print-cover-statement-links,
 .print-cover-years>a,.print-index-detail-head,.print-index-detail-foot,
 .print-hero-footer {
   font:600 10px/1.45 var(--mono);
@@ -120,27 +120,6 @@ body { background:var(--paper); }
 .print-cover-statement-links { display:flex;gap:20px;flex-wrap:wrap;margin-top:27px; }
 .print-cover-statement-links a { border-bottom:1px solid #858581;padding-bottom:4px; }
 .print-cover-statement-links a:hover { border-color:#111; }
-.print-cover-art { min-width:0; }
-.print-linework {
-  position:relative;
-  height:clamp(188px,20vw,308px);
-  overflow:hidden;
-  border-radius:0 0 22% 0;
-  background:repeating-linear-gradient(to bottom,#111 0,#111 3px,#f8f8f7 3px,#f8f8f7 7px);
-}
-.print-linework-cutout {
-  position:absolute;
-  top:6%;right:15%;bottom:9%;left:24%;
-  background:#f8f8f7;
-  clip-path:polygon(54% 0,79% 0,44% 100%,19% 100%);
-}
-.print-linework-code {
-  position:absolute;bottom:13px;left:14px;
-  font:600 10px/1 var(--mono);
-  background:#f8f8f7;padding:6px 9px;
-}
-.print-art-caption { display:block;border-bottom:1px solid var(--ink);padding:8px 0 3px; }
-
 /* INDEX / 02: navigation inside the layout, not a set of cards */
 .print-index { margin-top:clamp(125px,16vw,270px); }
 .print-index-header {
@@ -427,7 +406,6 @@ body { background:var(--paper); }
   .print-cover-lower { grid-template-columns:1fr 1fr;gap:55px;margin-top:155px; }
   .print-cover-years { grid-column:1; }
   .print-cover-statement { grid-column:2; }
-  .print-cover-art { grid-column:2;max-width:340px; }
   .print-index-grid { grid-template-columns:1fr;gap:60px; }
   .print-index-detail { max-width:690px; }
   .section-heading { grid-template-columns:1fr;gap:18px; }
@@ -462,11 +440,9 @@ body { background:var(--paper); }
   .print-identity-caption span:nth-child(3) { text-align:left; }
   .print-identity-caption span:nth-child(4) { text-align:right; }
   .print-cover-lower { grid-template-columns:1fr;gap:52px;margin-top:155px;padding-bottom:28px; }
-  .print-cover-years,.print-cover-statement,.print-cover-art { grid-column:1; }
+  .print-cover-years,.print-cover-statement { grid-column:1; }
   .print-cover-years strong { font-size:clamp(51px,12vw,76px); }
   .print-cover-statement p { font-size:17px;line-height:1.5; }
-  .print-cover-art { max-width:none; }
-  .print-linework { height:250px; }
   .print-index { margin-top:120px; }
   .print-index-header { grid-template-columns:55px 1fr auto;min-height:48px;font-size:8px;gap:6px; }
   .print-index-header span:last-child { font-size:8px; }
