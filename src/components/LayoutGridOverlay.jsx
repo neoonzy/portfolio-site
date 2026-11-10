@@ -7,7 +7,12 @@ export default function LayoutGridOverlay({ enabled }) {
       <div className="layout-grid-columns">
         {columns.map(index => <span className="layout-grid-column" key={index} />)}
       </div>
-      <div className="layout-grid-legend"><span>GRID / 12 COLUMNS</span><span>LEL — 2026</span></div>
+      <div className="layout-grid-legend">
+        <span className="grid-legend-desktop">GRID / 12 COL</span>
+        <span className="grid-legend-tablet">GRID / 06 COL</span>
+        <span className="grid-legend-mobile">GRID / 04 COL</span>
+        <span>LEL — 2026</span>
+      </div>
     </div>
   )
 }
