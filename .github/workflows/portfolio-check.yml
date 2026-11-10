@@ -8,6 +8,7 @@ on:
       - feat/hero-experimental-typeee-fiel
       - feat/editorial-white-space-v2
       - feat/editorial-grotesk-grid
+      - feat/interactive-previews-grid-physics
   pull_request:
     branches:
       - main

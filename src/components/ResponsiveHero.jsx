@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { projects } from '../data/projects.js'
+import MagneticStamp from './MagneticStamp.jsx'
 
 /**
  * Graphic editorial front page inspired by Swiss grids and printed portfolios.
  * No initial animation, artificial motion studies, or personal photography.
  * The project index is the only interaction in this section.
  */
-export default function ResponsiveHero({ lang, c, email }) {
+export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPreviewFocus, onPreviewLeave }) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const selected = projects[selectedIndex]
   const pt = lang === 'pt'
@@ -49,12 +50,13 @@ export default function ResponsiveHero({ lang, c, email }) {
                 <a href={'mailto:' + email}>{pt ? 'CONTATO' : 'CONTACT'} ↗</a>
               </div>
             </div>
-            <div className="print-cover-art" aria-hidden="true">
-              <div className="print-linework">
+            <div className="print-cover-art">
+              <div className="print-linework" aria-hidden="true">
                 <div className="print-linework-cutout" />
                 <span className="print-linework-code">LEL — 01</span>
               </div>
-              <span className="print-art-caption">STUDY / PRINTED FORM</span>
+              <MagneticStamp lang={lang} />
+              <span className="print-art-caption">{pt ? 'ARRASTE O CARIMBO / SOLTE PARA VOLTAR' : 'DRAG THE STAMP / RELEASE TO SPRING BACK'}</span>
             </div>
           </div>
         </div>
@@ -73,9 +75,11 @@ export default function ResponsiveHero({ lang, c, email }) {
                   type="button"
                   aria-pressed={selectedIndex === index}
                   className={'print-index-item' + (selectedIndex === index ? ' is-selected' : '')}
-                  onFocus={() => setSelectedIndex(index)}
-                  onMouseEnter={() => setSelectedIndex(index)}
-                  onClick={() => setSelectedIndex(index)}
+                  onFocus={event => { setSelectedIndex(index); onPreviewFocus?.(project, event) }}
+                  onBlur={onPreviewLeave}
+                  onMouseEnter={event => { setSelectedIndex(index); onPreviewEnter?.(project, event) }}
+                  onMouseLeave={onPreviewLeave}
+                  onClick={() => { setSelectedIndex(index); onPreviewLeave?.() }}
                 >
                   <span>{String(index + 1).padStart(2, '0')}</span>
                   <strong>{project.title}</strong>
