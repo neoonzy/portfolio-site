@@ -72,3 +72,45 @@
   }
   .floating-project-preview { transform-origin:center; }
 }
+
+
+/* The letters can now fall across the existing editorial hero.
+   Their obstacles are the Projects/Process and /About labels, not
+   a new canvas or artificial floor. */
+.print-hero { overflow:visible; }
+.print-cover {
+  position:relative;
+  z-index:2;
+}
+.print-identity {
+  position:relative;
+  z-index:3;
+  overflow:visible;
+}
+.kinetic-wordmark {
+  position:relative;
+  overflow:visible;
+}
+.kinetic-wordmark .kinetic-glyph {
+  transform-origin:50% 50%;
+  touch-action:pan-y;
+}
+.print-physics-reset {
+  justify-self:end;
+  min-height:30px;
+  padding:4px 0 4px 8px;
+  border:0;
+  border-bottom:1px solid #777;
+  background:transparent;
+  color:#353535;
+  cursor:pointer;
+  white-space:nowrap;
+  text-align:right;
+  font:600 9px/1.35 var(--mono);
+}
+.print-physics-reset:hover { border-color:#111;color:#000; }
+.print-physics-reset:focus-visible { outline:2px solid #111;outline-offset:3px; }
+[data-physics-obstacle] { position:relative; }
+@media(max-width:680px) {
+  .print-physics-reset { grid-column:2;grid-row:2; }
+}
