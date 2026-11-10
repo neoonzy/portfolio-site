@@ -1,0 +1,322 @@
+/* Arquivo fotográfico / segunda iteração da oficina editorial
+ * Somente fotos fornecidas para o portfólio; preserva conteúdo e navegação antigos.
+ */
+
+/* Hero como primeira página de um ensaio, sem suprimir CTAs profissionais. */
+.hero-grid {
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr);
+  gap: clamp(32px, 5vw, 86px);
+  align-items: center;
+}
+.hero-photo {
+  position: relative;
+  margin: 0;
+  min-width: 0;
+  animation: studio-enter .8s .16s ease-out both;
+}
+.hero-photo-frame {
+  position: relative;
+  background: #a86c37;
+  border: 1px solid var(--ink);
+  overflow: hidden;
+  aspect-ratio: 1.02;
+}
+.hero-photo-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 54% center;
+  transition: transform .8s cubic-bezier(.22,.61,.36,1);
+}
+.hero-photo:hover .hero-photo-frame img { transform: scale(1.024); }
+.hero-photo-mark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--paper);
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+  padding: 13px 15px;
+  font: 600 11px/1 var(--mono);
+  letter-spacing: .06em;
+}
+.hero-photo figcaption {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  padding: 14px 0 0;
+  color: var(--ink-soft);
+  border-top: 0;
+  font: 500 10px/1.5 var(--mono);
+  letter-spacing: .03em;
+}
+.hero-photo figcaption span:last-child { color: var(--muted); }
+.hero-secondary-links { display: flex; align-items: baseline; gap: 16px 30px; flex-wrap: wrap; }
+.hero-lab-anchor {
+  display: inline-block;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+  font: 500 11px/1.5 var(--mono);
+  color: var(--ink-soft);
+}
+.hero-lab-anchor:hover { border-color: var(--ink); color: var(--ink); }
+
+/* O laboratório continua acessível, mas não domina a primeira dobra. */
+.lab-band {
+  scroll-margin-top: 78px;
+  background: #27342b;
+  border-bottom: 1px solid var(--ink);
+  color: #f5f5ec;
+  padding-block: clamp(70px,8vw,116px);
+}
+.lab-band-grid {
+  display: grid;
+  grid-template-columns: minmax(0,.75fr) minmax(0,1.25fr);
+  gap: clamp(35px, 6vw, 105px);
+  align-items: center;
+}
+.lab-band-copy { align-self: center; }
+.lab-band-copy .eyebrow { color: #d4dbcc; }
+.lab-band-copy h2 {
+  font: 600 clamp(43px,4.3vw,68px)/1.02 var(--display);
+  letter-spacing: -.075em;
+  margin: 30px 0 25px;
+}
+.lab-band-copy h2 em {
+  display: block;
+  font-weight: 500;
+  font-style: normal;
+  color: #cbd5bc;
+}
+.lab-band-copy p { font-size: 17px; line-height: 1.65; max-width: 380px; color: #e3e7dd; }
+.lab-band-copy a {
+  display: inline-block;
+  margin-top: 30px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid #d3ddcc;
+  font: 600 11px/1.4 var(--mono);
+  color: #f5f5ec;
+}
+.lab-band .studio { max-width: 680px; width: 100%; box-shadow: 12px 12px 0 rgba(0,0,0,.17); }
+
+/* Arquivo com hierarquia de contato fotográfico */
+.photography-section {
+  background: #efece4;
+  scroll-margin-top: 77px;
+}
+.photography-heading {
+  display: grid;
+  grid-template-columns: 170px minmax(0,1fr) 110px;
+  gap: 30px;
+  align-items: start;
+  margin-bottom: 54px;
+}
+.photography-heading .section-title span { display: block; }
+.photography-heading .section-intro {
+  grid-column: auto;
+  max-width: 650px;
+  margin-top: 23px;
+}
+.photography-heading-index {
+  color: var(--muted);
+  padding-top: 10px;
+  text-align: right;
+  font: 500 10px/1.4 var(--mono);
+}
+.photo-archive-grid {
+  display: grid;
+  grid-template-columns: repeat(12,minmax(0,1fr));
+  grid-auto-rows: clamp(120px, 13vw, 184px);
+  gap: 18px;
+}
+.photo-tile {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.photo-tile-1 { grid-column: 1 / 6; grid-row: 1 / 4; }
+.photo-tile-2 { grid-column: 6 / 13; grid-row: 1 / 3; }
+.photo-tile-3 { grid-column: 6 / 9; grid-row: 3 / 5; }
+.photo-tile-4 { grid-column: 9 / 13; grid-row: 3 / 5; }
+.photo-tile-5 { grid-column: 1 / 6; grid-row: 4 / 6; }
+.photo-tile-6 { grid-column: 6 / 13; grid-row: 5 / 6; }
+.photo-open {
+  display: block;
+  position: relative;
+  flex: 1;
+  padding: 0;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--ink);
+  background: #d1cec4;
+  cursor: zoom-in;
+}
+.photo-open img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform .5s cubic-bezier(.2,.7,.2,1), filter .4s ease;
+}
+.photo-tile-1 img { object-position: 50% 38%; }
+.photo-tile-3 img { object-position: 48% 50%; }
+.photo-tile-5 img { object-position: 50% 42%; }
+.photo-open:hover img, .photo-open:focus-visible img { transform: scale(1.035); filter: contrast(1.035); }
+.photo-expand {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  font: 600 17px/1 var(--mono);
+}
+.photo-tile figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 0;
+  color: var(--ink);
+  font: 500 10px/1.4 var(--mono);
+}
+.photo-tile figcaption span:last-child { color: var(--muted); }
+.photo-archive-footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 7px 18px;
+  padding-top: 16px;
+  margin-top: 30px;
+  border-top: 1px solid var(--ink);
+  color: var(--muted);
+  font: 500 10px/1.5 var(--mono);
+}
+
+/* Galeria acessível com navegação por setas e Escape nativos. */
+.photo-lightbox {
+  position: fixed;
+  width: min(1120px, 95vw);
+  max-width: none;
+  height: min(870px, 94dvh);
+  max-height: none;
+  padding: 0;
+  margin: auto;
+  overflow: hidden;
+  color: #f2f2e9;
+  background: #181b18;
+  border: 1px solid #bbbfb2;
+}
+.photo-lightbox::backdrop { background: rgba(16,19,16,.91); backdrop-filter: blur(6px); }
+.photo-lightbox-inner { display: flex; flex-direction: column; height: 100%; }
+.photo-lightbox-top, .photo-lightbox-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  padding: 16px 23px;
+  font: 500 10px/1.4 var(--mono);
+}
+.photo-lightbox-top { border-bottom: 1px solid #52584f; }
+.photo-lightbox-top button {
+  padding: 7px 9px;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid #929c8e;
+  cursor: pointer;
+}
+.photo-lightbox-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  padding: 18px;
+}
+.photo-lightbox-image img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.photo-lightbox-footer { border-top: 1px solid #52584f; }
+.photo-lightbox-footer button {
+  padding: 7px;
+  border: 0;
+  background: none;
+  color: #f2f2e9;
+  cursor: pointer;
+  font: inherit;
+  white-space: nowrap;
+}
+.photo-lightbox-footer button:hover, .photo-lightbox-top button:hover { color: #d3e2c2; }
+.photo-lightbox-footer > span { text-align: center; }
+
+@media (max-width: 1120px) {
+  .photography-heading { grid-template-columns: 130px minmax(0,1fr); gap: 20px; }
+  .photography-heading-index { grid-column: 2; text-align: left; padding-top: 0; }
+  .lab-band-grid { gap: 28px; }
+  .lab-band-copy h2 { font-size: clamp(37px,4.7vw,55px); }
+}
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; max-width: 760px; }
+  .hero-photo { max-width: 680px; }
+  .hero-photo-frame { aspect-ratio: 1.35; }
+  .lab-band-grid { grid-template-columns: 1fr; max-width: 760px; }
+  .lab-band-copy { max-width: 600px; }
+  .lab-band .studio { margin-inline: auto; }
+  .photography-heading { grid-template-columns: 1fr; }
+  .photography-heading-index { grid-column: 1; }
+  .photo-archive-grid { grid-auto-rows: clamp(110px,15vw,154px); gap: 12px; }
+}
+@media (max-width: 680px) {
+  .hero-grid { gap: 36px; }
+  .hero-photo-frame { aspect-ratio: 1.04; }
+  .hero-photo figcaption { font-size: 9px; }
+  .hero-secondary-links { gap: 14px 20px; }
+  .hero-secondary-links .scroll-link { margin-top: 29px; }
+  .hero-lab-anchor { font-size: 10px; }
+  .lab-band { padding-block: 68px; }
+  .lab-band-copy h2 { margin: 20px 0; font-size: clamp(38px,10vw,56px); }
+  .lab-band-copy p { font-size: 16px; }
+  .lab-band .studio { box-shadow: 6px 6px 0 rgba(0,0,0,.17); }
+  .photography-heading { margin-bottom: 31px; gap: 13px; }
+  .photography-heading .section-title { font-size: clamp(38px,9vw,59px); }
+  .photography-heading .section-intro { margin-top: 15px; }
+  .photo-archive-grid { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: auto; gap: 15px 12px; }
+  .photo-tile { grid-row: auto; grid-column: auto; }
+  .photo-tile-1, .photo-tile-2, .photo-tile-6 { grid-column: 1 / -1; }
+  .photo-tile-1 .photo-open { aspect-ratio: 1.1; }
+  .photo-tile-2 .photo-open { aspect-ratio: 1.55; }
+  .photo-tile-3 .photo-open, .photo-tile-4 .photo-open { aspect-ratio: .72; }
+  .photo-tile-5 { grid-column: 1 / -1; }
+  .photo-tile-5 .photo-open { aspect-ratio: 1.55; }
+  .photo-tile-6 .photo-open { aspect-ratio: 1.7; }
+  .photo-open { flex: initial; }
+  .photo-tile figcaption { font-size: 9px; }
+  .photo-archive-footer { margin-top: 22px; }
+  .photo-lightbox { width: 100vw; height: 100dvh; border: 0; }
+  .photo-lightbox-top, .photo-lightbox-footer { padding: 12px 14px; gap: 10px; }
+  .photo-lightbox-image { padding: 8px; }
+  .photo-lightbox-footer button span { display: none; }
+  .photo-lightbox-footer button { font-size: 17px; padding: 12px 15px; }
+  .photo-lightbox-footer > span { max-width: 68%; font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo, .hero-photo-frame img { animation: none !important; transition: none !important; }
+  .photo-open img { transition: none !important; }
+}
