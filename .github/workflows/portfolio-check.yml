@@ -9,6 +9,7 @@ on:
       - feat/editorial-white-space-v2
       - feat/editorial-grotesk-grid
       - feat/interactive-previews-grid-physics
+      - feat/hero-kinetic-typography
   pull_request:
     branches:
       - main
