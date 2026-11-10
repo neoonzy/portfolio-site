@@ -8,6 +8,7 @@
   --react-y:50%;
   --shift-x:0px;
   --shift-y:0px;
+  --shift-last-x:0px;
   position:relative;
   overflow:hidden;
   color:#191b19;
@@ -66,8 +67,8 @@
   display:block;
   transition:transform .32s cubic-bezier(.2,.7,.2,1);
 }
-.editorial-title-shift > span { transform:translate3d(var(--shift-x),0,0); }
-.editorial-title-last > span { transform:translate3d(calc(var(--shift-x) * -.22),0,0); }
+.editorial-title-shift > span { translate:var(--shift-x) 0; }
+.editorial-title-last > span { translate:var(--shift-last-x) 0; }
 .editorial-title-last { color:#3d5644; }
 .editorial-hero-description {
   margin-top:32px;
