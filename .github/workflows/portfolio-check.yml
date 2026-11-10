@@ -11,6 +11,7 @@ on:
       - feat/interactive-previews-grid-physics
       - feat/hero-kinetic-typography
       - feat/hero-gravity-letters
+      - feat/hero-layout-collisions
   pull_request:
     branches:
       - main

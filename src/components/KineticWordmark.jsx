@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import {
-  createGlyphBody, FIXED_STEP, glyphHit, kickGlyph, settled, stepGlyphWorld,
+  createGlyphBody, createStaticObstacle, FIXED_STEP, glyphHit, kickGlyph, settled, stepGlyphWorld,
 } from '../lib/glyphPhysics.js'
 
 const WORDS = ['LUIS/', 'EDUARDO']
@@ -9,28 +9,29 @@ const clamp = (x, low, high) => Math.min(high, Math.max(low, x))
 
 /**
  * DOM lettering at rest; individual rigid bodies after mouse impact.
- * Their collision floor is the rule immediately under the open cover space,
- * so falling glyphs never descend into the projects index.
+ * Real editorial labels act as collision platforms, while the bottom edge
+ * of the entire hero section is the final floor.
  */
-const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
+const KineticWordmark = forwardRef(function KineticWordmark({ lang }, ref) {
   const rootRef = useRef(null)
   const glyphRefs = useRef([])
-  const controllerRef = useRef({ dropAll: () => {}, reset: () => {} })
+  const controllerRef = useRef({ reset: () => {} })
 
   useImperativeHandle(ref, () => ({
-    dropAll: () => controllerRef.current.dropAll(),
     reset: () => controllerRef.current.reset(),
   }), [])
 
   useEffect(() => {
     const title = rootRef.current
     const cover = title?.closest('.print-cover')
-    const runway = cover?.querySelector('.print-physics-runway')
+    const section = title?.closest('.print-hero')
     const glyphs = glyphRefs.current
-    if (!title || !cover || !runway || glyphs.length !== count) return
+    if (!title || !cover || !section || glyphs.length !== count) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
     const bodies = []
+    const obstacles = []
+    let keyboardIndex = 0
     let bounds = { left: 0, right: 0, top: 0, floor: 0 }
     let frame = 0
     let previous = 0
@@ -52,11 +53,13 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
         if (!body.active) {
           glyphs[i].style.transform = ''
           glyphs[i].style.zIndex = ''
+          glyphs[i].style.pointerEvents = ''
         } else {
           const dx = body.x - body.homeX
           const dy = body.y - body.homeY
           glyphs[i].style.transform = `translate3d(${dx.toFixed(2)}px,${dy.toFixed(2)}px,0) rotate(${body.angle.toFixed(4)}rad)`
           glyphs[i].style.zIndex = String(10 + i)
+          glyphs[i].style.pointerEvents = 'none'
         }
       })
     }
@@ -74,16 +77,18 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
       pointer = null
       quietFrames = 0
       duration = 0
-      glyphs.forEach(glyph => { glyph.style.transform = ''; glyph.style.zIndex = '' })
+      glyphs.forEach(glyph => { glyph.style.transform = ''; glyph.style.zIndex = ''; glyph.style.pointerEvents = '' })
       const coverRect = cover.getBoundingClientRect()
-      const floorRect = runway.getBoundingClientRect()
+      const sectionRect = section.getBoundingClientRect()
       bounds = {
         left: 6,
         right: Math.max(24, coverRect.width - 6),
         top: 0,
-        floor: Math.max(80, floorRect.bottom - coverRect.top - 1),
+        floor: Math.max(80, sectionRect.bottom - coverRect.top - 3),
       }
+      keyboardIndex = 0
       bodies.length = 0
+      obstacles.length = 0
       glyphs.forEach((glyph, i) => {
         const rect = glyph.getBoundingClientRect()
         bodies.push(createGlyphBody(
@@ -92,6 +97,16 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
           rect.width * .78,
           rect.height * .73,
           i,
+        ))
+      })
+      cover.querySelectorAll('[data-physics-obstacle]').forEach((label, i) => {
+        const rect = label.getBoundingClientRect()
+        obstacles.push(createStaticObstacle(
+          rect.left - coverRect.left + rect.width / 2,
+          rect.top - coverRect.top + rect.height / 2,
+          rect.width + 12,
+          rect.height + 14,
+          label.dataset.physicsObstacle || i,
         ))
       })
     }
@@ -104,7 +119,7 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
       previous = now
       let steps = 0
       while (accumulator >= FIXED_STEP && steps < 6) {
-        stepGlyphWorld(bodies, bounds, FIXED_STEP)
+        stepGlyphWorld(bodies, bounds, FIXED_STEP, obstacles)
         accumulator -= FIXED_STEP
         steps += 1
       }
@@ -124,16 +139,22 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
       if (!frame) frame = window.requestAnimationFrame(animate)
     }
 
-    const dropAll = () => {
-      if (reduce.matches) return
-      bodies.forEach((body, i) => {
-        if (body.active) return
-        kickGlyph(body, (i - (bodies.length - 1) / 2) * 22, -40, body.x + (i % 2 ? 6 : -6))
-      })
-      wake()
-    }
+    controllerRef.current = { reset }
 
-    controllerRef.current = { dropAll, reset }
+    const onTitleKey = event => {
+      if (reduce.matches || (event.key !== 'Enter' && event.key !== ' ')) return
+      if (event.ctrlKey || event.altKey || event.metaKey) return
+      event.preventDefault()
+      for (let i = 0; i < bodies.length; i += 1) {
+        const index = (keyboardIndex + i) % bodies.length
+        const body = bodies[index]
+        if (body.active) continue
+        kickGlyph(body, (index % 2 ? 1 : -1) * 100, -50, body.x)
+        keyboardIndex = (index + 1) % bodies.length
+        wake()
+        return
+      }
+    }
 
     const pick = (event, x, y) => {
       const target = event.target instanceof Element ? event.target.closest('[data-glyph]') : null
@@ -149,6 +170,7 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
       // Keep touch scrolling natural; mobile visitors can use DROP ALL.
       if (reduce.matches || event.button !== 0 || (event.pointerType !== 'mouse' && event.pointerType !== 'pen')) return
       const p = position(event)
+      if (event.target instanceof Element && event.target.closest('a, button, input, select, textarea, summary')) return
       const body = pick(event, p.x, p.y)
       if (!body) return
       event.preventDefault()
@@ -168,7 +190,7 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
         vx: 0,
         vy: 0,
       }
-      cover.setPointerCapture(event.pointerId)
+      section.setPointerCapture(event.pointerId)
       pointer = null
       wake()
     }
@@ -222,7 +244,7 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
       d.body.omega = clamp(d.vx * .006, -5, 5)
       dragging = null
       pointer = null
-      if (cover.hasPointerCapture(event.pointerId)) cover.releasePointerCapture(event.pointerId)
+      if (section.hasPointerCapture(event.pointerId)) section.releasePointerCapture(event.pointerId)
       wake()
     }
     const lost = () => {
@@ -242,12 +264,13 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
       pointer = null
     }
 
-    cover.addEventListener('pointerdown', onDown)
-    cover.addEventListener('pointermove', onMove, { passive: true })
-    cover.addEventListener('pointerup', release)
-    cover.addEventListener('pointercancel', release)
-    cover.addEventListener('lostpointercapture', lost)
-    cover.addEventListener('pointerleave', onPointerLeave)
+    title.addEventListener('keydown', onTitleKey)
+    section.addEventListener('pointerdown', onDown)
+    section.addEventListener('pointermove', onMove, { passive: true })
+    section.addEventListener('pointerup', release)
+    section.addEventListener('pointercancel', release)
+    section.addEventListener('lostpointercapture', lost)
+    section.addEventListener('pointerleave', onPointerLeave)
     window.addEventListener('resize', onResize)
     window.addEventListener('blur', onBlur)
     reduce.addEventListener('change', onPreference)
@@ -257,13 +280,14 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
     return () => {
       mounted = false
       pause()
-      controllerRef.current = { dropAll: () => {}, reset: () => {} }
-      cover.removeEventListener('pointerdown', onDown)
-      cover.removeEventListener('pointermove', onMove)
-      cover.removeEventListener('pointerup', release)
-      cover.removeEventListener('pointercancel', release)
-      cover.removeEventListener('lostpointercapture', lost)
-      cover.removeEventListener('pointerleave', onPointerLeave)
+      controllerRef.current = { reset: () => {} }
+      title.removeEventListener('keydown', onTitleKey)
+      section.removeEventListener('pointerdown', onDown)
+      section.removeEventListener('pointermove', onMove)
+      section.removeEventListener('pointerup', release)
+      section.removeEventListener('pointercancel', release)
+      section.removeEventListener('lostpointercapture', lost)
+      section.removeEventListener('pointerleave', onPointerLeave)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('blur', onBlur)
       reduce.removeEventListener('change', onPreference)
@@ -271,13 +295,17 @@ const KineticWordmark = forwardRef(function KineticWordmark(_props, ref) {
         if (!glyph) return
         glyph.style.transform = ''
         glyph.style.zIndex = ''
+        glyph.style.pointerEvents = ''
       })
     }
-  }, [])
+  }, [lang])
 
   let offset = 0
   return (
-    <h1 ref={rootRef} id="hero-title" className="print-wordmark kinetic-wordmark" aria-label="LUIS/EDUARDO">
+    <h1 ref={rootRef} id="hero-title" className="print-wordmark kinetic-wordmark"
+      tabIndex={0} aria-label={lang === 'en'
+        ? 'LUIS/EDUARDO. Press Enter or Space to release one letter at a time.'
+        : 'LUIS/EDUARDO. Pressione Enter ou espaço para soltar uma letra.'}>
       {WORDS.map((part, group) => {
         const first = offset
         offset += part.length

@@ -7,7 +7,6 @@ import './styles/experimental.css'
 import './styles/editorial-layout.css'
 import './styles/interactive-edition.css'
 import './styles/hero-kinetic.css'
-import './styles/hero-gravity.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode><App /></React.StrictMode>
