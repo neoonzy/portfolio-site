@@ -1,16 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { chapters } from '../data/chapters.js'
 
-const sections = [
-  { id: 'projects', pt: 'Projetos na prática', en: 'Selected projects' },
-  { id: 'lab', pt: 'Experimentar o Typeee', en: 'Try Typeee' },
-  { id: 'notes', pt: 'Caderno de processo', en: 'Process notebook' },
-  { id: 'about', pt: 'Sobre mim', en: 'About me' },
-  { id: 'experience', pt: 'Trajetória', en: 'Experience' },
-  { id: 'gallery', pt: 'Trabalhos visuais', en: 'Visual work' },
-  { id: 'contact', pt: 'Contato', en: 'Contact' },
-]
+const sections = chapters
 
-export default function QuickNavigator({ lang, onNavigate }) {
+const QuickNavigator = forwardRef(function QuickNavigator({ lang, onNavigate }, ref) {
   const dialogRef = useRef(null)
   const inputRef = useRef(null)
   const [query, setQuery] = useState('')
@@ -28,6 +21,8 @@ export default function QuickNavigator({ lang, onNavigate }) {
     setIsOpen(true)
     window.requestAnimationFrame(() => inputRef.current?.focus())
   }
+  useImperativeHandle(ref, () => ({ open }))
+
   const close = () => {
     if (dialogRef.current?.open) dialogRef.current.close()
     setIsOpen(false)
@@ -96,7 +91,7 @@ export default function QuickNavigator({ lang, onNavigate }) {
           </div>
           <div className="quick-nav-heading">
             <h2>{pt ? <>NAVEGAÇÃO<span>RÁPIDA.</span></> : <>QUICK<span>ACCESS.</span></>}</h2>
-            <span>{pt ? 'ÍNDICE / 07' : 'INDEX / 07'}</span>
+            <span>{pt ? 'ÍNDICE' : 'INDEX'} / {String(sections.length).padStart(2, '0')}</span>
           </div>
           <label htmlFor="quick-nav-input" className="quick-nav-input-label">
             {pt ? 'BUSCAR SEÇÃO /' : 'SEARCH SECTION /'}
@@ -136,4 +131,6 @@ export default function QuickNavigator({ lang, onNavigate }) {
       </dialog>
     </>
   )
-}
+})
+
+export default QuickNavigator
