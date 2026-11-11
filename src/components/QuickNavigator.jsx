@@ -74,6 +74,7 @@ export default function QuickNavigator({ lang, onNavigate }) {
         title={pt ? 'Navegação rápida · /' : 'Quick navigation · /'}>
         <span className="quick-nav-slash" aria-hidden="true">/</span>
         <span className="quick-nav-label">{pt ? 'ATALHOS' : 'SHORTCUTS'}</span>
+        <span className="quick-nav-label-mobile">{pt ? 'ÍNDICE' : 'INDEX'}</span>
       </button>
       <dialog ref={dialogRef} id="quick-nav" className="quick-nav-dialog"
         aria-label={pt ? 'Navegação rápida' : 'Quick navigation'}
