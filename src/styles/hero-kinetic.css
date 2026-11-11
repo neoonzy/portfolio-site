@@ -64,9 +64,10 @@
   .print-cover-statement { max-width:570px; }
   .print-identity-caption span:last-child { display:none; }
 }
-/* A narrow viewport should feel like a typographic poster, not squeeze
-   both names into one row. The distinct sizes let each word use nearly the
-   entire readable width, while keeping each original character as a body. */
+/* Mobile wordmark: deliberate, legible two-line rhythm.
+   The former 32vw / 23.5vw sizes and tight negative tracking made glyphs
+   crowd and let the slash intersect the name below. Keep generous spacing,
+   leave margins, and preserve each glyph as an independent physics body. */
 @media(max-width:680px) {
   .print-wordmark.kinetic-wordmark {
     display:flex;
@@ -74,8 +75,9 @@
     justify-content:flex-start;
     align-items:stretch;
     width:100%;
-    gap:clamp(2px,.75vw,6px);
-    line-height:.87;
+    gap:clamp(14px,3vw,23px);
+    line-height:1.04;
+    letter-spacing:0;
     white-space:nowrap;
     overflow:visible;
   }
@@ -85,16 +87,19 @@
     width:max-content;
     max-width:100%;
     min-width:0;
+    line-height:1.04;
+    white-space:nowrap;
   }
   .print-wordmark.kinetic-wordmark > .kinetic-word:first-child {
     align-self:flex-start;
-    font-size:min(32vw,200px);
-    letter-spacing:-.105em;
+    font-size:min(26.5vw,164px);
+    letter-spacing:-.045em;
   }
   .print-wordmark.kinetic-wordmark > .kinetic-word:last-child {
-    align-self:flex-end;
-    font-size:min(23.5vw,155px);
-    letter-spacing:-.115em;
+    align-self:flex-start;
+    margin-left:clamp(6px,1.8vw,12px);
+    font-size:min(17.5vw,116px);
+    letter-spacing:-.045em;
   }
 }
 
