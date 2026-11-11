@@ -161,7 +161,6 @@ function SectionHeading({ label, title, intro }) {
 
 export default function App() {
   const [lang, setLang] = useState(() => window.localStorage.getItem('luis-portfolio-language') === 'en' ? 'en' : 'pt')
-  const [menuOpen, setMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('')
   const [emailCopied, setEmailCopied] = useState(false)
   const [gridEnabled, setGridEnabled] = useState(false)
@@ -174,12 +173,6 @@ export default function App() {
     document.title = lang === 'pt' ? 'Luis Eduardo Lustosa — Design, Tecnologia & Fabricação Digital' : 'Luis Eduardo Lustosa — Design, Technology & Digital Fabrication'
     window.localStorage.setItem('luis-portfolio-language', lang)
   }, [lang])
-
-  useEffect(() => {
-    const onKeyDown = (event) => { if (event.key === 'Escape') setMenuOpen(false) }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) setActiveSection(entry.target.id) }), { rootMargin: '-18% 0px -65% 0px' })
@@ -233,12 +226,12 @@ export default function App() {
     <a className="skip-link" href="#main">{lang === 'pt' ? 'Pular para o conteúdo' : 'Skip to content'}</a>
     <header className="header">
       <div className="shell header-inner">
-        <a href="#top" className="wordmark" onClick={() => setMenuOpen(false)} aria-label="Luis Eduardo Lustosa, início">LUIS EDUARDO <span className="wordmark-caption">PORTFÓLIO / 2026</span></a>
-        <nav className={menuOpen ? 'navigation is-open' : 'navigation'} id="main-navigation" aria-label={lang === 'pt' ? 'Navegação principal' : 'Main navigation'}>
-          {ids.map(id => <a key={id} href={'#' + id} className={activeSection === id ? 'is-active' : ''} onClick={() => setMenuOpen(false)}>{c.navigation[id]}</a>)}
+        <a href="#top" className="wordmark" aria-label={lang === 'pt' ? 'Luis Eduardo Lustosa, início' : 'Luis Eduardo Lustosa, home'}>LUIS EDUARDO <span className="wordmark-caption">PORTFÓLIO / 2026</span></a>
+        <nav className="navigation" id="main-navigation" aria-label={lang === 'pt' ? 'Navegação principal' : 'Main navigation'}>
+          {ids.map(id => <a key={id} href={'#' + id} className={activeSection === id ? 'is-active' : ''}>{c.navigation[id]}</a>)}
         </nav>
         <div className="header-actions">
-          <QuickNavigator lang={lang} onNavigate={() => setMenuOpen(false)} />
+          <QuickNavigator lang={lang} />
           <button type="button" className={'grid-toggle' + (gridEnabled ? ' is-on' : '')}
             aria-label={lang === 'pt' ? (gridEnabled ? 'Desligar grade de construção' : 'Ligar grade de construção') : (gridEnabled ? 'Hide layout grid' : 'Show layout grid')}
             aria-pressed={gridEnabled} title={lang === 'pt' ? 'Grade do layout · G' : 'Layout grid · G'}
@@ -247,7 +240,6 @@ export default function App() {
             <span>GRID {gridEnabled ? 'ON' : 'OFF'}</span>
           </button>
           <button type="button" className="lang-button" aria-label={c.language} onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}>{lang.toUpperCase()} <span aria-hidden="true">↔</span></button>
-          <button type="button" className="menu-button" aria-label={c.menu} aria-controls="main-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? '✕' : '☰'}</button>
         </div>
       </div>
     </header>
