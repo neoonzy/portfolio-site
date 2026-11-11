@@ -1,70 +1,150 @@
 /*
- * Mobile navigation simplification (Edition 009).
- * One editorial INDEX trigger replaces the hamburger menu; the oversized
- * identity remains in the hero, so the top bar is solely for navigation.
+ * Edition 010 — One navigation pattern per breakpoint.
+ * Desktop: section links + compact quick search.
+ * Tablet: wordmark + INDEX + GRID + PT/EN.
+ * Mobile: INDEX + GRID + PT/EN (name is already the hero).
+ * INDEX is a high-contrast, bordered button, not plain typographic text.
  */
-.quick-nav-label-mobile { display:none; }
+.quick-nav-label-mobile,
+.quick-nav-arrow { display:none; }
 
-@media(max-width:680px) {
-  .header {
-    height:56px;
+/* Desktop: the quick navigator is a compact search utility,
+   visually separate from the row of navigation links. */
+@media(min-width:1121px) {
+  .header .header-inner { gap:clamp(15px,1.8vw,28px); }
+  .header .navigation { min-width:0; }
+  .header .header-actions { gap:8px;flex-shrink:0; }
+  .header .quick-nav-trigger,
+  .header .grid-toggle,
+  .header .lang-button { min-height:38px; }
+  .header .quick-nav-trigger {
+    padding:7px 11px;
+    border:1px solid #878784;
   }
-  .header-inner {
+}
+
+/* Tablet: no second hamburger on top of the section index.
+   Covers the in-between 901–1120 range as well as 681–900. */
+@media(min-width:681px) and (max-width:1120px) {
+  .header { height:64px; }
+  .header .header-inner { gap:16px; }
+  .header .wordmark { flex:0 1 auto;min-width:0;font-size:clamp(16px,1.8vw,19px); }
+  .header .navigation,
+  .header .navigation.is-open,
+  .header .menu-button { display:none; }
+  .header .header-actions { margin-left:auto;gap:8px;flex-shrink:0; }
+  .header .grid-toggle,
+  .header .lang-button { min-height:44px; }
+  .header .grid-toggle { padding:8px 11px; }
+  .header .lang-button { padding:8px 11px; }
+}
+
+/* Shared INDEX button for tablet and mobile:
+   44px touch surface, clear black outline, intentional arrow affordance. */
+@media(max-width:1120px) {
+  .header .quick-nav-trigger {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    min-height:44px;
+    padding:9px 13px;
+    border:1px solid #151515;
+    border-radius:0;
+    background:#171717;
+    color:#fff;
+    white-space:nowrap;
+    font:600 11px/1.35 var(--mono);
+    text-decoration:none;
+    transition:background 150ms ease,color 150ms ease;
+  }
+  .header .quick-nav-trigger .quick-nav-slash {
+    color:inherit;
+    font-size:16px;
+  }
+  .header .quick-nav-trigger .quick-nav-label { display:none; }
+  .header .quick-nav-trigger .quick-nav-label-mobile {
+    display:inline;
+    font:inherit;
+    letter-spacing:.015em;
+  }
+  .header .quick-nav-trigger .quick-nav-arrow {
+    display:inline;
+    margin-left:4px;
+    font:600 14px/1 var(--mono);
+  }
+  .header .quick-nav-trigger:hover {
+    border-color:#111;
+    background:#444;
+    color:#fff;
+  }
+  .header .quick-nav-trigger:focus-visible {
+    outline:2px solid #111;
+    outline-offset:3px;
+  }
+}
+
+/* Mobile: do not duplicate the name from the hero or offer two menus. */
+@media(max-width:680px) {
+  .header { height:56px; }
+  .header .header-inner {
+    display:flex;
     justify-content:flex-start;
+    align-items:center;
     gap:0;
   }
   .header .wordmark,
   .header .navigation,
   .header .navigation.is-open,
-  .header .menu-button {
-    display:none;
-  }
-  .header-actions {
+  .header .menu-button { display:none; }
+  .header .header-actions {
     display:flex;
     width:100%;
+    min-width:0;
     justify-content:space-between;
     align-items:center;
-    gap:7px;
-    min-width:0;
+    gap:8px;
   }
   .header .quick-nav-trigger {
-    min-height:40px;
-    padding:8px 9px;
+    min-height:44px;
     gap:7px;
-    border-color:transparent;
-    background:transparent;
-    white-space:nowrap;
-    color:#111;
+    padding:8px 11px;
   }
-  .header .quick-nav-trigger:hover,
-  .header .quick-nav-trigger:focus-visible {
-    background:#ececea;
-  }
-  .quick-nav-label { display:none; }
-  .quick-nav-label-mobile {
-    display:inline;
-    font:600 11px/1.4 var(--mono);
-    letter-spacing:.015em;
+  .header .quick-nav-trigger .quick-nav-arrow { margin-left:1px; }
+  .header .grid-toggle,
+  .header .lang-button {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    min-height:44px;
   }
   .header .grid-toggle {
     margin-left:auto;
-    min-height:40px;
-    min-width:40px;
-    padding:8px 10px;
+    min-width:44px;
+    padding:8px 11px;
+    border-color:#878784;
   }
   .header .lang-button {
-    min-height:40px;
-    padding:8px 10px;
+    min-width:53px;
+    padding:8px 9px;
+    border-color:#878784;
     font-size:11px;
   }
+  .header .quick-nav-trigger:active { background:#353535; }
 
-  /* Both sticky layers and anchor offsets must reflect the shorter header. */
+  /* Matching sticky-bar and anchor offsets for the 56px header. */
   .mobile-chapter-indicator { top:56px; }
   html { scroll-padding-top:66px; }
   .lab-band, main section[id] { scroll-margin-top:0; }
 }
 @media(max-width:365px) {
-  .header .quick-nav-trigger { padding-inline:4px;gap:5px; }
-  .header .grid-toggle { padding-inline:8px; }
-  .header .lang-button { padding-inline:7px; }
+  .header .header-actions { gap:6px; }
+  .header .quick-nav-trigger { gap:5px;padding:8px 8px; }
+  .header .quick-nav-trigger .quick-nav-arrow { margin-left:0; }
+  .header .grid-toggle { min-width:44px;padding:8px 10px; }
+  .header .lang-button { min-width:49px;padding:8px 7px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .header .quick-nav-trigger { transition:none; }
 }
