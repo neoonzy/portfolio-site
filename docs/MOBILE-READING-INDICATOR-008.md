@@ -102,20 +102,22 @@ A navegação foi revisada em **desktop, tablet e celular**, sem duplicar entrad
 - [ ] Tablet: nome, ÍNDICE, GRID e PT/EN cabem sem quebra.
 - [ ] Mobile: barra de progresso, salto a seções, alternância de idiomas e GRID operacionais.
 
-## Edição 011 — nome maior em telas pequenas
+## Edição 011 — composição tipográfica mobile equilibrada
 
-Um teste em iPhone evidenciou que `LUIS/` e `EDUARDO` compartilhavam a mesma linha no mobile, forçando tipografia pequena. A identidade do hero foi corrigida **sem modificar o conteúdo ou a física das letras**:
+A primeira tentativa de ampliar o nome deixou `LUIS/` grande demais e `EDUARDO` comprimido, quase encostando no limite direito. Em telas pequenas, o espaçamento negativo excessivo também gerava colisões visuais antes de qualquer interação física.
 
-- Até `680px`, `LUIS/` ocupa uma linha alinhada à esquerda e `EDUARDO` ocupa outra alinhada à direita.
-- Tipografia escalada pela largura da tela: primeira linha `min(32vw, 200px)`, segunda `min(23.5vw, 155px)`.
-- Cada letra continua um `span` independente, com hit test e colisões; a geometria física é medida do layout real.
-- O limite da queda continua antes de **Seleção de trabalhos** e o botão **Reorganizar** continua no mesmo lugar.
-- Em tablet e desktop, a composição original em uma linha é preservada.
+O ajuste mantém **duas linhas**, mas com proporções editoriais mais equilibradas:
 
-### QA específico
+- `LUIS/` alinhado à esquerda: `font-size: min(26.5vw, 164px)`.
+- `EDUARDO` na segunda linha, também à esquerda, com um recuo discreto: `font-size: min(17.5vw, 116px)`.
+- Tracking de `-.045em` em vez de `-.105em`/`-.115em`, evitando letras comprimidas.
+- `line-height: 1.04` e `gap: clamp(14px, 3vw, 23px)` impedem que a barra do primeiro nome invada a segunda linha.
+- Cada glifo permanece um elemento DOM real, com os corpos físicos medidos após o layout. O mecanismo de gravidade, colisões e reset não foi alterado.
+- A composição desktop/tablet continua intacta.
 
-- [ ] iPhone pequeno (320–390px): nome não corta nem gera scroll horizontal.
-- [ ] Mobile 414px e breakpoint 680px: letras grandes e alinhamento visual editorial.
-- [ ] Tablet 681px: retorno à composição horizontal sem overflow.
-- [ ] Após girar o aparelho, as posições físicas são recalculadas.
-- [ ] Reorganizar restaura o nome corretamente e links abaixo permanecem acessíveis.
+### Verificações
+
+- [x] Proporções reproduzidas em viewport local de 320, 390 e 415px com uma fonte sans semelhante para testar dimensões e espaçamento.
+- [ ] Inspeção final com a fonte Space Grotesk carregada no dispositivo real.
+- [ ] Conferir ausência de corte, overflow lateral, sobreposição e recuperação das letras após Reorganizar.
+- [ ] Checar mudança em 680/681px, rotação do aparelho, PT/EN e redução de movimento.
