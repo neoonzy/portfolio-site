@@ -1,0 +1,70 @@
+/*
+ * Mobile navigation simplification (Edition 009).
+ * One editorial INDEX trigger replaces the hamburger menu; the oversized
+ * identity remains in the hero, so the top bar is solely for navigation.
+ */
+.quick-nav-label-mobile { display:none; }
+
+@media(max-width:680px) {
+  .header {
+    height:56px;
+  }
+  .header-inner {
+    justify-content:stretch;
+    gap:0;
+  }
+  .header .wordmark,
+  .header .navigation,
+  .header .navigation.is-open,
+  .header .menu-button {
+    display:none;
+  }
+  .header-actions {
+    display:flex;
+    width:100%;
+    justify-content:space-between;
+    align-items:center;
+    gap:7px;
+    min-width:0;
+  }
+  .header .quick-nav-trigger {
+    min-height:40px;
+    padding:8px 9px;
+    gap:7px;
+    border-color:transparent;
+    background:transparent;
+    white-space:nowrap;
+    color:#111;
+  }
+  .header .quick-nav-trigger:hover,
+  .header .quick-nav-trigger:focus-visible {
+    background:#ececea;
+  }
+  .quick-nav-label { display:none; }
+  .quick-nav-label-mobile {
+    display:inline;
+    font:600 11px/1.4 var(--mono);
+    letter-spacing:.015em;
+  }
+  .header .grid-toggle {
+    margin-left:auto;
+    min-height:40px;
+    min-width:40px;
+    padding:8px 10px;
+  }
+  .header .lang-button {
+    min-height:40px;
+    padding:8px 10px;
+    font-size:11px;
+  }
+
+  /* Both sticky layers and anchor offsets must reflect the shorter header. */
+  .mobile-chapter-indicator { top:56px; }
+  html { scroll-padding-top:66px; }
+  .lab-band, main section[id] { scroll-margin-top:0; }
+}
+@media(max-width:365px) {
+  .header .quick-nav-trigger { padding-inline:4px;gap:5px; }
+  .header .grid-toggle { padding-inline:8px; }
+  .header .lang-button { padding-inline:7px; }
+}
