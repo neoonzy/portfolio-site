@@ -64,6 +64,40 @@
   .print-cover-statement { max-width:570px; }
   .print-identity-caption span:last-child { display:none; }
 }
+/* A narrow viewport should feel like a typographic poster, not squeeze
+   both names into one row. The distinct sizes let each word use nearly the
+   entire readable width, while keeping each original character as a body. */
+@media(max-width:680px) {
+  .print-wordmark.kinetic-wordmark {
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:stretch;
+    width:100%;
+    gap:clamp(2px,.75vw,6px);
+    line-height:.87;
+    white-space:nowrap;
+    overflow:visible;
+  }
+  .print-wordmark.kinetic-wordmark > .kinetic-word {
+    display:inline-flex;
+    position:relative;
+    width:max-content;
+    max-width:100%;
+    min-width:0;
+  }
+  .print-wordmark.kinetic-wordmark > .kinetic-word:first-child {
+    align-self:flex-start;
+    font-size:min(32vw,200px);
+    letter-spacing:-.105em;
+  }
+  .print-wordmark.kinetic-wordmark > .kinetic-word:last-child {
+    align-self:flex-end;
+    font-size:min(23.5vw,155px);
+    letter-spacing:-.115em;
+  }
+}
+
 @media(prefers-reduced-motion:reduce) {
   .kinetic-wordmark .kinetic-glyph {
     transform:none!important;
