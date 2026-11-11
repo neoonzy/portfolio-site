@@ -71,10 +71,12 @@ export default function QuickNavigator({ lang, onNavigate }) {
     <>
       <button className="quick-nav-trigger" type="button" onClick={open}
         aria-haspopup="dialog" aria-expanded={isOpen} aria-controls="quick-nav"
-        title={pt ? 'Navegação rápida · /' : 'Quick navigation · /'}>
+        title={pt ? 'Abrir índice de seções · /' : 'Open section index · /'}
+        aria-label={pt ? 'Abrir índice de seções' : 'Open section index'}>
         <span className="quick-nav-slash" aria-hidden="true">/</span>
-        <span className="quick-nav-label">{pt ? 'ATALHOS' : 'SHORTCUTS'}</span>
+        <span className="quick-nav-label">{pt ? 'BUSCAR' : 'SEARCH'}</span>
         <span className="quick-nav-label-mobile">{pt ? 'ÍNDICE' : 'INDEX'}</span>
+        <span className="quick-nav-arrow" aria-hidden="true">↗</span>
       </button>
       <dialog ref={dialogRef} id="quick-nav" className="quick-nav-dialog"
         aria-label={pt ? 'Navegação rápida' : 'Quick navigation'}
