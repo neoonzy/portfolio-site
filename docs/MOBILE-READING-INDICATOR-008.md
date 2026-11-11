@@ -101,3 +101,21 @@ A navegação foi revisada em **desktop, tablet e celular**, sem duplicar entrad
 - [ ] Desktop: links diretos não ultrapassam as margens; BUSCAR abre o índice por busca.
 - [ ] Tablet: nome, ÍNDICE, GRID e PT/EN cabem sem quebra.
 - [ ] Mobile: barra de progresso, salto a seções, alternância de idiomas e GRID operacionais.
+
+## Edição 011 — nome maior em telas pequenas
+
+Um teste em iPhone evidenciou que `LUIS/` e `EDUARDO` compartilhavam a mesma linha no mobile, forçando tipografia pequena. A identidade do hero foi corrigida **sem modificar o conteúdo ou a física das letras**:
+
+- Até `680px`, `LUIS/` ocupa uma linha alinhada à esquerda e `EDUARDO` ocupa outra alinhada à direita.
+- Tipografia escalada pela largura da tela: primeira linha `min(32vw, 200px)`, segunda `min(23.5vw, 155px)`.
+- Cada letra continua um `span` independente, com hit test e colisões; a geometria física é medida do layout real.
+- O limite da queda continua antes de **Seleção de trabalhos** e o botão **Reorganizar** continua no mesmo lugar.
+- Em tablet e desktop, a composição original em uma linha é preservada.
+
+### QA específico
+
+- [ ] iPhone pequeno (320–390px): nome não corta nem gera scroll horizontal.
+- [ ] Mobile 414px e breakpoint 680px: letras grandes e alinhamento visual editorial.
+- [ ] Tablet 681px: retorno à composição horizontal sem overflow.
+- [ ] Após girar o aparelho, as posições físicas são recalculadas.
+- [ ] Reorganizar restaura o nome corretamente e links abaixo permanecem acessíveis.
