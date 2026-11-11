@@ -10,7 +10,7 @@
     height:56px;
   }
   .header-inner {
-    justify-content:stretch;
+    justify-content:flex-start;
     gap:0;
   }
   .header .wordmark,
