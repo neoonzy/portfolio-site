@@ -41,3 +41,28 @@ npm run build
 - [ ] Testar `prefers-reduced-motion`, PT/EN e alterações de altura com imagens.
 
 Esta é uma branch de revisão. `main` não foi alterada.
+
+
+## Edição 009 — simplificação do cabeçalho mobile
+
+A navegação anterior repetia três elementos sem função distinta: nome no header (também no hero), botão `/atalhos` e hambúrguer. A partir desta revisão, telas até **680 px** usam um cabeçalho de **56 px**:
+
+```text
+/ ÍNDICE                         ▦   PT ↔
+──────────────────────────────────────
+━━━━━━━━━━────────────────────────────
+```
+
+- O nome "LUIS EDUARDO" deixa de aparecer **somente no header mobile**, continuando visível na tipografia principal do hero. Desktop e tablet permanecem inalterados.
+- O **/ ÍNDICE** abre o mesmo painel editorial de navegação rápida com todas as nove seções, busca e suporte ao teclado.
+- O hambúrguer fica oculto **somente até 680px**, evitando dois menus para a mesma finalidade. Na faixa tablet intermediária, os controles anteriores permanecem.
+- **GRID** e **PT/EN** seguem acessíveis no mobile.
+- A barra de progresso continua com **2 px** e acompanha o novo header sticky: `top:56px`; âncoras compensadas com `scroll-padding-top:66px`.
+- Nenhum novo menu foi criado. A homepage mantém o hero editorial e os links navegáveis.
+- Implementação em `src/styles/mobile-nav-minimal.css`; novo rótulo mobile em `QuickNavigator.jsx`.
+
+### QA adicional
+- [ ] Em 320/360/390/430/680px: / ÍNDICE, GRID e PT/EN cabem, sem overflow.
+- [ ] Em 681/900/1280px: navegação existente preservada, nome visível.
+- [ ] / ÍNDICE abre e fecha o diálogo, links funcionam, Escape fecha.
+- [ ] Âncoras não ficam sob o header e progresso de 2px continua correto.
