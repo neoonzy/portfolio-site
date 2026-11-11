@@ -3,7 +3,7 @@ import { chapters } from '../data/chapters.js'
 
 const sections = chapters
 
-export default function QuickNavigator({ lang, onNavigate }) {
+export default function QuickNavigator({ lang }) {
   const dialogRef = useRef(null)
   const inputRef = useRef(null)
   const [query, setQuery] = useState('')
@@ -27,7 +27,6 @@ export default function QuickNavigator({ lang, onNavigate }) {
   }
   const go = id => {
     close()
-    onNavigate?.()
     document.getElementById(id)?.scrollIntoView({
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
     })
