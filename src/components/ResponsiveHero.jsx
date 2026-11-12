@@ -113,7 +113,7 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
 
         <div className="print-hero-footer">
           <span>SCROLL / {pt ? 'EXPLORAR PROJETOS' : 'EXPLORE PROJECTS'}</span>
-          <a href="#about">{pt ? 'CONTINUAR EXPLORANDO' : 'KEEP EXPLORING'} <span aria-hidden="true">↓</span></a>
+          <a href="#projects">{pt ? 'EXPLORAR PROJETOS' : 'EXPLORE SELECTED WORK'} <span aria-hidden="true">↓</span></a>
         </div>
       </div>
     </section>
