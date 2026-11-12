@@ -54,3 +54,21 @@ html{scroll-padding-top:85px}
   html{scroll-behavior:auto!important}
   .print-index-item strong,.case-study-link{transition:none!important}
 }
+
+/* Search results distinguish sections from projects without introducing color noise. */
+.quick-nav-result-type{display:block;margin-top:6px;color:#6d6d69;font:600 10px/1.4 var(--mono);letter-spacing:.02em}
+.quick-nav-results button>strong{min-width:0}
+.quick-nav-search input{min-height:44px}
+.quick-nav-results button{min-height:64px}
+/* Visual gallery: additional embeds are mounted only on demand. */
+.gallery-controls{display:flex;justify-content:center;margin:42px 0 24px}
+.gallery-load-more{display:inline-flex;justify-content:space-between;align-items:center;gap:30px;min-height:48px;min-width:min(100%,300px);padding:13px 17px;background:transparent;color:#181818;border:1px solid #181818;font:600 12px/1.5 var(--mono);cursor:pointer}
+.gallery-load-more:hover,.gallery-load-more:focus-visible{background:#181818;color:#fff}
+.gallery-card iframe{background:#ecece9;content-visibility:auto}
+.gallery-footer a{display:inline-flex;min-height:40px;align-items:center}
+@media(max-width:680px){
+ .quick-nav-result-type{font-size:10px}
+ .gallery-controls{margin:28px 0 22px}
+ .gallery-load-more{width:100%}
+ .gallery-card iframe{height:clamp(250px,78vw,335px)}
+}
