@@ -6,9 +6,11 @@
 .case-header-inner button:hover{background:#111;color:white}
 .case-page{background:var(--paper);color:var(--ink);min-height:100vh}
 .case-meta{display:flex;justify-content:space-between;gap:15px;padding:21px 0;border-bottom:1px solid #c5c5c2;font:600 11px/1.5 var(--mono)}
-.case-hero{display:grid;grid-template-columns:minmax(0,8fr) minmax(0,4fr);align-items:end;gap:28px;padding:clamp(65px,9vw,120px) 0 38px}
+.case-hero{display:grid;grid-template-columns:minmax(0,8fr) minmax(0,4fr);align-items:end;gap:28px;padding:clamp(65px,9vw,120px) 0 52px}
 .case-hero h1{font:700 clamp(62px,12vw,185px)/.9 var(--display);letter-spacing:-.105em;overflow-wrap:anywhere}
 .case-hero h1 span{color:#aaa}
+/* The heading is focused programmatically after SPA navigation; it is not a control. */
+.case-hero h1:focus{outline:none}
 .case-hero>p{font:500 clamp(21px,2.35vw,34px)/1.25 var(--display);letter-spacing:-.045em}
 .case-cover{display:grid;place-items:center;min-height:280px;background:#e5e5e1;border-top:1px solid #bdbdb9;border-bottom:1px solid #bdbdb9}
 .case-cover img{display:block;width:100%;max-height:700px;object-fit:contain;object-position:center}
