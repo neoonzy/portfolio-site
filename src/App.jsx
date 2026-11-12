@@ -7,6 +7,7 @@ import QuickNavigator from './components/QuickNavigator.jsx'
 import FloatingProjectPreview from './components/FloatingProjectPreview.jsx'
 import LayoutGridOverlay from './components/LayoutGridOverlay.jsx'
 import MobileSectionIndicator from './components/MobileSectionIndicator.jsx'
+import CaseStudyPage from './components/CaseStudyPage.jsx'
 
 const content = {
   pt: {
@@ -159,7 +160,10 @@ function SectionHeading({ label, title, intro }) {
   </div>
 }
 
+const getCaseSlug = () => window.location.pathname.match(/^\/projetos\/([a-z0-9-]+)\/?$/)?.[1] ?? null
+
 export default function App() {
+  const [activeCase, setActiveCase] = useState(getCaseSlug)
   const [lang, setLang] = useState(() => window.localStorage.getItem('luis-portfolio-language') === 'en' ? 'en' : 'pt')
   const [activeSection, setActiveSection] = useState('')
   const [emailCopied, setEmailCopied] = useState(false)
@@ -170,9 +174,15 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en'
-    document.title = lang === 'pt' ? 'Luis Eduardo Lustosa — Design, Tecnologia & Fabricação Digital' : 'Luis Eduardo Lustosa — Design, Technology & Digital Fabrication'
+    document.title = activeCase ? (projects.find(p=>p.slug===activeCase)?.title || 'Projeto')+' — Luis Eduardo Lustosa' : lang === 'pt' ? 'Luis Eduardo Lustosa — Design, Tecnologia & Fabricação Digital' : 'Luis Eduardo Lustosa — Design, Technology & Digital Fabrication'
     window.localStorage.setItem('luis-portfolio-language', lang)
-  }, [lang])
+  }, [lang, activeCase])
+
+  useEffect(() => {
+    const sync = () => setActiveCase(getCaseSlug())
+    window.addEventListener('popstate', sync)
+    return () => window.removeEventListener('popstate', sync)
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) setActiveSection(entry.target.id) }), { rootMargin: '-18% 0px -65% 0px' })
@@ -222,6 +232,28 @@ export default function App() {
     catch { window.location.href = 'mailto:' + email }
   }
 
+  const openCase = (event, slug) => {
+    if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return
+    event.preventDefault()
+    window.history.pushState({ project: slug }, '', '/projetos/' + slug)
+    setPreview(null)
+    setActiveCase(slug)
+  }
+  const backToProjects = event => {
+    if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return
+    event.preventDefault()
+    window.history.pushState({}, '', '/#projects')
+    setActiveCase(null)
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById('projects')
+      target?.scrollIntoView({ behavior: 'instant' })
+      target?.focus({ preventScroll: true })
+    })
+  }
+
+  if (activeCase) return <CaseStudyPage slug={activeCase} lang={lang}
+    onBack={backToProjects} onLanguageChange={() => setLang(value=>value==='pt'?'en':'pt')} />
+
   return <>
     <a className="skip-link" href="#main">{lang === 'pt' ? 'Pular para o conteúdo' : 'Skip to content'}</a>
     <header className="header">
@@ -247,7 +279,7 @@ export default function App() {
 
     <main id="main">
       <ResponsiveHero lang={lang} c={c} email={email}
-        onPreviewEnter={onPreviewEnter} onPreviewFocus={onPreviewFocus} onPreviewLeave={onPreviewLeave} />
+        onPreviewEnter={onPreviewEnter} onPreviewFocus={onPreviewFocus} onPreviewLeave={onPreviewLeave} onOpenCase={openCase} />
 
       <section className="section about-section" id="about">
         <div className="shell">
@@ -304,18 +336,19 @@ export default function App() {
                 onClick={() => setProjectView('list')}>{lang === 'pt' ? '≡ ÍNDICE' : '≡ INDEX'}</button>
             </div>
           </div>
-          <div className={'project-grid' + (projectView === 'list' ? ' is-list' : '')}>{projects.map((project, i) => <article className="project-card" key={project.slug}>
+          <div className={'project-grid' + (projectView === 'list' ? ' is-list' : '')}>{projects.map((project, i) => <article className="project-card" id={'project-'+project.slug} tabIndex={-1} key={project.slug}>
             <div className="project-visual" aria-hidden="true"><div className="project-visual-top"><span>WORK / 0{i + 1}</span><span>↗</span></div>{project.image ? <img src={project.image} alt="" loading="lazy" /> : <div className="project-monogram">{project.title}</div>}<div className="visual-bottom">{project.category[lang]}</div></div>
             <div className="project-body">
               <div className="project-meta"><span>{project.category[lang]}</span><span>0{i + 1} / 0{projects.length}</span></div>
-              <h3><a className="project-preview-link" href={project.url} target="_blank" rel="noopener noreferrer"
+              <h3><a className="project-preview-link" href={'/projetos/'+project.slug} onClick={event=>openCase(event,project.slug)}
                 onMouseEnter={event => onPreviewEnter(project, event)} onMouseLeave={onPreviewLeave}
                 onFocus={event => onPreviewFocus(project, event)} onBlur={onPreviewLeave}>{project.title}</a></h3>
               <p>{project.description[lang]}</p>
               <div className="tags">{project.tags.map(tag => <span className="tag" key={tag}>{tag}</span>)}</div>
               <details className="project-details"><summary>{lang === 'pt' ? 'SOBRE O PROJETO' : 'ABOUT THIS PROJECT'} <span>+</span></summary><p>{project.details?.[lang] || project.description[lang]}</p><dl><div><dt>{lang === 'pt' ? 'ATUAÇÃO' : 'ROLE'}</dt><dd>{project.role?.[lang] || 'Design / desenvolvimento'}</dd></div></dl></details>
               <div className="project-links">
-                <a href={project.url} target="_blank" rel="noreferrer">{c.projectVisit}</a>
+                <a className="case-study-link" href={'/projetos/'+project.slug} onClick={event=>openCase(event,project.slug)}>{lang==='pt'?'ESTUDO DE CASO ↗':'CASE STUDY ↗'}</a>
+                <a href={project.url} target="_blank" rel="noopener noreferrer">{project.slug==='monan'?(lang==='pt'?'VER CURRÍCULO LATTES ↗':'ACADEMIC PROFILE ↗'):c.projectVisit}</a>
                 {project.repo && <a href={project.repo} target="_blank" rel="noreferrer">{c.source}</a>}
               </div>
             </div>
