@@ -1,0 +1,56 @@
+/* UX edition 012: targeted, accessible refinements over the editorial design system. */
+:root{--ux-control-size:44px;--ux-mobile-section-space:clamp(68px,9vw,95px)}
+.print-index-entry{min-width:0}
+.print-index-entry:first-child .print-index-item{border-top:1px solid #ccc}
+.index-mobile-hint{display:none}
+.print-index-mobile-detail{display:none}
+.print-index-mobile-detail[hidden]{display:none!important}
+.case-study-link{font-weight:700!important;border-bottom:1px solid #181818!important}
+.project-card:focus{outline:none;scroll-margin-top:90px}
+.project-card:focus-visible{outline:2px solid #181818;outline-offset:5px}
+.project-links a{display:inline-flex;align-items:center;min-height:44px;padding-block:10px}
+.project-details summary,.note-details summary{min-height:44px;align-items:center}
+.project-view-switch button{min-height:44px;font-size:11px}
+.print-index-mobile-detail a{display:inline-flex;min-height:44px;align-items:center}
+.print-running-header,.print-index-header,.print-identity-caption{font-size:clamp(10px,.8vw,12px)}
+:focus-visible{outline:2px solid #111;outline-offset:3px}
+html{scroll-padding-top:85px}
+.section[id]{scroll-margin-top:85px}
+@media(max-width:900px){
+  .print-index-entry{border-bottom:0}
+}
+@media(max-width:680px){
+  .print-index-entry{border-bottom:1px solid #c5c5c1}
+  .print-index-item{border-bottom:0}
+  .index-mobile-hint{display:block;font:600 11px/1.5 var(--mono);letter-spacing:0;margin-top:9px;color:#5a5a57}
+  .print-index-mobile-detail:not([hidden]){display:block;padding:0 15px 22px 37px}
+  .print-index-mobile-detail p{font:400 15px/1.6 var(--body);margin:0 0 13px}
+  .print-index-mobile-detail a{font:700 12px/1.5 var(--mono);border-bottom:1px solid #111}
+  .print-index-detail{display:none}
+  .print-cover-lower{margin-top:clamp(80px,23vw,120px)!important}
+  .print-index{margin-top:clamp(68px,17vw,110px)!important}
+  .section{padding-block:var(--ux-mobile-section-space)!important}
+  .section-heading{margin-bottom:clamp(42px,9vw,60px)!important}
+  .editorial-interlude{padding-block:clamp(75px,16vw,105px)!important}
+  .print-running-header,.print-index-header{font-size:10px!important}
+  .print-identity-caption{font-size:11px!important;row-gap:12px!important}
+  .print-index-item strong{font-size:clamp(32px,9vw,46px)}
+  .project-view-switch button{font-size:11px;padding:10px 11px}
+  .project-links{gap:10px;flex-wrap:wrap}
+  .project-links a{font-size:12px}
+  .project-meta,.visual-bottom,.tag{font-size:12px}
+  .project-view-tools>span{font-size:11px;max-width:155px}
+  .notes-caption,.note-topline{font-size:11px}
+  .gallery-footer,.gallery-heading{font-size:11px}
+  .quick-nav-help{font-size:10px}
+  .case-study-link{order:-1}
+  html{scroll-padding-top:66px}
+  .section[id]{scroll-margin-top:66px}
+}
+@media(hover:none),(pointer:coarse){
+  .print-physics-reset{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
+  .print-index-item strong,.case-study-link{transition:none!important}
+}
