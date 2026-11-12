@@ -1,12 +1,12 @@
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { findCaseStudy } from '../data/caseStudies.js'
 
 export default function CaseStudyPage({ slug, lang, onBack, onLanguageChange }) {
   const project = findCaseStudy(slug)
   const pt = lang === 'pt'
   const narrative = project?.narrative
-  useEffect(() => {
-    window.scrollTo(0, 0)
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
     document.getElementById('case-title')?.focus({ preventScroll: true })
   }, [slug])
   if (!project || !narrative) return (
