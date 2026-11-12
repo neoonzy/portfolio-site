@@ -3,8 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-
-  // Caminhos relativos no build: faz o site funcionar dentro de
-  // https://www.cin.ufpe.br/~SEULOGIN/ sem precisar hardcodar o login.
-  base: './',
+  // Root-absolute assets keep direct SPA URLs (/projetos/:slug) working on Vercel.
+  // For a legacy subdirectory host (such as CIn), run: npm run build:cin
+  base: '/',
 })
