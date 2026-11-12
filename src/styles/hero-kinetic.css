@@ -96,7 +96,7 @@
   }
   .print-wordmark.kinetic-wordmark > .kinetic-word:last-child {
     align-self:flex-start;
-    margin-left:clamp(6px,1.8vw,12px);
+    margin-left:0;
   }
 }
 
