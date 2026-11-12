@@ -50,7 +50,7 @@ O portfólio não usa imagens genéricas nem currículo de terceiros. Para obter
 
 ## Publicação
 
-O `vercel.json` mantém os deploys Git automáticos desativados (`git.deploymentEnabled: false`). As rotas `/projetos/:slug` são reescritas para a SPA no servidor Vercel. Alterar a branch ou aprovar um PR não publica o site automaticamente.
+O `vercel.json` mantém os deploys Git automáticos desativados (`git.deploymentEnabled: false`). As rotas `/projetos/:slug` são reescritas para a SPA no servidor Vercel. O build principal usa recursos com caminhos absolutos (`base: '/'`) para permitir abrir diretamente os estudos de caso. Para publicar em uma pasta como `/~usuario/` do CIn, use `npm run build:cin` (base relativa); rotas internas profundas exigem configuração de fallback no servidor. Alterar a branch ou aprovar um PR não publica o site automaticamente.
 
 ## Auditoria e QA
 
