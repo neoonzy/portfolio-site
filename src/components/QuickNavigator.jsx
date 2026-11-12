@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { chapters } from '../data/chapters.js'
+import { projects } from '../data/projects.js'
 
-const sections = chapters
+const normalize = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase().trim()
 
 export default function QuickNavigator({ lang }) {
   const dialogRef = useRef(null)
@@ -10,35 +11,47 @@ export default function QuickNavigator({ lang }) {
   const [selected, setSelected] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const pt = lang === 'pt'
-  const filtered = sections.filter(item => item[lang].toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()))
+  const term = normalize(query)
+  const sectionMatches = chapters.filter(item => normalize(item[lang] + ' ' + item.shortPt + ' ' + item.shortEn).includes(term))
+  const projectMatches = term ? projects.filter(item => normalize([
+    item.title, item.category[lang], item.description[lang], item.details?.[lang],
+    item.role?.[lang], ...item.tags,
+  ].join(' ')).includes(term)) : []
+  const results = [
+    ...sectionMatches.map(item => ({ ...item, type: 'section', label: item[lang], target: item.id })),
+    ...projectMatches.map(item => ({ ...item, type: 'project', label: item.title, target: 'project-' + item.slug })),
+  ]
 
   const open = () => {
-    const dialog = dialogRef.current
-    if (!dialog || dialog.open) return
+    if (dialogRef.current?.open) return
     setQuery('')
     setSelected(0)
-    dialog.showModal()
+    dialogRef.current?.showModal()
     setIsOpen(true)
     window.requestAnimationFrame(() => inputRef.current?.focus())
   }
-  const close = () => {
-    if (dialogRef.current?.open) dialogRef.current.close()
-    setIsOpen(false)
-  }
+  const close = () => { if (dialogRef.current?.open) dialogRef.current.close(); setIsOpen(false) }
   const go = id => {
     close()
-    document.getElementById(id)?.scrollIntoView({
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+    const target = document.getElementById(id)
+    if (!target) return
+    window.location.hash = id
+    const heading = target.querySelector('h1,h2,h3') || target
+    const oldTabIndex = heading.getAttribute('tabindex')
+    heading.setAttribute('tabindex','-1')
+    window.requestAnimationFrame(() => {
+      heading.focus({ preventScroll:true })
+      target.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block:'start' })
+      heading.addEventListener('blur', () => {
+        if (oldTabIndex === null) heading.removeAttribute('tabindex')
+        else heading.setAttribute('tabindex', oldTabIndex)
+      }, { once:true })
     })
-    window.history.replaceState(null, '', '#' + id)
   }
-
   useEffect(() => {
-    const handleKey = event => {
-      if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey || event.repeat) return
-      const target = event.target
-      if (target instanceof HTMLElement &&
-        (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) return
+    const handler = event => {
+      if (event.key !== '/' || event.repeat || event.ctrlKey || event.metaKey || event.altKey) return
+      if (event.target instanceof HTMLElement && (event.target.isContentEditable || ['INPUT','TEXTAREA','SELECT'].includes(event.target.tagName))) return
       if (document.querySelector('dialog[open]')) return
       event.preventDefault()
       const dialog = dialogRef.current
@@ -49,86 +62,62 @@ export default function QuickNavigator({ lang }) {
       setIsOpen(true)
       window.requestAnimationFrame(() => inputRef.current?.focus())
     }
-    document.addEventListener('keydown', handleKey)
-    return () => document.removeEventListener('keydown', handleKey)
+    document.addEventListener('keydown',handler)
+    return () => document.removeEventListener('keydown',handler)
   }, [])
-
   const inputKeys = event => {
-    if (event.key === 'ArrowDown' && filtered.length) {
-      event.preventDefault()
-      setSelected(i => Math.min(i + 1, filtered.length - 1))
-    } else if (event.key === 'ArrowUp' && filtered.length) {
-      event.preventDefault()
-      setSelected(i => Math.max(i - 1, 0))
-    } else if (event.key === 'Enter' && filtered.length) {
-      event.preventDefault()
-      go(filtered[Math.min(selected, filtered.length - 1)].id)
-    }
+    if (event.key === 'ArrowDown' && results.length) { event.preventDefault(); setSelected(v=>Math.min(v+1,results.length-1)) }
+    if (event.key === 'ArrowUp' && results.length) { event.preventDefault(); setSelected(v=>Math.max(v-1,0)) }
+    if (event.key === 'Enter' && results.length) { event.preventDefault(); go(results[Math.min(selected,results.length-1)].target) }
   }
-
-  return (
-    <>
-      <button className="quick-nav-trigger" type="button" onClick={open}
-        aria-haspopup="dialog" aria-expanded={isOpen} aria-controls="quick-nav"
-        title={pt ? 'Buscar seção · /' : 'Search sections · /'}
-        aria-label={pt ? 'Buscar seção' : 'Search sections'}>
-        <span className="quick-nav-slash" aria-hidden="true">/</span>
-        <span className="quick-nav-label">{pt ? 'BUSCAR' : 'SEARCH'}</span>
-        <span className="quick-nav-label-mobile">{pt ? 'BUSCAR' : 'SEARCH'}</span>
-        <span className="quick-nav-arrow" aria-hidden="true">↗</span>
-      </button>
-      <dialog ref={dialogRef} id="quick-nav" className="quick-nav-dialog"
-        aria-label={pt ? 'Navegação rápida' : 'Quick navigation'}
-        onClose={() => setIsOpen(false)}
-        onClick={event => { if (event.target === dialogRef.current) close() }}>
-        <div className="quick-nav">
-          <div className="quick-nav-top">
-            <span>INDEX / 001</span>
-            <span>LUIS EDUARDO — 2026</span>
-            <button type="button" onClick={close} aria-label={pt ? 'Fechar navegação rápida' : 'Close quick navigation'}>
-              ESC <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div className="quick-nav-heading">
-            <h2>{pt ? <>NAVEGAÇÃO<span>RÁPIDA.</span></> : <>QUICK<span>ACCESS.</span></>}</h2>
-            <span>{pt ? 'ÍNDICE' : 'INDEX'} / {String(sections.length).padStart(2, '0')}</span>
-          </div>
-          <label htmlFor="quick-nav-input" className="quick-nav-input-label">
-            {pt ? 'BUSCAR SEÇÃO /' : 'SEARCH SECTION /'}
-          </label>
-          <div className="quick-nav-search">
-            <span aria-hidden="true">/</span>
-            <input ref={inputRef} id="quick-nav-input" type="search" value={query}
-              autoComplete="off"
-              onChange={event => { setQuery(event.target.value); setSelected(0) }}
-              onKeyDown={inputKeys}
-              placeholder={pt ? 'Digite uma seção...' : 'Type a section...'} />
-            <span className="quick-nav-search-hint">↵</span>
-          </div>
-          <div className="quick-nav-results-heading">
-            <span>{pt ? 'SEÇÕES /' : 'SECTIONS /'} {String(filtered.length).padStart(2, '0')}</span>
-            <span>↗</span>
-          </div>
-          <div className="quick-nav-results">
-            {filtered.map((item, index) => (
-              <button type="button" key={item.id}
-                className={index === selected ? 'is-highlighted' : ''}
-                onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)}
-                onClick={() => go(item.id)}>
-                <span>{String(sections.findIndex(x => x.id === item.id) + 1).padStart(2, '0')}</span>
-                <strong>{item[lang]}</strong><span aria-hidden="true">↗</span>
-              </button>
-            ))}
-            {filtered.length === 0 && (
-              <p role="status">{pt ? 'NENHUMA SEÇÃO ENCONTRADA.' : 'NO MATCHING SECTIONS.'}</p>
-            )}
-          </div>
-          <div className="quick-nav-help">
-            <span>{pt ? 'ATALHO / PRESSIONE “/” PARA ABRIR' : 'SHORTCUT / PRESS “/” TO OPEN'}</span>
-            <span>{pt ? '↑↓ SELECIONAR · ↵ IR · ESC FECHAR' : '↑↓ SELECT · ↵ GO · ESC CLOSE'}</span>
-          </div>
+  return <>
+    <button className="quick-nav-trigger" type="button" onClick={open} aria-haspopup="dialog"
+      aria-expanded={isOpen} aria-controls="quick-nav"
+      title={pt ? 'Buscar seção ou projeto · /' : 'Search sections or projects · /'}
+      aria-label={pt ? 'Buscar seção ou projeto' : 'Search sections or projects'}>
+      <span className="quick-nav-slash" aria-hidden="true">/</span>
+      <span className="quick-nav-label">{pt ? 'BUSCAR' : 'SEARCH'}</span>
+      <span className="quick-nav-label-mobile">{pt ? 'BUSCAR' : 'SEARCH'}</span>
+      <span className="quick-nav-arrow" aria-hidden="true">↗</span>
+    </button>
+    <dialog ref={dialogRef} id="quick-nav" className="quick-nav-dialog"
+      aria-label={pt ? 'Busca rápida de seções e projetos' : 'Quick search across sections and projects'}
+      onClose={()=>setIsOpen(false)} onClick={event=>{if(event.target===dialogRef.current)close()}}>
+      <div className="quick-nav">
+        <div className="quick-nav-top"><span>INDEX / SEARCH</span><span>LUIS EDUARDO — 2026</span>
+          <button type="button" onClick={close} aria-label={pt?'Fechar busca':'Close search'}>ESC <span aria-hidden="true">×</span></button>
         </div>
-      </dialog>
-    </>
-  )
+        <div className="quick-nav-heading">
+          <h2>{pt ? <>NAVEGAÇÃO<span>RÁPIDA.</span></> : <>QUICK<span>ACCESS.</span></>}</h2>
+          <span>{pt?'BUSCA':'SEARCH'} / {String(results.length).padStart(2,'0')}</span>
+        </div>
+        <label htmlFor="quick-nav-input" className="quick-nav-input-label">{pt?'BUSCAR SEÇÃO OU PROJETO /':'SEARCH SECTION OR PROJECT /'}</label>
+        <div className="quick-nav-search">
+          <span aria-hidden="true">/</span>
+          <input ref={inputRef} id="quick-nav-input" type="search" value={query} autoComplete="off"
+            onChange={event=>{setQuery(event.target.value);setSelected(0)}} onKeyDown={inputKeys}
+            placeholder={pt?'Ex.: Zumbido, React, contato...':'E.g. Typeee, React, contact...'} />
+          <span className="quick-nav-search-hint">↵</span>
+        </div>
+        <div className="quick-nav-results-heading">
+          <span>{pt?'RESULTADOS /':'RESULTS /'} {String(results.length).padStart(2,'0')}</span><span>↗</span>
+        </div>
+        <div className="quick-nav-results">
+          {results.map((item,index)=><button type="button" key={item.type+item.target}
+            className={selected===index?'is-highlighted':''}
+            onMouseEnter={()=>setSelected(index)} onFocus={()=>setSelected(index)}
+            onClick={()=>go(item.target)}>
+            <span>{String(index+1).padStart(2,'0')}</span>
+            <strong>{item.label}<small className="quick-nav-result-type">{item.type==='project'?(pt?'PROJETO':'PROJECT'):(pt?'SEÇÃO':'SECTION')}</small></strong>
+            <span aria-hidden="true">↗</span>
+          </button>)}
+          {results.length===0&&<p role="status">{pt?'NENHUM RESULTADO. TENTE OUTRO TERMO.':'NO RESULTS. TRY ANOTHER SEARCH.'}</p>}
+        </div>
+        <div className="quick-nav-help">
+          <span>{pt?'ATALHO / PRESSIONE “/” PARA ABRIR':'SHORTCUT / PRESS “/” TO OPEN'}</span>
+          <span>{pt?'↑↓ SELECIONAR · ↵ IR · ESC FECHAR':'↑↓ SELECT · ↵ GO · ESC CLOSE'}</span>
+        </div>
+      </div>
+    </dialog>
+  </>
 }
