@@ -5,9 +5,9 @@
  */
 export const chapters = [
   { id: 'top', pt: 'Abertura', en: 'Introduction', shortPt: 'INÍCIO', shortEn: 'INTRO' },
+  { id: 'projects', pt: 'Projetos na prática', en: 'Selected projects', shortPt: 'PROJETOS', shortEn: 'PROJECTS' },
   { id: 'about', pt: 'Sobre mim', en: 'About me', shortPt: 'SOBRE', shortEn: 'ABOUT' },
   { id: 'experience', pt: 'Trajetória', en: 'Experience', shortPt: 'TRAJETÓRIA', shortEn: 'EXPERIENCE' },
-  { id: 'projects', pt: 'Projetos na prática', en: 'Selected projects', shortPt: 'PROJETOS', shortEn: 'PROJECTS' },
   { id: 'lab', pt: 'Experimentar o Typeee', en: 'Try Typeee', shortPt: 'TYPEEE', shortEn: 'TYPEEE' },
   { id: 'notes', pt: 'Caderno de processo', en: 'Process notebook', shortPt: 'PROCESSOS', shortEn: 'PROCESS' },
   { id: 'gallery', pt: 'Trabalhos visuais', en: 'Visual work', shortPt: 'DESIGN', shortEn: 'DESIGN' },
