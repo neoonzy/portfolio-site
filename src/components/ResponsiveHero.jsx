@@ -7,8 +7,9 @@ import KineticWordmark from './KineticWordmark.jsx'
  * No initial animation, artificial motion studies, or personal photography.
  * The project index is the only interaction in this section.
  */
-export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPreviewFocus, onPreviewLeave }) {
+export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPreviewFocus, onPreviewLeave, onOpenCase }) {
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [expandedMobileIndex, setExpandedMobileIndex] = useState(null)
   const lettersRef = useRef(null)
   const selected = projects[selectedIndex]
   const pt = lang === 'pt'
@@ -20,7 +21,7 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
           <span>INDEX</span>
           <span>/ 01 — {pt ? 'INTRO' : 'INTRO'}</span>
           <span>LUIS EDUARDO / {pt ? 'PORTFÓLIO' : 'PORTFOLIO'}</span>
-          <span>GRID ↗</span>
+          <span>PORTFOLIO / 09</span>
         </div>
 
         <div className="print-cover">
@@ -61,8 +62,10 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
           <div className="print-index-grid">
             <div className="print-index-nav" role="group" aria-label={pt ? 'Selecionar projeto' : 'Select project'}>
               {projects.map((project, index) => (
+                <div className="print-index-entry" key={project.slug}>
                 <button
-                  key={project.slug}
+                  aria-expanded={expandedMobileIndex === index}
+                  aria-controls={'hero-mobile-project-' + index}
                   type="button"
                   aria-pressed={selectedIndex === index}
                   className={'print-index-item' + (selectedIndex === index ? ' is-selected' : '')}
@@ -70,12 +73,21 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
                   onBlur={onPreviewLeave}
                   onMouseEnter={event => { setSelectedIndex(index); onPreviewEnter?.(project, event) }}
                   onMouseLeave={onPreviewLeave}
-                  onClick={() => { setSelectedIndex(index); onPreviewLeave?.() }}
+                  onClick={() => {
+                    setSelectedIndex(index)
+                    setExpandedMobileIndex(current => current === index ? null : index)
+                    onPreviewLeave?.()
+                  }}
                 >
                   <span>{String(index + 1).padStart(2, '0')}</span>
-                  <strong>{project.title}</strong>
-                  <span aria-hidden="true">↗</span>
+                  <strong>{project.title}<small className="index-mobile-hint">{pt ? 'VER RESUMO' : 'VIEW DETAILS'}</small></strong>
+                  <span aria-hidden="true">{expandedMobileIndex === index ? '−' : '+'}</span>
                 </button>
+                <div id={'hero-mobile-project-' + index} className="print-index-mobile-detail" hidden={expandedMobileIndex !== index}>
+                  <p>{project.description[lang]}</p>
+                  <a href={'/projetos/' + project.slug} onClick={event => onOpenCase?.(event,project.slug)}>{pt ? 'ESTUDO DE CASO' : 'CASE STUDY'} ↗</a>
+                </div>
+                </div>
               ))}
             </div>
             <div className="print-index-detail" aria-live="polite" aria-atomic="true">
@@ -87,12 +99,12 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
                 <span className="print-minilabel">{selected.category[lang]}</span>
                 <h2>{selected.title}<span aria-hidden="true">.</span></h2>
                 <p>{selected.description[lang]}</p>
-                <a href={selected.url} target="_blank" rel="noopener noreferrer">
-                  {pt ? 'VISITAR O PROJETO' : 'OPEN PROJECT'} <span aria-hidden="true">↗</span>
+                <a href={'/projetos/' + selected.slug} onClick={event => onOpenCase?.(event, selected.slug)}>
+                  {pt ? 'LER ESTUDO DE CASO' : 'READ CASE STUDY'} <span aria-hidden="true">↗</span>
                 </a>
               </div>
               <div className="print-index-detail-foot">
-                <span>{pt ? 'PASSE O MOUSE OU SELECIONE' : 'HOVER OR SELECT'}</span>
+                <span>{pt ? 'ESCOLHA UM PROJETO' : 'CHOOSE A PROJECT'}</span>
                 <span>LEL © 26</span>
               </div>
             </div>
@@ -100,7 +112,7 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
         </div>
 
         <div className="print-hero-footer">
-          <span>SCROLL / 001 — 007</span>
+          <span>SCROLL / {pt ? 'EXPLORAR PROJETOS' : 'EXPLORE PROJECTS'}</span>
           <a href="#about">{pt ? 'CONTINUAR EXPLORANDO' : 'KEEP EXPLORING'} <span aria-hidden="true">↓</span></a>
         </div>
       </div>
