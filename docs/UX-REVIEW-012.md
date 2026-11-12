@@ -44,7 +44,7 @@ A lógica pura fica em `src/lib/searchPortfolio.js` e tem testes automáticos.
 
 ## 4. Visual e Typeee
 
-A galeria visual exibe quatro trabalhos do Behance e Mapeia inicialmente. Os quatro embeds restantes só entram no DOM ao selecionar **Ver mais trabalhos**, reduzindo carregamento de terceiros em visitas curtas. Não foram inventados thumbnails para projetos dos quais ainda não temos imagens estáticas.
+A galeria visual exibe inicialmente quatro trabalhos do Behance e Mapeia. **Nenhum iframe de terceiro é carregado automaticamente**: cada card do Behance mostra uma capa editorial identificada e o controle **Carregar prévia**, com link permanente para abrir no Behance caso o embed não funcione. Outros quatro trabalhos aparecem ao selecionar **Ver mais trabalhos**. Não foram inventadas thumbnails; quando fotografias ou capas originais estiverem disponíveis, elas deverão substituir as capas tipográficas.
 
 A demonstração do Typeee tem botão de começar com foco real no campo de texto, aceita Enter e Espaço, e trata eventos de composição de caracteres do teclado virtual sem interpretar a composição incompleta como fim de palavra. Preserva os resultados e a contagem de tempo existentes.
 
@@ -79,7 +79,10 @@ Um workflow adicional `.github/workflows/visual-qa.yml` monta um servidor Vite t
 
 ### Revisão humana pendente
 
-- [ ] Conferir os screenshots em Safari iPhone, Chrome Android e desktop, incluindo zoom a 200%.
+A inspeção das capturas de Playwright identificou áreas vazias nos embeds Behance e um estado de rolagem inesperado na primeira captura de um estudo de caso. Ambos foram corrigidos; o workflow agora verifica abertura dos estudos no topo e prévias externas somente após escolha do usuário.
+
+- [x] Conferir as capturas automatizadas em 320, 390, 680, 768 e 1440px; não houve overflow horizontal ou desalinhamento do nome.
+- [ ] Repetir em Safari iPhone, Chrome Android e desktop reais, incluindo zoom a 200%.
 - [ ] Testar o painel BUSCAR e a ordem de foco com VoiceOver/TalkBack.
 - [ ] Revisar textos e dados pessoais que serão publicados nos estudos de caso.
 - [ ] Substituir os embeds do Behance por thumbnails autênticas quando as imagens estiverem disponíveis.
