@@ -87,7 +87,7 @@ export default function StudioPanel({ lang }) {
 
   const completeWord = raw => {
     if (gameRef.current.phase === 'finished') return
-    const typedWord = raw.trim().split(/\\s+/)[0]
+    const typedWord = raw.trim().split(/\s+/)[0]
     if (!typedWord) return
     const current = gameRef.current
     const word = words[current.index % words.length]
@@ -109,7 +109,7 @@ export default function StudioPanel({ lang }) {
     if (gameRef.current.phase === 'finished') return
     const raw = event.target.value
     if (gameRef.current.phase === 'idle' && raw.length > 0 && !startedAt.current) startedAt.current = Date.now()
-    if (!composing.current && /\\s/.test(raw)) completeWord(raw)
+    if (!composing.current && /\s/.test(raw)) completeWord(raw)
     else setGame(previous => ({
       ...previous,
       phase: previous.phase === 'idle' && raw.length ? 'running' : previous.phase,
