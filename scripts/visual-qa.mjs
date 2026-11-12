@@ -68,6 +68,7 @@ try {
   const desktopCase = await browser.newPage({ viewport:{ width:1440, height:900 } })
   await desktopCase.goto(base + '/projetos/typeee', { waitUntil:'domcontentloaded' })
   await desktopCase.locator('#case-title').waitFor({ state:'visible' })
+  assert.equal(await desktopCase.locator('#case-title').evaluate(node => getComputedStyle(node).outlineStyle), 'none')
   await desktopCase.evaluate(() => document.fonts?.ready)
   await desktopCase.screenshot({ path:'visual-qa-artifacts/case-typeee-1440.png', fullPage:false })
   await desktopCase.close()
