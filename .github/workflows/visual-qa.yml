@@ -1,0 +1,46 @@
+name: Visual UX smoke tests
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  browser-qa:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'feat/ux-audit-complete-revision'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install project
+        run: npm ci
+      - name: Install browser testing tools (CI only)
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Build production bundle
+        run: npm run build
+      - name: Start local preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/portfolio-preview.log 2>&1 &
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:4173/ >/dev/null
+      - name: Verify layout and critical interactions
+        run: node scripts/visual-qa.mjs
+      - name: Save screenshots for visual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-visual-qa
+          path: visual-qa-artifacts/
+          if-no-files-found: ignore
+          retention-days: 7
