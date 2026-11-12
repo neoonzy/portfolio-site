@@ -64,10 +64,9 @@
   .print-cover-statement { max-width:570px; }
   .print-identity-caption span:last-child { display:none; }
 }
-/* Mobile wordmark: deliberate, legible two-line rhythm.
-   The former 32vw / 23.5vw sizes and tight negative tracking made glyphs
-   crowd and let the slash intersect the name below. Keep generous spacing,
-   leave margins, and preserve each glyph as an independent physics body. */
+/* Two mobile lines share one font-size and tracking rule so the names
+   have identical typography. Size is constrained by the longer EDUARDO
+   to avoid clipping; glyphs remain independent physics bodies. */
 @media(max-width:680px) {
   .print-wordmark.kinetic-wordmark {
     display:flex;
@@ -89,17 +88,15 @@
     min-width:0;
     line-height:1.04;
     white-space:nowrap;
+    font-size:min(17.5vw,116px);
+    letter-spacing:-.045em;
   }
   .print-wordmark.kinetic-wordmark > .kinetic-word:first-child {
     align-self:flex-start;
-    font-size:min(26.5vw,164px);
-    letter-spacing:-.045em;
   }
   .print-wordmark.kinetic-wordmark > .kinetic-word:last-child {
     align-self:flex-start;
     margin-left:clamp(6px,1.8vw,12px);
-    font-size:min(17.5vw,116px);
-    letter-spacing:-.045em;
   }
 }
 
