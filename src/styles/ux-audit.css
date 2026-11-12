@@ -72,3 +72,17 @@ html{scroll-padding-top:85px}
  .gallery-load-more{width:100%}
  .gallery-card iframe{height:clamp(250px,78vw,335px)}
 }
+
+/* A visible way to start the embedded Typeee on virtual keyboards. */
+.typeee-input-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:11px}
+.typeee-input-heading .typeee-typing-label{margin:0}
+.typeee-start{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 13px;border:1px solid currentColor;background:transparent;color:inherit;font:600 11px/1.5 var(--mono);cursor:pointer}
+.typeee-start:hover,.typeee-start:focus-visible{background:#e5e5e1;color:#111}
+.typeee-input{min-height:48px;font-size:16px!important}
+.case-cover{aspect-ratio:16/9;overflow:hidden}
+.case-cover>img{height:100%;object-fit:contain}
+.case-cover .case-placeholder{height:100%}
+@media(max-width:680px){
+  .typeee-input-heading{align-items:stretch}
+  .typeee-start{width:100%;justify-content:center}
+}
