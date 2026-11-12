@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { projects, visualProjects } from './data/projects.js'
+import { projects } from './data/projects.js'
 import StudioPanel from './components/StudioPanel.jsx'
 import FieldNotes from './components/FieldNotes.jsx'
 import ResponsiveHero from './components/ResponsiveHero.jsx'
@@ -7,6 +7,8 @@ import QuickNavigator from './components/QuickNavigator.jsx'
 import FloatingProjectPreview from './components/FloatingProjectPreview.jsx'
 import LayoutGridOverlay from './components/LayoutGridOverlay.jsx'
 import MobileSectionIndicator from './components/MobileSectionIndicator.jsx'
+import VisualGallery from './components/VisualGallery.jsx'
+import CaseStudyPage from './components/CaseStudyPage.jsx'
 
 const content = {
   pt: {
@@ -19,7 +21,7 @@ const content = {
     heroAction: 'VER PROJETOS',
     heroSecond: 'FALAR COMIGO',
     heroSticker: 'FAÇO ACONTECER ↗',
-    labelAbout: '01 / QUEM SOU',
+    labelAbout: '03 / QUEM SOU',
     aboutTitle: 'SOBRE MIM.',
     aboutLead: 'Designer, estudante de Sistemas de Informação na UFPE e entusiasta da cultura maker.',
     aboutText: 'Sou de Curimatá, no Piauí, moro em Recife e trabalho na interseção entre design, desenvolvimento front-end, prototipagem 3D e comunicação. Gosto de entender o problema, desenhar uma solução e colocar a mão na massa para fazê-la existir.',
@@ -32,7 +34,7 @@ const content = {
       ['2024 — 2025', 'Engenharia da Computação', 'UFPE · formação interrompida'],
       ['2021 — 2023', 'Ensino médio e formação técnica em Informática', 'Instituto Federal do Piauí · IFPI'],
     ],
-    labelExperience: '02 / EXPERIÊNCIA',
+    labelExperience: '04 / EXPERIÊNCIA',
     experienceTitle: 'CAMINHO\nPERCORRIDO.',
     experienceIntro: 'Projetos, extensão e trabalho em diferentes frentes criativas e técnicas.',
     experience: [
@@ -43,25 +45,25 @@ const content = {
       { date: '2024 — 2025', title: 'Modelagem e prototipagem 3D', place: 'Monan · UFPE', desc: 'Criação de modelos e protótipos físicos em projeto interdisciplinar de tecnologia e impacto social.', tags: ['Modelagem 3D', 'Protótipos'] },
       { date: '2021 — 2022', title: 'Monitor de robótica educacional', place: 'Projeto de Robótica como Auxílio Educacional · IFPI', desc: 'Apoio ao ensino de robótica e atividades práticas com estudantes.', tags: ['Robótica', 'Educação'] },
     ],
-    labelProjects: '03 / SELEÇÃO',
+    labelProjects: '02 / SELEÇÃO',
     projectsTitle: 'PROJETOS\nNA PRÁTICA.',
     projectsIntro: 'Interfaces, iniciativas independentes e experiências que misturam o técnico e o criativo.',
     projectVisit: 'ABRIR PROJETO ↗',
     source: 'CÓDIGO ↗',
-    labelGallery: '05 / PORTFÓLIO VISUAL',
+    labelGallery: '07 / PORTFÓLIO VISUAL',
     galleryTitle: 'PORTFÓLIO\nVISUAL.',
     galleryIntro: 'Seleção visual de projetos autorais e interfaces desenvolvidas. Explore os trabalhos e conheça suas aplicações.',
     galleryCard: 'TRABALHO VISUAL',
     galleryMore: 'VER TODOS NO BEHANCE ↗',
     galleryFallback: 'Abrir no Behance ↗',
-    labelSkills: '06 / CAIXA DE FERRAMENTAS',
+    labelSkills: '08 / CAIXA DE FERRAMENTAS',
     skillsTitle: 'O QUE EU\nUSO E FAÇO.',
     skills: [
       { title: 'INTERFACES & WEB', items: ['Figma', 'UI/UX Design', 'React', 'JavaScript', 'HTML / CSS', 'Styled Components', 'Material UI'] },
       { title: 'OFICINA & PROTÓTIPOS', items: ['Modelagem 3D', 'Fusion 360', 'SketchUp', 'Impressão 3D', 'Corte a laser', 'Arduino', 'Raspberry Pi'] },
       { title: 'CRIAÇÃO & COMUNICAÇÃO', items: ['Identidade visual', 'Fotografia', 'Produção de conteúdo', 'Diagramação', 'Comunicação de projetos'] },
     ],
-    labelContact: '07 / CONTATO',
+    labelContact: '09 / CONTATO',
     contactTitle: 'TEM UMA IDEIA?\nBORA FAZER.',
     contactText: 'Aberto a conversas, projetos e colaborações entre design, tecnologia, fabricação digital e iniciativas culturais.',
     emailAction: 'ME MANDA UM E-MAIL ↗',
@@ -84,7 +86,7 @@ const content = {
     heroAction: 'SEE PROJECTS',
     heroSecond: 'GET IN TOUCH',
     heroSticker: 'MAKING IT REAL ↗',
-    labelAbout: '01 / ABOUT',
+    labelAbout: '03 / ABOUT',
     aboutTitle: 'ABOUT ME.',
     aboutLead: 'Designer, Information Systems student at UFPE and maker culture enthusiast.',
     aboutText: 'Originally from Curimatá, Piauí, and now based in Recife, I work across design, front-end development, 3D prototyping and communication. I love understanding a challenge, designing a solution and actually building it.',
@@ -97,7 +99,7 @@ const content = {
       ['2024 — 2025', 'Computer Engineering', 'UFPE · discontinued degree'],
       ['2021 — 2023', 'High school and technical training in IT', 'Federal Institute of Piauí · IFPI'],
     ],
-    labelExperience: '02 / EXPERIENCE',
+    labelExperience: '04 / EXPERIENCE',
     experienceTitle: 'THE ROAD\nSO FAR.',
     experienceIntro: 'Creative and technical work across university outreach, teams and projects.',
     experience: [
@@ -108,25 +110,25 @@ const content = {
       { date: '2024 — 2025', title: '3D Modeling & Prototyping', place: 'Monan · UFPE', desc: 'Development of digital models and physical prototypes in a social-impact technology initiative.', tags: ['3D modeling', 'Prototypes'] },
       { date: '2021 — 2022', title: 'Educational Robotics Monitor', place: 'Educational Robotics Project · IFPI', desc: 'Teaching support and practical robotics activities with students.', tags: ['Robotics', 'Education'] },
     ],
-    labelProjects: '03 / SELECTED WORK',
+    labelProjects: '02 / SELECTED WORK',
     projectsTitle: 'PROJECTS\nIN ACTION.',
     projectsIntro: 'Interfaces, independent initiatives and experiments combining technical and creative practice.',
     projectVisit: 'VIEW PROJECT ↗',
     source: 'SOURCE ↗',
-    labelGallery: '05 / VISUAL WORK',
+    labelGallery: '07 / VISUAL WORK',
     galleryTitle: 'SELECTED\nVISUALS.',
     galleryIntro: 'A visual selection of independent projects and interfaces. Explore the work and its applications.',
     galleryCard: 'VISUAL PROJECT',
     galleryMore: 'ALL WORK ON BEHANCE ↗',
     galleryFallback: 'Open on Behance ↗',
-    labelSkills: '06 / TOOLBOX',
+    labelSkills: '08 / TOOLBOX',
     skillsTitle: 'TOOLS &\nPRACTICE.',
     skills: [
       { title: 'INTERFACES & WEB', items: ['Figma', 'UI/UX Design', 'React', 'JavaScript', 'HTML / CSS', 'Styled Components', 'Material UI'] },
       { title: 'MAKING & PROTOTYPES', items: ['3D modeling', 'Fusion 360', 'SketchUp', '3D printing', 'Laser cutting', 'Arduino', 'Raspberry Pi'] },
       { title: 'DESIGN & COMMUNICATION', items: ['Brand identity', 'Photography', 'Content creation', 'Editorial layout', 'Project communications'] },
     ],
-    labelContact: '07 / CONTACT',
+    labelContact: '09 / CONTACT',
     contactTitle: 'GOT AN IDEA?\nLET’S MAKE IT.',
     contactText: 'Open to projects and collaborations across design, technology, digital fabrication and culture.',
     emailAction: 'SEND ME AN EMAIL ↗',
@@ -141,7 +143,7 @@ const content = {
   },
 }
 
-const ids = ['about', 'experience', 'projects', 'notes', 'gallery', 'skills', 'contact']
+const ids = ['projects', 'about', 'experience', 'notes', 'gallery', 'skills', 'contact']
 const links = [
   { name: 'GITHUB', href: 'https://github.com/neoonzy' },
   { name: 'BEHANCE', href: 'https://www.behance.net/lustosabr' },
@@ -159,7 +161,10 @@ function SectionHeading({ label, title, intro }) {
   </div>
 }
 
+const getCaseSlug = () => window.location.pathname.match(/^\/projetos\/([a-z0-9-]+)\/?$/)?.[1] ?? null
+
 export default function App() {
+  const [activeCase, setActiveCase] = useState(getCaseSlug)
   const [lang, setLang] = useState(() => window.localStorage.getItem('luis-portfolio-language') === 'en' ? 'en' : 'pt')
   const [activeSection, setActiveSection] = useState('')
   const [emailCopied, setEmailCopied] = useState(false)
@@ -170,9 +175,15 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en'
-    document.title = lang === 'pt' ? 'Luis Eduardo Lustosa — Design, Tecnologia & Fabricação Digital' : 'Luis Eduardo Lustosa — Design, Technology & Digital Fabrication'
+    document.title = activeCase ? (projects.find(p=>p.slug===activeCase)?.title || 'Projeto')+' — Luis Eduardo Lustosa' : lang === 'pt' ? 'Luis Eduardo Lustosa — Design, Tecnologia & Fabricação Digital' : 'Luis Eduardo Lustosa — Design, Technology & Digital Fabrication'
     window.localStorage.setItem('luis-portfolio-language', lang)
-  }, [lang])
+  }, [lang, activeCase])
+
+  useEffect(() => {
+    const sync = () => setActiveCase(getCaseSlug())
+    window.addEventListener('popstate', sync)
+    return () => window.removeEventListener('popstate', sync)
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) setActiveSection(entry.target.id) }), { rootMargin: '-18% 0px -65% 0px' })
@@ -222,6 +233,28 @@ export default function App() {
     catch { window.location.href = 'mailto:' + email }
   }
 
+  const openCase = (event, slug) => {
+    if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return
+    event.preventDefault()
+    window.history.pushState({ project: slug }, '', '/projetos/' + slug)
+    setPreview(null)
+    setActiveCase(slug)
+  }
+  const backToProjects = event => {
+    if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return
+    event.preventDefault()
+    window.history.pushState({}, '', '/#projects')
+    setActiveCase(null)
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById('projects')
+      target?.scrollIntoView({ behavior: 'instant' })
+      target?.focus({ preventScroll: true })
+    })
+  }
+
+  if (activeCase) return <CaseStudyPage slug={activeCase} lang={lang}
+    onBack={backToProjects} onLanguageChange={() => setLang(value=>value==='pt'?'en':'pt')} />
+
   return <>
     <a className="skip-link" href="#main">{lang === 'pt' ? 'Pular para o conteúdo' : 'Skip to content'}</a>
     <header className="header">
@@ -247,7 +280,39 @@ export default function App() {
 
     <main id="main">
       <ResponsiveHero lang={lang} c={c} email={email}
-        onPreviewEnter={onPreviewEnter} onPreviewFocus={onPreviewFocus} onPreviewLeave={onPreviewLeave} />
+        onPreviewEnter={onPreviewEnter} onPreviewFocus={onPreviewFocus} onPreviewLeave={onPreviewLeave} onOpenCase={openCase} />
+
+      <section className="section projects-section" id="projects">
+        <div className="shell">
+          <SectionHeading label={c.labelProjects} title={c.projectsTitle} intro={c.projectsIntro} />
+          <div className="project-view-tools">
+            <span>{lang === 'pt' ? 'EXIBIÇÃO / SELECIONE UM FORMATO' : 'DISPLAY / CHOOSE A FORMAT'}</span>
+            <div className="project-view-switch" role="group" aria-label={lang === 'pt' ? 'Formato de apresentação dos projetos' : 'Project presentation layout'}>
+              <button type="button" aria-pressed={projectView === 'grid'} className={projectView === 'grid' ? 'is-active' : ''}
+                onClick={() => setProjectView('grid')}>{lang === 'pt' ? '▦ GRADE' : '▦ GRID'}</button>
+              <button type="button" aria-pressed={projectView === 'list'} className={projectView === 'list' ? 'is-active' : ''}
+                onClick={() => setProjectView('list')}>{lang === 'pt' ? '≡ ÍNDICE' : '≡ INDEX'}</button>
+            </div>
+          </div>
+          <div className={'project-grid' + (projectView === 'list' ? ' is-list' : '')}>{projects.map((project, i) => <article className="project-card" id={'project-'+project.slug} tabIndex={-1} key={project.slug}>
+            <div className="project-visual" aria-hidden="true"><div className="project-visual-top"><span>WORK / 0{i + 1}</span><span>↗</span></div>{project.image ? <img src={project.image} alt="" loading="lazy" /> : <div className="project-monogram">{project.title}</div>}<div className="visual-bottom">{project.category[lang]}</div></div>
+            <div className="project-body">
+              <div className="project-meta"><span>{project.category[lang]}</span><span>0{i + 1} / 0{projects.length}</span></div>
+              <h3><a className="project-preview-link" href={'/projetos/'+project.slug} onClick={event=>openCase(event,project.slug)}
+                onMouseEnter={event => onPreviewEnter(project, event)} onMouseLeave={onPreviewLeave}
+                onFocus={event => onPreviewFocus(project, event)} onBlur={onPreviewLeave}>{project.title}</a></h3>
+              <p>{project.description[lang]}</p>
+              <div className="tags">{project.tags.map(tag => <span className="tag" key={tag}>{tag}</span>)}</div>
+              <details className="project-details"><summary>{lang === 'pt' ? 'SOBRE O PROJETO' : 'ABOUT THIS PROJECT'} <span>+</span></summary><p>{project.details?.[lang] || project.description[lang]}</p><dl><div><dt>{lang === 'pt' ? 'ATUAÇÃO' : 'ROLE'}</dt><dd>{project.role?.[lang] || 'Design / desenvolvimento'}</dd></div></dl></details>
+              <div className="project-links">
+                <a className="case-study-link" href={'/projetos/'+project.slug} onClick={event=>openCase(event,project.slug)}>{lang==='pt'?'ESTUDO DE CASO ↗':'CASE STUDY ↗'}</a>
+                <a href={project.url} target="_blank" rel="noopener noreferrer">{project.slug==='monan'?(lang==='pt'?'VER CURRÍCULO LATTES ↗':'ACADEMIC PROFILE ↗'):c.projectVisit}</a>
+                {project.repo && <a href={project.repo} target="_blank" rel="noreferrer">{c.source}</a>}
+              </div>
+            </div>
+          </article>)}</div>
+        </div>
+      </section>
 
       <section className="section about-section" id="about">
         <div className="shell">
@@ -292,41 +357,10 @@ export default function App() {
         </div>
       </section>
 
-      <section className="section projects-section" id="projects">
-        <div className="shell">
-          <SectionHeading label={c.labelProjects} title={c.projectsTitle} intro={c.projectsIntro} />
-          <div className="project-view-tools">
-            <span>{lang === 'pt' ? 'EXIBIÇÃO / SELECIONE UM FORMATO' : 'DISPLAY / CHOOSE A FORMAT'}</span>
-            <div className="project-view-switch" role="group" aria-label={lang === 'pt' ? 'Formato de apresentação dos projetos' : 'Project presentation layout'}>
-              <button type="button" aria-pressed={projectView === 'grid'} className={projectView === 'grid' ? 'is-active' : ''}
-                onClick={() => setProjectView('grid')}>{lang === 'pt' ? '▦ GRADE' : '▦ GRID'}</button>
-              <button type="button" aria-pressed={projectView === 'list'} className={projectView === 'list' ? 'is-active' : ''}
-                onClick={() => setProjectView('list')}>{lang === 'pt' ? '≡ ÍNDICE' : '≡ INDEX'}</button>
-            </div>
-          </div>
-          <div className={'project-grid' + (projectView === 'list' ? ' is-list' : '')}>{projects.map((project, i) => <article className="project-card" key={project.slug}>
-            <div className="project-visual" aria-hidden="true"><div className="project-visual-top"><span>WORK / 0{i + 1}</span><span>↗</span></div>{project.image ? <img src={project.image} alt="" loading="lazy" /> : <div className="project-monogram">{project.title}</div>}<div className="visual-bottom">{project.category[lang]}</div></div>
-            <div className="project-body">
-              <div className="project-meta"><span>{project.category[lang]}</span><span>0{i + 1} / 0{projects.length}</span></div>
-              <h3><a className="project-preview-link" href={project.url} target="_blank" rel="noopener noreferrer"
-                onMouseEnter={event => onPreviewEnter(project, event)} onMouseLeave={onPreviewLeave}
-                onFocus={event => onPreviewFocus(project, event)} onBlur={onPreviewLeave}>{project.title}</a></h3>
-              <p>{project.description[lang]}</p>
-              <div className="tags">{project.tags.map(tag => <span className="tag" key={tag}>{tag}</span>)}</div>
-              <details className="project-details"><summary>{lang === 'pt' ? 'SOBRE O PROJETO' : 'ABOUT THIS PROJECT'} <span>+</span></summary><p>{project.details?.[lang] || project.description[lang]}</p><dl><div><dt>{lang === 'pt' ? 'ATUAÇÃO' : 'ROLE'}</dt><dd>{project.role?.[lang] || 'Design / desenvolvimento'}</dd></div></dl></details>
-              <div className="project-links">
-                <a href={project.url} target="_blank" rel="noreferrer">{c.projectVisit}</a>
-                {project.repo && <a href={project.repo} target="_blank" rel="noreferrer">{c.source}</a>}
-              </div>
-            </div>
-          </article>)}</div>
-        </div>
-      </section>
-
       <section className="lab-band" id="lab" aria-labelledby="lab-title">
         <div className="shell lab-band-grid">
           <div className="lab-band-copy">
-            <span className="eyebrow">{lang === 'pt' ? 'EXPERIMENTE / 001' : 'EXPERIMENT / 001'}</span>
+            <span className="eyebrow">{lang === 'pt' ? '05 / EXPERIMENTE' : '05 / EXPERIMENT'}</span>
             <h2 id="lab-title">{lang === 'pt' ? <>UM POUCO DE <em>TYPEEE.</em></> : <>A TASTE OF <em>TYPEEE.</em></>}</h2>
             <p>{lang === 'pt' ? 'Um pequeno desafio de digitação para você conhecer um dos meus projetos sem sair desta página.' : 'A tiny typing challenge to get a feel for one of my projects without leaving this page.'}</p>
             <a href="#projects">{lang === 'pt' ? 'CONHECER OS PROJETOS ↗' : 'DISCOVER THE PROJECTS ↗'}</a>
@@ -340,18 +374,7 @@ export default function App() {
       <section className="section gallery-section" id="gallery">
         <div className="shell">
           <SectionHeading label={c.labelGallery} title={c.galleryTitle} intro={c.galleryIntro} />
-          <div className="gallery-grid">
-            {visualProjects.map((item, i) => item.kind === 'behance' ? <article className="gallery-card" key={item.id}>
-              <div className="gallery-heading"><span>{c.galleryCard} / {String(i + 1).padStart(2, '0')}</span><span aria-hidden="true">↗</span></div>
-              <iframe title={'Behance ' + item.id} src={'https://www.behance.net/embed/project/' + item.id + '?ilo0=1'} loading="lazy" allowFullScreen allow="clipboard-write" referrerPolicy="strict-origin-when-cross-origin" />
-              <div className="gallery-footer"><span>BEHANCE · {item.id}</span><a href={'https://www.behance.net/gallery/' + item.id + '/'} target="_blank" rel="noopener noreferrer">{c.galleryFallback}</a></div>
-            </article> : <a className="gallery-card gallery-mapeia" key={item.slug} href={item.url} target="_blank" rel="noopener noreferrer">
-              <div className="gallery-heading"><span>{c.galleryCard} / {String(i + 1).padStart(2, '0')}</span><span aria-hidden="true">↗</span></div>
-              <div className="gallery-preview"><img src={item.image} alt={item.alt[lang]} loading="lazy" /></div>
-              <div className="gallery-footer"><strong>{item.title}</strong><span>{item.type[lang]} ↗</span></div>
-            </a>)}
-          </div>
-          <a className="button button-dark gallery-all" href="https://www.behance.net/lustosabr" target="_blank" rel="noreferrer">{c.galleryMore}</a>
+          <VisualGallery lang={lang} c={c} />
         </div>
       </section>
 

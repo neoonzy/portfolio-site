@@ -20,7 +20,7 @@ const copy = {
     solo: 'PARTIDA SOLO', word: 'PALAVRA', time: 'TIME LEFT', speed: 'SPEED', accuracy: 'ACCURACY',
     combo: 'COMBO', text: 'TEXTO', idle: 'O TEMPO COMEÇA NA PRIMEIRA TECLA',
     running: 'DIGITE A PALAVRA E PRESSIONE ESPAÇO', typing: 'SUA DIGITAÇÃO',
-    placeholder: 'toque aqui e comece a digitar...', help: 'ERROU? USE BACKSPACE. ESPAÇO AVANÇA PARA A PRÓXIMA PALAVRA.',
+    placeholder: 'toque aqui e comece a digitar...', help: 'ERROU? USE BACKSPACE. ESPAÇO OU ENTER AVANÇA PARA A PRÓXIMA PALAVRA.',
     reset: 'REINICIAR', points: 'PTS', best: 'BEST COMBO', disclaimer: 'MINI DEMO · PARTIDA LOCAL · NÃO OFICIAL',
     finished: 'BOA PARTIDA.', result: 'TEMPO ESGOTADO / MINI DEMO', again: 'TENTAR DE NOVO', visit: 'JOGAR NO TYPEEE',
   },
@@ -29,7 +29,7 @@ const copy = {
     solo: 'SOLO GAME', word: 'WORD', time: 'TIME LEFT', speed: 'SPEED', accuracy: 'ACCURACY',
     combo: 'COMBO', text: 'TEXT', idle: 'TIMER STARTS ON THE FIRST KEY',
     running: 'TYPE THE WORD, THEN PRESS SPACE', typing: 'YOUR TYPING',
-    placeholder: 'tap here and start typing...', help: 'BACKSPACE TO CORRECT. SPACE TO GO TO THE NEXT WORD.',
+    placeholder: 'tap here and start typing...', help: 'BACKSPACE TO CORRECT. SPACE OR ENTER MOVES TO THE NEXT WORD.',
     reset: 'RESTART', points: 'PTS', best: 'BEST COMBO', disclaimer: 'MINI DEMO · LOCAL SESSION · UNRANKED',
     finished: 'GOOD GAME.', result: 'TIME IS UP / MINI DEMO', again: 'TRY AGAIN', visit: 'PLAY TYPEEE',
   },
@@ -51,6 +51,7 @@ export default function StudioPanel({ lang }) {
   const [game, setGame] = useState(initialGame)
   const startedAt = useRef(null)
   const inputRef = useRef(null)
+  const composing = useRef(false)
   const gameRef = useRef(game)
   gameRef.current = game
 
@@ -84,36 +85,41 @@ export default function StudioPanel({ lang }) {
     if (document.activeElement === inputRef.current) inputRef.current?.focus()
   }
 
-  const onChange = (event) => {
+  const completeWord = raw => {
+    if (gameRef.current.phase === 'finished') return
+    const typedWord = raw.trim().split(/\s+/)[0]
+    if (!typedWord) return
+    const current = gameRef.current
+    const word = words[current.index % words.length]
+    const correct = wordAccuracy(typedWord, word)
+    const matched = typedWord === word
+    setGame(previous => ({
+      ...previous,
+      phase: previous.phase === 'idle' ? 'running' : previous.phase,
+      draft: '',
+      index: previous.index + 1,
+      total: previous.total + Array.from(typedWord).length,
+      correct: previous.correct + correct,
+      combo: matched ? previous.combo + 1 : 0,
+      bestCombo: Math.max(previous.bestCombo, matched ? previous.combo + 1 : 0),
+      points: previous.points + (matched ? word.length * 10 : correct * 3),
+    }))
+  }
+  const onChange = event => {
     if (gameRef.current.phase === 'finished') return
     const raw = event.target.value
-    if (gameRef.current.phase === 'idle' && raw.length > 0) {
-      startedAt.current = Date.now()
-    }
-    const current = gameRef.current
-    if (raw.includes(' ')) {
-      const typedWord = raw.split(' ')[0]
-      if (!typedWord) { setGame(previous => ({ ...previous, draft: '' })); return }
-      const word = words[current.index % words.length]
-      const correct = wordAccuracy(typedWord, word)
-      const matched = typedWord === word
-      setGame(previous => ({
-        ...previous,
-        phase: previous.phase === 'idle' ? 'running' : previous.phase,
-        draft: '',
-        index: previous.index + 1,
-        total: previous.total + Array.from(typedWord).length,
-        correct: previous.correct + correct,
-        combo: matched ? previous.combo + 1 : 0,
-        bestCombo: Math.max(previous.bestCombo, matched ? previous.combo + 1 : 0),
-        points: previous.points + (matched ? word.length * 10 : correct * 3),
-      }))
-    } else {
-      setGame(previous => ({
-        ...previous,
-        phase: previous.phase === 'idle' && raw.length ? 'running' : previous.phase,
-        draft: raw,
-      }))
+    if (gameRef.current.phase === 'idle' && raw.length > 0 && !startedAt.current) startedAt.current = Date.now()
+    if (!composing.current && /\s/.test(raw)) completeWord(raw)
+    else setGame(previous => ({
+      ...previous,
+      phase: previous.phase === 'idle' && raw.length ? 'running' : previous.phase,
+      draft: raw,
+    }))
+  }
+  const onKeyDown = event => {
+    if (event.key === 'Enter' && !event.isComposing && !composing.current) {
+      event.preventDefault()
+      completeWord(event.currentTarget.value)
     }
   }
 
@@ -164,10 +170,17 @@ export default function StudioPanel({ lang }) {
                   </span>
                 ))}
               </div>
-              <label htmlFor="typeee-preview-input" className="typeee-typing-label">{c.typing}</label>
+              <div className="typeee-input-heading">
+                <label htmlFor="typeee-preview-input" className="typeee-typing-label">{c.typing}</label>
+                {game.phase === 'idle' && <button type="button" className="typeee-start" onClick={() => inputRef.current?.focus()}>{lang === 'pt' ? 'COMEÇAR DESAFIO ↗' : 'START CHALLENGE ↗'}</button>}
+              </div>
               <input id="typeee-preview-input" ref={inputRef} type="text" value={game.draft}
                 autoComplete="off" autoCapitalize="off" autoCorrect="off" spellCheck={false}
-                onChange={onChange} className="typeee-input" placeholder={c.placeholder}
+                onChange={onChange} onKeyDown={onKeyDown}
+                onCompositionStart={() => { composing.current = true }}
+                onCompositionEnd={event => { composing.current = false; onChange(event) }}
+                inputMode="text" enterKeyHint="next"
+                className="typeee-input" placeholder={c.placeholder}
                 aria-describedby="typeee-preview-help"
                 onPaste={e => e.preventDefault()} onDrop={e => e.preventDefault()} />
               <p id="typeee-preview-help" className="typeee-help">{c.help}</p>

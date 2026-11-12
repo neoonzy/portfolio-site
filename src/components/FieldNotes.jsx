@@ -1,6 +1,6 @@
 const translations = {
   pt: {
-    label: '04 / CADERNO DE PROCESSO',
+    label: '06 / CADERNO DE PROCESSO',
     title: ['O CAMINHO', 'IMPORTA.'],
     intro: 'Entre uma ideia e o resultado há escolhas, testes e mudanças de rota. Alguns recortes do que construo e aprendo.',
     open: 'VER BASTIDORES',
@@ -33,7 +33,7 @@ const translations = {
     footer: 'NOTAS DE TRABALHO / EM CONSTRUÇÃO',
   },
   en: {
-    label: '04 / PROCESS NOTEBOOK',
+    label: '06 / PROCESS NOTEBOOK',
     title: ['THE PROCESS', 'MATTERS.'],
     intro: 'Between an idea and an outcome lie choices, tests and changes of direction. A few glimpses of what I make and learn.',
     open: 'BEHIND THE SCENES',
