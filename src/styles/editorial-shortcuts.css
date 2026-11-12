@@ -67,7 +67,7 @@
 .quick-nav-heading h2 {
   margin:0;
   max-width:100%;
-  font:700 clamp(44px,7vw,79px)/.92 var(--display);
+  font:700 clamp(36px,5.4vw,58px)/.96 var(--display);
   letter-spacing:-.105em;
   color:#171717;
   overflow-wrap:anywhere;
@@ -197,7 +197,7 @@
   .quick-nav-top { grid-template-columns:1fr auto;min-height:54px;font-size:9px; }
   .quick-nav-top>span:nth-child(2) { display:none; }
   .quick-nav-heading { padding:35px 0 39px; }
-  .quick-nav-heading h2 { font-size:clamp(38px,11vw,66px); }
+  .quick-nav-heading h2 { font-size:clamp(29px,8vw,44px); }
   .quick-nav-heading>span { font-size:8px; }
   .quick-nav-search input { font-size:16px; }
   .quick-nav-results { max-height:min(38dvh,315px); }

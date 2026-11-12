@@ -1,16 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
+import { chapters } from '../data/chapters.js'
 
-const sections = [
-  { id: 'projects', pt: 'Projetos na prática', en: 'Selected projects' },
-  { id: 'lab', pt: 'Experimentar o Typeee', en: 'Try Typeee' },
-  { id: 'notes', pt: 'Caderno de processo', en: 'Process notebook' },
-  { id: 'about', pt: 'Sobre mim', en: 'About me' },
-  { id: 'experience', pt: 'Trajetória', en: 'Experience' },
-  { id: 'gallery', pt: 'Trabalhos visuais', en: 'Visual work' },
-  { id: 'contact', pt: 'Contato', en: 'Contact' },
-]
+const sections = chapters
 
-export default function QuickNavigator({ lang, onNavigate }) {
+export default function QuickNavigator({ lang }) {
   const dialogRef = useRef(null)
   const inputRef = useRef(null)
   const [query, setQuery] = useState('')
@@ -34,7 +27,6 @@ export default function QuickNavigator({ lang, onNavigate }) {
   }
   const go = id => {
     close()
-    onNavigate?.()
     document.getElementById(id)?.scrollIntoView({
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
     })
@@ -78,9 +70,12 @@ export default function QuickNavigator({ lang, onNavigate }) {
     <>
       <button className="quick-nav-trigger" type="button" onClick={open}
         aria-haspopup="dialog" aria-expanded={isOpen} aria-controls="quick-nav"
-        title={pt ? 'Navegação rápida · /' : 'Quick navigation · /'}>
+        title={pt ? 'Buscar seção · /' : 'Search sections · /'}
+        aria-label={pt ? 'Buscar seção' : 'Search sections'}>
         <span className="quick-nav-slash" aria-hidden="true">/</span>
-        <span className="quick-nav-label">{pt ? 'ATALHOS' : 'SHORTCUTS'}</span>
+        <span className="quick-nav-label">{pt ? 'BUSCAR' : 'SEARCH'}</span>
+        <span className="quick-nav-label-mobile">{pt ? 'BUSCAR' : 'SEARCH'}</span>
+        <span className="quick-nav-arrow" aria-hidden="true">↗</span>
       </button>
       <dialog ref={dialogRef} id="quick-nav" className="quick-nav-dialog"
         aria-label={pt ? 'Navegação rápida' : 'Quick navigation'}
@@ -96,7 +91,7 @@ export default function QuickNavigator({ lang, onNavigate }) {
           </div>
           <div className="quick-nav-heading">
             <h2>{pt ? <>NAVEGAÇÃO<span>RÁPIDA.</span></> : <>QUICK<span>ACCESS.</span></>}</h2>
-            <span>{pt ? 'ÍNDICE / 07' : 'INDEX / 07'}</span>
+            <span>{pt ? 'ÍNDICE' : 'INDEX'} / {String(sections.length).padStart(2, '0')}</span>
           </div>
           <label htmlFor="quick-nav-input" className="quick-nav-input-label">
             {pt ? 'BUSCAR SEÇÃO /' : 'SEARCH SECTION /'}

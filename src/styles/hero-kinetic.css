@@ -64,6 +64,42 @@
   .print-cover-statement { max-width:570px; }
   .print-identity-caption span:last-child { display:none; }
 }
+/* Two mobile lines share one font-size and tracking rule so the names
+   have identical typography. Size is constrained by the longer EDUARDO
+   to avoid clipping; glyphs remain independent physics bodies. */
+@media(max-width:680px) {
+  .print-wordmark.kinetic-wordmark {
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:stretch;
+    width:100%;
+    gap:clamp(14px,3vw,23px);
+    line-height:1.04;
+    letter-spacing:0;
+    white-space:nowrap;
+    overflow:visible;
+  }
+  .print-wordmark.kinetic-wordmark > .kinetic-word {
+    display:inline-flex;
+    position:relative;
+    width:max-content;
+    max-width:100%;
+    min-width:0;
+    line-height:1.04;
+    white-space:nowrap;
+    font-size:min(17.5vw,116px);
+    letter-spacing:-.045em;
+  }
+  .print-wordmark.kinetic-wordmark > .kinetic-word:first-child {
+    align-self:flex-start;
+  }
+  .print-wordmark.kinetic-wordmark > .kinetic-word:last-child {
+    align-self:flex-start;
+    margin-left:0;
+  }
+}
+
 @media(prefers-reduced-motion:reduce) {
   .kinetic-wordmark .kinetic-glyph {
     transform:none!important;

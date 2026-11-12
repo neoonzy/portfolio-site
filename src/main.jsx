@@ -9,6 +9,8 @@ import './styles/interactive-edition.css'
 import './styles/hero-kinetic.css'
 import './styles/layout-grid-system.css'
 import './styles/editorial-shortcuts.css'
+import './styles/mobile-section-indicator.css'
+import './styles/mobile-nav-minimal.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode><App /></React.StrictMode>
