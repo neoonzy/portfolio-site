@@ -29,7 +29,7 @@ Cada projeto possui rota própria `/projetos/<slug>`, com:
 
 A origem dos textos é `src/data/projects.js` e `src/data/caseStudies.js`. Os textos são qualitativos; não inventam métricas, clientes, testes ou fotografias. O projeto Mapeia é identificado como protótipo conceitual e Monan informa que a documentação fotográfica ainda está sendo organizada. O destino externo de Monan agora é explicitamente **Currículo Lattes**, não “Abrir projeto”.
 
-O `CaseStudyPage` é renderizado pela SPA e aceita abertura, retorno, histórico do navegador e mudança de idioma. Uma regra de rewrite em `vercel.json` permite acesso direto às URLs no ambiente Vercel, sem ativar deploy automático. O build Vite não adiciona novas bibliotecas de roteamento.
+O `CaseStudyPage` é renderizado pela SPA e aceita abertura, retorno, histórico do navegador e mudança de idioma. Uma regra de rewrite em `vercel.json` permite acesso direto às URLs no ambiente Vercel, sem ativar deploy automático. O primeiro teste de navegador encontrou uma falha de asset path nas rotas internas: o antigo `base: './'` produzia URLs relativas que falhavam ao acessar `/projetos/typeee` diretamente. O build Vercel passou para `base: '/'`; para hospedagem em subdiretório existe `npm run build:cin`. O build Vite não adiciona novas bibliotecas de roteamento.
 
 ## 3. Busca realmente útil
 
