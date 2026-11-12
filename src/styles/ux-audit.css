@@ -86,3 +86,22 @@ html{scroll-padding-top:85px}
   .typeee-input-heading{align-items:stretch}
   .typeee-start{width:100%;justify-content:center}
 }
+
+/* The visual portfolio remains useful when Behance blocks its third-party iframe. */
+.behance-visual{min-height:clamp(265px,25vw,385px);background:#e8e8e5}
+.behance-teaser{display:flex;flex-direction:column;justify-content:space-between;min-height:clamp(265px,25vw,385px);padding:clamp(14px,2vw,24px);background:#e6e6e3;color:#181818}
+.behance-teaser-top,.behance-teaser-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;font:600 10px/1.5 var(--mono)}
+.behance-teaser>strong{font:700 clamp(100px,14vw,190px)/.9 var(--display);letter-spacing:-.1em;align-self:center}
+.behance-teaser-footer button{min-height:44px;min-width:138px;border:1px solid #111;background:#111;color:#fff;padding:9px 11px;font:600 10px/1.45 var(--mono);cursor:pointer}
+.behance-teaser-footer button:hover,.behance-teaser-footer button:focus-visible{background:#fff;color:#111}
+.behance-loaded-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 13px;background:#dfdfdc;color:#333;font:600 9px/1.35 var(--mono)}
+.behance-loaded-head button{min-height:36px;border:1px solid #111;background:transparent;color:#111;padding:6px 9px;cursor:pointer;font:600 9px var(--mono)}
+.behance-loaded-head button:hover{background:#111;color:#fff}
+.behance-visual iframe{display:block;width:100%;border:0;background:#eee;min-height:300px}
+@media(max-width:680px){
+  .behance-visual,.behance-teaser{min-height:clamp(235px,65vw,330px)}
+  .behance-teaser>strong{font-size:clamp(95px,24vw,150px)}
+  .behance-teaser-footer{flex-wrap:wrap}
+  .behance-teaser-footer button{flex:1;min-width:130px}
+  .behance-visual iframe{min-height:260px}
+}
