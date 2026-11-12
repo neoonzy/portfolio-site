@@ -108,8 +108,8 @@ A primeira tentativa de ampliar o nome deixou `LUIS/` grande demais e `EDUARDO` 
 
 O ajuste mantém **duas linhas**, mas com proporções editoriais mais equilibradas:
 
-- `LUIS/` alinhado à esquerda: `font-size: min(26.5vw, 164px)`.
-- `EDUARDO` na segunda linha, também à esquerda, com um recuo discreto: `font-size: min(17.5vw, 116px)`.
+- `LUIS/` e `EDUARDO` agora usam **exatamente o mesmo** `font-size: min(17.5vw, 116px)` e o mesmo `letter-spacing: -.045em`, definidos em uma regra CSS compartilhada.
+- A largura é determinada por `EDUARDO`, o nome mais longo, para não cortar letras nas laterais. A segunda linha continua com recuo discreto.
 - Tracking de `-.045em` em vez de `-.105em`/`-.115em`, evitando letras comprimidas.
 - `line-height: 1.04` e `gap: clamp(14px, 3vw, 23px)` impedem que a barra do primeiro nome invada a segunda linha.
 - Cada glifo permanece um elemento DOM real, com os corpos físicos medidos após o layout. O mecanismo de gravidade, colisões e reset não foi alterado.
