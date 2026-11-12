@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { chapters } from '../data/chapters.js'
 import { projects } from '../data/projects.js'
-
-const normalize = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase().trim()
+import { searchPortfolio } from '../lib/searchPortfolio.js'
 
 export default function QuickNavigator({ lang }) {
   const dialogRef = useRef(null)
@@ -11,16 +10,7 @@ export default function QuickNavigator({ lang }) {
   const [selected, setSelected] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const pt = lang === 'pt'
-  const term = normalize(query)
-  const sectionMatches = chapters.filter(item => normalize(item[lang] + ' ' + item.shortPt + ' ' + item.shortEn).includes(term))
-  const projectMatches = term ? projects.filter(item => normalize([
-    item.title, item.category[lang], item.description[lang], item.details?.[lang],
-    item.role?.[lang], ...item.tags,
-  ].join(' ')).includes(term)) : []
-  const results = [
-    ...sectionMatches.map(item => ({ ...item, type: 'section', label: item[lang], target: item.id })),
-    ...projectMatches.map(item => ({ ...item, type: 'project', label: item.title, target: 'project-' + item.slug })),
-  ]
+  const results = searchPortfolio(chapters, projects, lang, query)
 
   const open = () => {
     if (dialogRef.current?.open) return
