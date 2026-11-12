@@ -75,6 +75,12 @@ test('gallery defers extra iframes until visitors request more', () => {
   assert.match(gallery, /loading="lazy"/)
 })
 
+test('Vercel build uses root-absolute assets for direct case-study URLs', () => {
+  assert.match(source('vite.config.js'), /base: '\/'/)
+  const packageJson = JSON.parse(source('package.json'))
+  assert.equal(packageJson.scripts['build:cin'], 'vite build --base=./')
+})
+
 test('fonts are linked from HTML rather than imported from the main stylesheet', () => {
   assert.doesNotMatch(source('src/styles/global.css'), /@import url\(['"]https:\/\/fonts.googleapis.com/)
   assert.match(source('index.html'), /fonts.googleapis.com\/css2/)
