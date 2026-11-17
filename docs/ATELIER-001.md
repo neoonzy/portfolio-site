@@ -27,9 +27,10 @@ O acervo de oito trabalhos visuais do Behance permanece na sala Arquivo como uma
 - Mobile: dock inferior de quatro rotas principais, botão “+” para o mapa completo de seis salas e mapa acessível no header.
 - Navegação via hash (`#arquivo`, `#caderno`, `#contato`), com compatibilidade para `#projects`, `#about`, `#notes`, `#contact` etc.
 - Deep link direto a uma peça por `#work-zumbido`; estado selecionado é restaurado ao navegar pelo histórico.
-- Teclado: `1` a `6` muda de sala, Esc abre o mapa, Esc novamente fecha. Atalhos ignorados durante escrita em campos de texto.
+- Teclado: `1` a `6` muda de sala, `M` abre o mapa, Esc fecha diálogos. Atalhos ignorados durante escrita em campos de texto.
 - O foco é movido para `main` após mudança de sala; o scroll volta ao topo sem animação.
 - Não existe snap obrigatório da página nem sequestro do scroll. O dock funciona com safe areas.
+- Em celulares, tocar uma peça abre imediatamente sua ficha como um diálogo nativo em formato de gaveta, com fechamento explícito. No desktop, a ficha continua fixa ao lado da bancada.
 
 ## Direção visual
 
