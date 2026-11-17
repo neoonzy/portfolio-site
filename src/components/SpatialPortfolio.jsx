@@ -237,28 +237,58 @@ function Landing({ lang, t, onGo, onSelect }) {
   </section>
 }
 
+function ProjectInfo({ project:p, t, lang, onNext, onClose, modal=false }) {
+  return <>
+    <div className="sp-inspector-top">
+      <span>{t.inspect}</span>
+      <span>{t.number} {p.number} / 04</span>
+      {modal&&<button className="sp-inspector-close" onClick={onClose} aria-label={lang==='pt'?'Fechar ficha':'Close project file'}>FECHAR ×</button>}
+    </div>
+    <h2>{p.title}</h2>
+    <p className="sp-inspector-kind">{p.category[lang]}</p>
+    <p className="sp-inspector-description">{p.description[lang]}</p>
+    <div className="sp-inspector-facts"><span>{t.role}</span><p>{p.role[lang]}</p></div>
+    <div className="sp-inspector-facts"><span>{t.materials}</span><p>{p.tags.join(' / ')}</p></div>
+    <div className="sp-inspector-links">
+      <a href={p.url} target="_blank" rel="noopener noreferrer">{p.slug==='monan'?(lang==='pt'?'VER NO LATTES':'ACADEMIC PROFILE'):t.launch} ↗</a>
+      {p.repo&&<a href={p.repo} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}
+    </div>
+    <button className="sp-inspector-next" onClick={onNext}>{t.clear} <span>→</span></button>
+  </>
+}
+
 function Archive({lang,t,selected,onSelect,onGo}) {
   const p=projectNumbers.find(x=>x.slug===selected)||projectNumbers[0]
+  const [sheetOpen,setSheetOpen]=useState(false)
+  const sheetRef=useRef(null)
+  const next=()=>onSelect(projectNumbers[(projectNumbers.findIndex(x=>x.slug===p.slug)+1)%4].slug)
+  const pick=slug=>{
+    onSelect(slug)
+    if(window.matchMedia('(max-width:680px)').matches)setSheetOpen(true)
+  }
+  useEffect(()=>{
+    const dialog=sheetRef.current
+    if(!dialog)return
+    if(sheetOpen&&!dialog.open)dialog.showModal()
+    if(!sheetOpen&&dialog.open)dialog.close()
+  },[sheetOpen])
   return <section className="sp-archive" aria-labelledby="sp-archive-title">
     <Frame title={t.archiveTitle} number="01" side="04 OBJETOS / UM ARQUIVO"/>
     <div className="sp-archive-title"><h1 id="sp-archive-title">{t.archiveLead}</h1><p>{t.archiveHelp}</p></div>
     <div className="sp-archive-layout">
       <div className="sp-workbench" aria-label={lang==='pt'?'Escolher projeto':'Choose project'}>
-        {projectNumbers.map((project,i)=><WorkTile key={project.slug} project={project} index={i} active={p.slug===project.slug} onPick={onSelect}/>)}
+        {projectNumbers.map((project,i)=><WorkTile key={project.slug} project={project} index={i} active={p.slug===project.slug} onPick={pick}/>)}
       </div>
-      <aside className="sp-inspector" aria-live="polite" aria-atomic="true">
-        <div className="sp-inspector-top"><span>{t.inspect}</span><span>{t.number} {p.number} / 04</span></div>
-        <h2>{p.title}</h2>
-        <p className="sp-inspector-kind">{p.category[lang]}</p>
-        <p className="sp-inspector-description">{p.description[lang]}</p>
-        <div className="sp-inspector-facts"><span>{t.role}</span><p>{p.role[lang]}</p></div>
-        <div className="sp-inspector-facts"><span>{t.materials}</span><p>{p.tags.join(' / ')}</p></div>
-        <div className="sp-inspector-links">
-          <a href={p.url} target="_blank" rel="noopener noreferrer">{p.slug==='monan'?(lang==='pt'?'VER NO LATTES':'ACADEMIC PROFILE'):t.launch} ↗</a>
-          {p.repo&&<a href={p.repo} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}
-        </div>
-        <button className="sp-inspector-next" onClick={()=>onSelect(projectNumbers[(projectNumbers.findIndex(x=>x.slug===p.slug)+1)%4].slug)}>{t.clear} <span>→</span></button>
+      <aside className="sp-inspector" aria-label={lang==='pt'?'Ficha do projeto selecionado':'Selected project file'} aria-live="polite" aria-atomic="true">
+        <ProjectInfo project={p} t={t} lang={lang} onNext={next}/>
       </aside>
+      <dialog ref={sheetRef} className="sp-project-sheet" onClose={()=>setSheetOpen(false)}
+        aria-label={(lang==='pt'?'Ficha do projeto ':'Project file ')+p.title}
+        onClick={e=>{if(e.target===sheetRef.current)setSheetOpen(false)}}>
+        <div className="sp-project-sheet-inner">
+          <ProjectInfo project={p} t={t} lang={lang} onClose={()=>setSheetOpen(false)} onNext={next} modal/>
+        </div>
+      </dialog>
     </div>
     <div className="sp-visual-roll">
       <div className="sp-visual-roll-title"><span>VISUAL ROLL / 08</span><span>{lang==='pt'?'TRABALHOS GRÁFICOS / BEHANCE':'GRAPHIC WORK / BEHANCE'}</span></div>
