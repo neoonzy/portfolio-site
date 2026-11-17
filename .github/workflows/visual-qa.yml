@@ -22,7 +22,7 @@ jobs:
         run: npm ci
       - name: Install browser testing tools (CI only)
         run: |
-          npm install --no-save playwright
+          npm install --no-save playwright @playwright/cli
           npx playwright install --with-deps chromium
       - name: Build production bundle
         run: npm run build
@@ -36,6 +36,19 @@ jobs:
           curl -fsS http://127.0.0.1:4173/ >/dev/null
       - name: Verify layout and critical interactions
         run: node scripts/visual-qa.mjs
+      - name: Playwright CLI — inspect the mobile and desktop composition
+        run: |
+          npx playwright-cli open http://127.0.0.1:4173/
+          npx playwright-cli resize 390 844
+          npx playwright-cli snapshot --filename=visual-qa-artifacts/cli-mobile.yml
+          npx playwright-cli screenshot --filename=visual-qa-artifacts/cli-mobile.png
+          npx playwright-cli goto http://127.0.0.1:4173/#projects
+          npx playwright-cli screenshot --filename=visual-qa-artifacts/cli-projects-mobile.png
+          npx playwright-cli resize 1440 900
+          npx playwright-cli goto http://127.0.0.1:4173/
+          npx playwright-cli snapshot --filename=visual-qa-artifacts/cli-desktop.yml
+          npx playwright-cli screenshot --filename=visual-qa-artifacts/cli-desktop.png
+          npx playwright-cli close
       - name: Save screenshots for visual review
         if: always()
         uses: actions/upload-artifact@v4
