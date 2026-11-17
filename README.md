@@ -2,6 +2,14 @@
 
 Portfolio de **Luis Eduardo Lustosa Brito**, designer, estudante de Sistemas de Informação no CIn/UFPE e entusiasta de prototipagem e fabricação digital.
 
+## Edição em revisão — FIELDWORK / 013
+
+A proposta em `feat/ux-audit-complete-revision` conserva o portfólio editorial monocromático, mas introduz uma composição de capa com screenshot de projeto real, ritmo de oficina, um capítulo escuro para estudos de caso e uma única intervenção verde-lima para a conexão entre mundo digital e fabricação.
+
+A direção está documentada em [docs/FIELDWORK-013.md](docs/FIELDWORK-013.md), com critérios do **Taste Skill**, **Web Interface Guidelines** e uma verificação de verdade via **Playwright CLI**. O contrato de manutenção está em [AGENTS.md](AGENTS.md).
+
+**Esta edição ainda está em revisão, sem merge na `main` e sem deploy automático.**
+
 ## Identidade visual
 
 Brutalismo minimalista editorial: paleta quase monocromática (off-white, grafite e cinzas), tipografia forte, grids estruturados, linhas finas e espaços amplos. Sem sombras rígidas, adesivos ou cards excessivamente coloridos. O site oferece português e inglês, com português como idioma padrão.
@@ -33,7 +41,7 @@ npm run build
 npm run preview
 ```
 
-O PR de revisão também executa testes de navegador em 10 larguras e publica screenshots como artefatos do GitHub Actions, sem exigir deploy na Vercel.
+O PR de revisão executa testes de navegador em 10 larguras, além de snapshots e capturas por **Playwright CLI**. Os artefatos ficam disponíveis no GitHub Actions sem publicar o site na Vercel.
 
 ## Atualização
 
