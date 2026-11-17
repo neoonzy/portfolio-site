@@ -19,6 +19,10 @@ try{
     for(const room of rooms){
       await page.goto(origin+'/#'+room,{waitUntil:'domcontentloaded'})
       await page.waitForSelector('.sp-site-'+room)
+      if(room==='arquivo') await page.waitForFunction(() =>
+        [...document.querySelectorAll('.sp-specimen-visual img')].every(img=>img.complete && img.naturalWidth>0),
+        { timeout:10000 }
+      )
       assert.equal(await page.locator('.sp-site-'+room).count(),1)
       const d=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth}))
       assert.ok(d.scrollWidth<=d.clientWidth+2,'overflow '+width+' '+room+' '+JSON.stringify(d))
