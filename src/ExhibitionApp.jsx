@@ -5,6 +5,7 @@ import { normalizeQuery } from './lib/searchPortfolio.js'
 import KineticWordmark from './components/KineticWordmark.jsx'
 import StudioPanel from './components/StudioPanel.jsx'
 import CaseStudyPage from './components/CaseStudyPage.jsx'
+import PhotographicContactSheet from './components/PhotographicContactSheet.jsx'
 
 const stations = [
   { id: 'entrada', pt: 'ENTRADA', en: 'ENTER', symbol: '00' },
@@ -159,7 +160,7 @@ function Workshop({ lang, t, stage, setStage, onCase }) {
   </div>
 }
 
-function Atlas({ lang, t, active, setActive, onProject }) {
+function Atlas({ lang, t, active, setActive, onProject, onPhotos }) {
   const item=atlasItems[active]
   const project=projects.find(p=>p.slug===item.project)
   return <div className="ex-atlas ex-scene" id="constelacao">
@@ -167,6 +168,11 @@ function Atlas({ lang, t, active, setActive, onProject }) {
     <div className="ex-atlas-top"><h1>{t.atlas}<span>.</span></h1><p>{t.spaceShort}</p></div>
     <div className="ex-atlas-field"><svg viewBox="0 0 1000 550" preserveAspectRatio="none" aria-hidden="true"><path d="M170 155 L760 105 L640 425 L330 400 Z M170 155 L640 425 M760 105 L330 400" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3 8"/><circle cx="500" cy="280" r="60" fill="none" stroke="currentColor" strokeWidth="1"/></svg><div className="ex-atlas-center">LE<br/><span>°</span></div>{atlasItems.map((x,i)=><button className={'ex-atlas-node ex-atlas-node-'+i+(active===i?' current':'')} key={x.id} onClick={()=>setActive(i)} aria-pressed={active===i}><span>0{i+1}</span><strong>{x[lang]}</strong><span aria-hidden="true">↗</span></button>)}</div>
     <div className="ex-atlas-caption" aria-live="polite"><div><span>{lang==='pt'?'EM FOCO':'IN FOCUS'} / 0{active+1}</span><h2>{item[lang]}</h2></div><p>{lang==='pt'?item.ptText:item.enText}</p><button type="button" onClick={()=>onProject(project.slug)}>{lang==='pt'?'EXPLORAR':'EXPLORE'} {project.title} ↗</button></div>
+    <button type="button" className="ex-atlas-photo-entry" onClick={onPhotos} aria-haspopup="dialog">
+      <span className="ex-atlas-photo-thumb"><img src="/photography/rua-skate.webp" alt="" width="850" height="1062" loading="lazy" decoding="async" /></span>
+      <span className="ex-atlas-photo-text"><small>LE° / 06 IMAGENS</small><strong>{lang==='pt'?'ABRIR CADERNO FOTOGRÁFICO':'OPEN PHOTO NOTEBOOK'}</strong><em>{lang==='pt'?'A rua também é matéria de trabalho.':'The street is part of the process.'}</em></span>
+      <span className="ex-atlas-photo-arrow" aria-hidden="true">↗</span>
+    </button>
     <div className="ex-scene-bottom"><span>RECIFE / CURIMATÁ / EM MOVIMENTO</span><span>LE / MAPA 03</span></div>
   </div>
 }
@@ -262,7 +268,7 @@ export default function ExhibitionApp() {
   useEffect(()=>{
     if(!overlay)return
     const prior=document.activeElement
-    const modal=document.querySelector('.ex-sitemap, .ex-search-layer')
+    const modal=document.querySelector('.ex-sitemap, .ex-search-layer, .ex-photo-wall')
     const getButtons=()=>[...(modal?.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),[tabindex="0"]')||[])]
     const initial=modal?.querySelector('input')||getButtons()[0]
     window.requestAnimationFrame(()=>initial?.focus())
@@ -293,10 +299,10 @@ export default function ExhibitionApp() {
       {station===0&&<Entrance lang={lang} t={t} onChange={go} onProject={slug=>openProject(null,slug)}/>}
       {station===1&&<Works lang={lang} t={t} selected={selected} onSelect={setSelected} onCase={openProject}/>}
       {station===2&&<Workshop lang={lang} t={t} stage={step} setStage={setStep} onCase={openProject}/>}
-      {station===3&&<Atlas lang={lang} t={t} active={atlas} setActive={setAtlas} onProject={slug=>openProject(null,slug)}/>}
+      {station===3&&<Atlas lang={lang} t={t} active={atlas} setActive={setAtlas} onProject={slug=>openProject(null,slug)} onPhotos={()=>setOverlay('photos')}/>}
       {station===4&&<Contact lang={lang} t={t} onChange={go}/>}
     </main>
     <footer className="ex-bottom-dock"><span>{t.keyboard}</span><div className="ex-bottom-pips">{stations.map((x,i)=><button type="button" key={x.id} aria-label={`${x.symbol} ${x[lang]}`} aria-current={station===i?'page':undefined} onClick={()=>go(i)}><span/></button>)}</div><button type="button" onClick={()=>go((station+1)%5)}>{station===4?t.first:t.next} <span aria-hidden="true">→</span></button></footer>
-    {overlay&&<div className="ex-overlay" onClick={event=>{if(event.target===event.currentTarget)setOverlay(null)}}>{overlay==='map'?<SiteMap lang={lang} t={t} onGo={go} onClose={()=>setOverlay(null)}/>:<Search lang={lang} t={t} onClose={()=>setOverlay(null)} onGo={go} onCase={openProject}/>}</div>}
+    {overlay&&<div className="ex-overlay" onClick={event=>{if(event.target===event.currentTarget)setOverlay(null)}}>{overlay==='photos'?<PhotographicContactSheet lang={lang} onClose={()=>setOverlay(null)}/>:overlay==='map'?<SiteMap lang={lang} t={t} onGo={go} onClose={()=>setOverlay(null)}/>:<Search lang={lang} t={t} onClose={()=>setOverlay(null)} onGo={go} onCase={openProject}/>}</div>}
   </div>
 }
