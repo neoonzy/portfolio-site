@@ -48,7 +48,7 @@ const copy = {
     timeline:'TRAJETÓRIA EM TRÊS FRAGMENTOS', now:'AGORA', tools:'O QUE PASSA PELAS MINHAS MÃOS',
     contactLead:'TEM ALGUMA COISA PRA FAZER JUNTO?', contactSub:'Projetos, conversas, colaborações e ideias ainda sem nome.',
     email:'ESCREVER UM E-MAIL', copy:'COPIAR ENDEREÇO', copied:'COPIADO ✓', social:'OUTRAS ROTAS',
-    back:'VOLTAR À ENTRADA', escape:'ESC ABRE/FECHA O MAPA', keyboard:'01—06 NAVEGAM',
+    back:'VOLTAR À ENTRADA', escape:'M ABRE O MAPA · ESC FECHA', keyboard:'01—06 NAVEGAM',
     archiveTitle:'ARQUIVO', labTitle:'EXPERIMENTO', notebookTitle:'CADERNO', aboutTitle:'PESSOA', contactTitle:'CONTATO',
   },
   en: {
@@ -70,7 +70,7 @@ const copy = {
     timeline:'A JOURNEY IN THREE FRAGMENTS',now:'NOW',tools:'WHAT I WORK WITH',
     contactLead:'GOT SOMETHING WE COULD MAKE TOGETHER?',contactSub:'Projects, conversations, collaborations and ideas without names yet.',
     email:'WRITE AN EMAIL',copy:'COPY ADDRESS',copied:'COPIED ✓',social:'OTHER ROUTES',
-    back:'BACK TO ENTRY',escape:'ESC OPENS/CLOSES MAP',keyboard:'01—06 NAVIGATE',
+    back:'BACK TO ENTRY',escape:'M OPENS MAP · ESC CLOSES',keyboard:'01—06 NAVIGATE',
     archiveTitle:'ARCHIVE',labTitle:'EXPERIMENT',notebookTitle:'NOTEBOOK',aboutTitle:'PERSON',contactTitle:'CONTACT',
   },
 }
@@ -409,7 +409,8 @@ export default function SpatialPortfolio(){
       const target=e.target
       if(e.ctrlKey||e.metaKey||e.altKey||e.repeat)return
       if(target instanceof HTMLElement&&(target.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target.tagName)))return
-      if(e.key==='Escape'){if(mapOpen)setMapOpen(false);else setMapOpen(true);return}
+      if(e.key==='Escape'){if(mapOpen){e.preventDefault();setMapOpen(false)}return}
+      if(e.key.toLowerCase()==='m'&&!mapOpen){e.preventDefault();setMapOpen(true);return}
       const index=Number(e.key)-1
       if(index>=0&&index<rooms.length){e.preventDefault();navigate(rooms[index].key)}
     }
