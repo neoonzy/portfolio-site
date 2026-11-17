@@ -172,7 +172,7 @@ a,button{touch-action:manipulation}
 /* Closing statement carries the final action, not a collection of generic cards. */
 .contact-section{background:#171816;color:#f5f5ef;border-top:1px solid #161713;border-bottom:0}
 .contact-section .eyebrow{color:#cdcec3}
-.contact-section .contact-title{font-size:clamp(54px,8vw,120px);color:#f5f5ef}
+.contact-section .contact-title{font-size:clamp(52px,7vw,104px);letter-spacing:-.052em;line-height:1.02;color:#f5f5ef}
 .contact-section .contact-description{color:#cbcec4}
 .contact-section .contact-email,.contact-section .contact-identifier{color:#f5f5ef}
 .contact-section .contact-right a{color:#f5f5ef;border-bottom-color:#56574f}
@@ -231,7 +231,7 @@ a,button{touch-action:manipulation}
   .print-hero-footer{margin-top:55px}
   .projects-section .project-grid:not(.is-list)>.project-card:nth-child(even){padding-top:0}
   .projects-section .project-view-switch button.is-active{background:var(--field-signal);color:#111}
-  .contact-section .contact-title{font-size:clamp(56px,14vw,80px)}
+  .contact-section .contact-title{font-size:clamp(43px,11.3vw,64px);letter-spacing:-.045em;line-height:1.04}
   .contact-section .contact-description{color:#e5e6d9}
   .contact-section .contact-actions{gap:10px}
   .contact-section .contact-actions a,.contact-section .contact-actions button{min-height:48px}
