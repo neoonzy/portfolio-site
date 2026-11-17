@@ -170,7 +170,7 @@ a,button{touch-action:manipulation}
 .editorial-interlude .interlude-footer{font-size:11px}
 
 /* Closing statement carries the final action, not a collection of generic cards. */
-.contact-section{background:#171816;color:#f5f5ef;border-top:1px solid #161713;border-bottom:0}
+.contact-section{background:#171816;color:#f5f5ef;border-top:1px solid #161713;border-bottom:0;min-height:calc(100svh - 70px);display:flex;flex-direction:column;justify-content:center}
 .contact-section .eyebrow{color:#cdcec3}
 .contact-section .contact-title{font-size:clamp(52px,7vw,104px);letter-spacing:-.052em;line-height:1.02;color:#f5f5ef}
 .contact-section .contact-description{color:#cbcec4}
@@ -231,6 +231,7 @@ a,button{touch-action:manipulation}
   .print-hero-footer{margin-top:55px}
   .projects-section .project-grid:not(.is-list)>.project-card:nth-child(even){padding-top:0}
   .projects-section .project-view-switch button.is-active{background:var(--field-signal);color:#111}
+  .contact-section{min-height:calc(100svh - 56px)}
   .contact-section .contact-title{font-size:clamp(43px,11.3vw,64px);letter-spacing:-.045em;line-height:1.04}
   .contact-section .contact-description{color:#e5e6d9}
   .contact-section .contact-actions{gap:10px}
