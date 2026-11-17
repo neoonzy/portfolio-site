@@ -78,6 +78,7 @@ try {
     const top = target.getBoundingClientRect().top
     return window.scrollY > 50 && top < window.innerHeight * .5
   }, { timeout: 10000 })
+  await desktopCase.screenshot({ path:'visual-qa-artifacts/direct-contact-1440.png', fullPage:false })
   console.log('PASS direct hash navigation reveals contact after React mount')
 
   await desktopCase.close()
