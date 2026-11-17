@@ -28,7 +28,7 @@ test('projects are authored content with routes and accessible alternatives',()=
   assert.match(exhibit,/mailto:luiseduardolustosab@gmail.com/)
   assert.doesNotMatch(exhibit,/mailto:luiseduardolustosabrito@gmail.com/)
   assert.match(exhibit,/getButtons/)
-  assert.match(exhibit,/event\.key==='Tab'/)
+  assert.match(exhibit,/event\.key!=='Tab'/)
 })
 
 test('physical, typographic and responsive stations retain motion alternatives',()=>{
