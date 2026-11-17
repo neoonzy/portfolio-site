@@ -4,8 +4,8 @@ import KineticWordmark from './KineticWordmark.jsx'
 
 /**
  * Graphic editorial front page inspired by Swiss grids and printed portfolios.
- * No initial animation, artificial motion studies, or personal photography.
- * The project index is the only interaction in this section.
+ * A kinetic title, an authentic project image, and a real searchable index.
+ * Visuals must use the actual project assets, never decorative placeholders.
  */
 export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPreviewFocus, onPreviewLeave, onOpenCase }) {
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -49,6 +49,25 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
                 <a href={'mailto:' + email}>{pt ? 'CONTATO' : 'CONTACT'} ↗</a>
               </div>
             </div>
+            <a className="hero-focus" href={'/projetos/' + selected.slug}
+              onClick={event => onOpenCase?.(event, selected.slug)}
+              aria-label={pt ? 'Ver estudo de caso de ' + selected.title : 'View the case study for ' + selected.title}>
+              <div className="hero-focus-top">
+                <span>{pt ? 'ARQUIVO EM FOCO' : 'FEATURED WORK'}</span>
+                <span>{String(selectedIndex + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}</span>
+              </div>
+              <div className="hero-focus-visual">
+                {selected.image
+                  ? <img key={selected.slug} src={selected.image} alt=""
+                      width="1200" height="800" decoding="async" />
+                  : <span className="hero-focus-monogram" aria-hidden="true">{selected.title}</span>}
+                <span className="hero-focus-sticker" aria-hidden="true">↗</span>
+              </div>
+              <div className="hero-focus-bottom">
+                <strong>{selected.title}</strong>
+                <span>{pt ? 'EXPLORAR PROJETO' : 'EXPLORE PROJECT'}</span>
+              </div>
+            </a>
 
           </div>
         </div>
