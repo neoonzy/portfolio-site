@@ -84,9 +84,9 @@ export default function QuickNavigator({ lang }) {
         <label htmlFor="quick-nav-input" className="quick-nav-input-label">{pt?'BUSCAR SEÇÃO OU PROJETO /':'SEARCH SECTION OR PROJECT /'}</label>
         <div className="quick-nav-search">
           <span aria-hidden="true">/</span>
-          <input ref={inputRef} id="quick-nav-input" type="search" value={query} autoComplete="off"
+          <input ref={inputRef} id="quick-nav-input" name="portfolio-search" type="search" value={query} autoComplete="off" spellCheck={false}
             onChange={event=>{setQuery(event.target.value);setSelected(0)}} onKeyDown={inputKeys}
-            placeholder={pt?'Ex.: Zumbido, React, contato...':'E.g. Typeee, React, contact...'} />
+            placeholder={pt?'Ex.: Zumbido, React, contato…':'E.g. Typeee, React, contact…'} />
           <span className="quick-nav-search-hint">↵</span>
         </div>
         <div className="quick-nav-results-heading">
