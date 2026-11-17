@@ -172,7 +172,7 @@ function WorkTile({ project, index, active, onPick }) {
     style={{'--move-x':shift.x+'px','--move-y':shift.y+'px'}}>
     <span className="sp-specimen-top"><span>OBJ / {project.number}</span><span>↗</span></span>
     <span className="sp-specimen-visual">
-      {project.image?<img src={project.image} alt="" loading="lazy" decoding="async" />:
+      {project.image?<img src={project.image} alt="" loading="eager" decoding="async" fetchPriority={active ? "high" : "auto"} />:
       <span className="sp-specimen-3d" aria-hidden="true"><i/><i/><i/>3D</span>}
     </span>
     <span className="sp-specimen-name">{project.title}<span>0{index+1}</span></span>
