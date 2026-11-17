@@ -222,6 +222,20 @@ function Archive({lang,t,selected,onSelect,onGo}) {
         <button className="sp-inspector-next" onClick={()=>onSelect(projectNumbers[(projectNumbers.findIndex(x=>x.slug===p.slug)+1)%4].slug)}>{t.clear} <span>→</span></button>
       </aside>
     </div>
+    <div className="sp-visual-roll">
+      <div className="sp-visual-roll-title"><span>VISUAL ROLL / 08</span><span>{lang==='pt'?'TRABALHOS GRÁFICOS / BEHANCE':'GRAPHIC WORK / BEHANCE'}</span></div>
+      <div className="sp-visual-roll-track" aria-label={lang==='pt'?'Trabalhos visuais':'Visual works'}>
+        {visualProjects.filter(item=>item.kind==='behance').map((item,i)=><a key={item.id}
+          href={'https://www.behance.net/gallery/'+item.id+'/'} target="_blank" rel="noopener noreferrer"
+          aria-label={(lang==='pt'?'Abrir trabalho visual ':'Open visual work ')+(i+1)+' no Behance'}>
+          <span>{String(i+1).padStart(2,'0')} / 08</span>
+          <strong>{String(i+1).padStart(2,'0')}</strong>
+          <small>BEHANCE / {item.id}</small>
+          <i aria-hidden="true">↗</i>
+        </a>)}
+      </div>
+      <a className="sp-visual-roll-all" href="https://www.behance.net/lustosabr" target="_blank" rel="noopener noreferrer">{lang==='pt'?'VER TODO O ARQUIVO VISUAL':'EXPLORE ALL VISUAL WORK'} ↗</a>
+    </div>
     <button className="sp-room-end" onClick={()=>onGo('laboratorio')}>02 / {rooms[2][lang]} <span>↗</span></button>
   </section>
 }
