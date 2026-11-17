@@ -66,7 +66,7 @@ const processItems = [
 ]
 function safeAction(event) { return !(event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) }
 
-function PointerPrint({ project, n, onOpen }) {
+function PointerPrint({ project, n, onOpen, lang }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 })
   const dragRef = useRef(null)
   const suppress = useRef(false)
@@ -85,7 +85,7 @@ function PointerPrint({ project, n, onOpen }) {
   }
   const onUp = () => { suppress.current = Boolean(dragRef.current?.moved); dragRef.current = null }
   const click = () => { if (suppress.current) { suppress.current = false; return } onOpen(project.slug) }
-  return <button type="button" className={'ex-print ex-print-' + n} onClick={click} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} style={{ '--mx': `${offset.x}px`, '--my': `${offset.y}px` }} aria-label={'Abrir ' + project.title}>
+  return <button type="button" className={'ex-print ex-print-' + n} onClick={click} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} style={{ '--mx': `${offset.x}px`, '--my': `${offset.y}px` }} aria-label={(lang==='pt'?'Abrir ':'Open ')+project.title}>
     <span className="ex-print-meta"><span>{String(n).padStart(2, '0')} / 04</span><span>LE — 26</span></span>
     <span className="ex-print-image">{project.image ? <img src={project.image} alt="" draggable="false" /> : <span>3D.</span>}</span>
     <span className="ex-print-caption"><strong>{project.title}</strong><span>↗</span></span>
@@ -107,9 +107,9 @@ function Entrance({ lang, t, onChange, onProject }) {
       </section>
       <div className="ex-hero-collage" aria-label={lang === 'pt' ? 'Fragmentos de projetos' : 'Project fragments'}>
         <div className="ex-collage-caption">{lang === 'pt' ? 'OBJETOS PARA EXPLORAR' : 'OBJECTS TO EXPLORE'} <span>↘</span></div>
-        <PointerPrint project={projects[1]} n={1} onOpen={onProject} />
-        <PointerPrint project={projects[0]} n={2} onOpen={onProject} />
-        <PointerPrint project={projects[2]} n={3} onOpen={onProject} />
+        <PointerPrint project={projects[1]} n={1} onOpen={onProject} lang={lang} />
+        <PointerPrint project={projects[0]} n={2} onOpen={onProject} lang={lang} />
+        <PointerPrint project={projects[2]} n={3} onOpen={onProject} lang={lang} />
         <span className="ex-collage-bottom">{t.drag} / {t.touch}</span>
       </div>
     </div>
@@ -174,7 +174,7 @@ function Atlas({ lang, t, active, setActive, onProject }) {
 function Contact({ lang, t, onChange }) {
   return <div className="ex-contact ex-scene" id="contato">
     <header className="ex-scene-label"><span>04 / CONTACT — 2026</span><span>{t.locality}</span></header>
-    <div className="ex-contact-main"><p>{t.contact}</p><h1>{t.contactBig.split('\n').map(line=><span key={line}>{line}</span>)}</h1><div className="ex-contact-actions"><a href="mailto:luiseduardolustosabrito@gmail.com" className="ex-contact-primary">{t.email} <span>↗</span></a><a href="https://github.com/neoonzy" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://www.behance.net/lustosabr" target="_blank" rel="noopener noreferrer">BEHANCE ↗</a><a href="http://lattes.cnpq.br/2980803847545519" target="_blank" rel="noopener noreferrer">LATTES ↗</a></div></div>
+    <div className="ex-contact-main"><p>{t.contact}</p><h1>{t.contactBig.split('\n').map(line=><span key={line}>{line}</span>)}</h1><div className="ex-contact-actions"><a href="mailto:luiseduardolustosab@gmail.com" className="ex-contact-primary">{t.email} <span>↗</span></a><a href="https://github.com/neoonzy" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://www.behance.net/lustosabr" target="_blank" rel="noopener noreferrer">BEHANCE ↗</a><a href="http://lattes.cnpq.br/2980803847545519" target="_blank" rel="noopener noreferrer">LATTES ↗</a></div></div>
     <div className="ex-contact-footer"><span>{t.aboutFoot}</span><button type="button" onClick={()=>onChange(0)}>{t.first} ↖</button><span>© 2026</span></div>
   </div>
 }
@@ -262,7 +262,19 @@ export default function ExhibitionApp() {
   useEffect(()=>{
     if(!overlay)return
     const prior=document.activeElement
-    const key=event=>{if(event.key==='Escape')setOverlay(null)}
+    const modal=document.querySelector('.ex-sitemap, .ex-search-layer')
+    const getButtons=()=>[...(modal?.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),[tabindex="0"]')||[])]
+    const initial=modal?.querySelector('input')||getButtons()[0]
+    window.requestAnimationFrame(()=>initial?.focus())
+    const key=event=>{
+      if(event.key==='Escape'){event.preventDefault();setOverlay(null);return}
+      if(event.key!=='Tab')return
+      const items=getButtons()
+      if(!items.length)return
+      const first=items[0],last=items[items.length-1]
+      if(event.shiftKey && document.activeElement===first){event.preventDefault();last.focus()}
+      else if(!event.shiftKey && document.activeElement===last){event.preventDefault();first.focus()}
+    }
     document.addEventListener('keydown',key)
     document.body.style.overflow='hidden'
     return()=>{document.removeEventListener('keydown',key);document.body.style.overflow='';prior?.focus?.()}
