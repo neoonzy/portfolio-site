@@ -111,7 +111,7 @@ export default function FloatingProjectPreview({ preview, lang }) {
       </div>
       <div className={'floating-preview-image' + (!project.image ? ' is-type' : '')}>
         {project.image
-          ? <img src={project.image} alt="" draggable="false" />
+          ? <img src={project.image} alt="" draggable="false" width={project.slug === "mapeia" ? 1280 : 1200} height={project.slug === "mapeia" ? 800 : 820} />
           : <strong>{project.symbol || project.title}</strong>}
       </div>
       <div className="floating-preview-footer">
