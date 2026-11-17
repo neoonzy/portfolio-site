@@ -14,6 +14,7 @@ on:
       - feat/hero-layout-collisions
       - feat/grid-true-collision-scope-shortcuts
       - feat/mobile-editorial-section-indicator
+      - feat/atelier-spatial-experience
   pull_request:
     branches:
       - main

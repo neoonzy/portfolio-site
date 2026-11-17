@@ -1,0 +1,57 @@
+name: ATELIER — interaction and visual QA
+on:
+  push:
+    branches: [feat/atelier-spatial-experience]
+concurrency:
+  group: atelier-six-rooms
+  cancel-in-progress: true
+jobs:
+  spatial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Dependencies
+        run: npm ci
+      - name: Browser tools
+        run: |
+          npm install --no-save playwright @playwright/cli
+          npx playwright install --with-deps chromium
+      - name: Build
+        run: npm run build
+      - name: Local preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/atelier-preview.log 2>&1 &
+          for i in {1..35}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 1; done
+          curl -fsS http://127.0.0.1:4173/ > /dev/null
+      - name: Six rooms — Playwright
+        run: node scripts/spatial-qa.mjs
+      - name: CLI snapshots — mobile & desktop
+        run: |
+          npx playwright-cli open http://127.0.0.1:4173/
+          npx playwright-cli resize 390 844
+          npx playwright-cli snapshot --filename=spatial-qa/cli-entry-mobile.yml
+          npx playwright-cli screenshot --filename=spatial-qa/cli-entry-mobile.png
+          npx playwright-cli goto http://127.0.0.1:4173/#arquivo
+          npx playwright-cli screenshot --filename=spatial-qa/cli-archive-mobile.png
+          npx playwright-cli goto http://127.0.0.1:4173/#caderno
+          npx playwright-cli screenshot --filename=spatial-qa/cli-notebook-mobile.png
+          npx playwright-cli resize 1440 900
+          npx playwright-cli goto http://127.0.0.1:4173/
+          npx playwright-cli snapshot --filename=spatial-qa/cli-entry-desktop.yml
+          npx playwright-cli screenshot --filename=spatial-qa/cli-entry-desktop.png
+          npx playwright-cli goto http://127.0.0.1:4173/#arquivo
+          npx playwright-cli screenshot --filename=spatial-qa/cli-archive-desktop.png
+          npx playwright-cli close
+      - name: Upload review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atelier-six-room-qa
+          path: spatial-qa/
+          if-no-files-found: ignore
+          retention-days: 7
