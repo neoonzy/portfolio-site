@@ -339,9 +339,9 @@ function Notebook({lang,t,onSelect,onGo}) {
 
 function About({lang,t,onGo}) {
   const path=[
-    {year:'2001 —',place:'CURIMATÁ / PI',name:lang==='pt'?'ORIGEM':'ORIGIN'},
-    {year:'2024 —',place:'RECIFE / PE',name:lang==='pt'?'MUDANÇA':'RELOCATION'},
-    {year:'2026 —',place:'UFPE / CIN',name:t.now},
+    {year:'ORIGEM',place:'CURIMATÁ / PI',name:lang==='pt'?'PIAUÍ':'PIAUÍ'},
+    {year:'CIDADE',place:'RECIFE / PE',name:lang==='pt'?'PERNAMBUCO':'PERNAMBUCO'},
+    {year:'2026',place:'UFPE / CIN',name:t.now},
   ]
   return <section className="sp-about" aria-labelledby="sp-about-title">
     <Frame title={t.aboutTitle} number="04" side="BIO / MAPA DE PERCURSO"/>
