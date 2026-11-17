@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { projects } from './data/projects.js'
 import StudioPanel from './components/StudioPanel.jsx'
 import FieldNotes from './components/FieldNotes.jsx'
@@ -184,6 +184,17 @@ export default function App() {
     window.addEventListener('popstate', sync)
     return () => window.removeEventListener('popstate', sync)
   }, [])
+
+  // Native hash scrolling may run before React inserts the sections on first load.
+  // Re-apply the anchored position after mount, without smooth animation.
+  useLayoutEffect(() => {
+    if (activeCase || !window.location.hash) return
+    const id = decodeURIComponent(window.location.hash.slice(1))
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'instant', block: 'start' })
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [activeCase])
 
   useEffect(() => {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) setActiveSection(entry.target.id) }), { rootMargin: '-18% 0px -65% 0px' })
