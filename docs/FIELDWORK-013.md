@@ -42,6 +42,8 @@ The Taste Skill is used as a design and critique framework. **Its full external 
 ## Web Interface Guidelines review
 
 ### Updated
+- Direct links such as `/#contact` now reposition after React mounts the document, and Playwright verifies the target is actually visible. This was discovered while reviewing the contact screenshot.
+- Contact heading has gentler tracking and a smaller responsive type scale, to avoid colliding glyphs on narrow phones.
 - `index.html`: explicit `data-type`, `site-kind`, light colour scheme and matching theme-color.
 - Project images and case-study images: real width/height dimensions, lazy below-fold loading, eager hero asset, decoding hints.
 - `src/components/QuickNavigator.jsx`: named search control, spellcheck disabled, genuine ellipsis.
