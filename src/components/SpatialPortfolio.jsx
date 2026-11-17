@@ -141,7 +141,7 @@ function Frame({ children, title, number, side, className='' }) {
   </div>
 }
 
-function WorkTile({ project, index, active, onPick }) {
+function WorkTile({ project, index, active, onPick, lang }) {
   const node = useRef(null)
   const drag = useRef(null)
   const [shift, setShift] = useState({x:0,y:0})
@@ -168,7 +168,7 @@ function WorkTile({ project, index, active, onPick }) {
     onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={()=>{drag.current=null}}
     onClick={e=>{if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches)onPick(project.slug)}}
     onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onPick(project.slug)}}}
-    aria-pressed={active} aria-label={'Selecionar '+project.title}
+    aria-pressed={active} aria-label={(lang==='pt'?'Selecionar ':'Select ')+project.title}
     style={{'--move-x':shift.x+'px','--move-y':shift.y+'px'}}>
     <span className="sp-specimen-top"><span>OBJ / {project.number}</span><span>↗</span></span>
     <span className="sp-specimen-visual">
@@ -207,12 +207,12 @@ function Landing({ lang, t, onGo, onSelect }) {
       <div className="sp-name-grid">
         <KineticWordmark lang={lang} ref={physicsRef}/>
         <div className="sp-name-sub">
-          <span>LUIS EDUARDO LUSTOSA</span><span>DESIGN / SOFTWARE / OBJETOS</span>
+          <span>LUIS EDUARDO LUSTOSA</span><span>{lang==='pt'?'DESIGN / SOFTWARE / OBJETOS':'DESIGN / SOFTWARE / OBJECTS'}</span>
         </div>
       </div>
       <div className="sp-entry-work">
         <div className="sp-entry-manifesto">
-          <span className="sp-kicker" data-physics-obstacle="about">/ SOBRE O QUE EU FAÇO</span>
+          <span className="sp-kicker" data-physics-obstacle="about">{lang==='pt'?'/ SOBRE O QUE EU FAÇO':'/ WHAT I DO'}</span>
           <h2>{t.intro}</h2>
           <p>{t.note}</p>
           <button className="sp-action" onClick={()=>onGo('arquivo')}>{t.discover}<span>↗</span></button>
@@ -277,7 +277,7 @@ function Archive({lang,t,selected,onSelect,onGo}) {
     <div className="sp-archive-title"><h1 id="sp-archive-title">{t.archiveLead}</h1><p>{t.archiveHelp}</p></div>
     <div className="sp-archive-layout">
       <div className="sp-workbench" aria-label={lang==='pt'?'Escolher projeto':'Choose project'}>
-        {projectNumbers.map((project,i)=><WorkTile key={project.slug} project={project} index={i} active={p.slug===project.slug} onPick={pick}/>)}
+        {projectNumbers.map((project,i)=><WorkTile key={project.slug} project={project} index={i} active={p.slug===project.slug} onPick={pick} lang={lang}/>)}
       </div>
       <aside className="sp-inspector" aria-label={lang==='pt'?'Ficha do projeto selecionado':'Selected project file'} aria-live="polite" aria-atomic="true">
         <ProjectInfo project={p} t={t} lang={lang} onNext={next}/>
@@ -425,7 +425,7 @@ export default function SpatialPortfolio(){
   return <>
     <a className="sp-skip" href="#sp-main">{t.skip}</a>
     <header className="sp-header">
-      <button type="button" className="sp-brand" onClick={()=>navigate('entrada')} aria-label={lang==='pt'?'Voltar à entrada':'Return to entry'}><span className="sp-brand-symbol">LE/</span><span>LUIS EDUARDO<br/>ARQUIVO PESSOAL</span></button>
+      <button type="button" className="sp-brand" onClick={()=>navigate('entrada')} aria-label={lang==='pt'?'Voltar à entrada':'Return to entry'}><span className="sp-brand-symbol">LE/</span><span>LUIS EDUARDO<br/>{lang==='pt'?'ARQUIVO PESSOAL':'PERSONAL ARCHIVE'}</span></button>
       <nav className="sp-primary-nav" aria-label={lang==='pt'?'Salas do portfólio':'Portfolio rooms'}>
         {rooms.map(r=><button key={r.key} onClick={()=>navigate(r.key)} aria-current={room===r.key?'page':undefined}><span>{r.label}</span>{r[lang]}</button>)}
       </nav>
