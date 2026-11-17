@@ -295,7 +295,7 @@ export default function App() {
             </div>
           </div>
           <div className={'project-grid' + (projectView === 'list' ? ' is-list' : '')}>{projects.map((project, i) => <article className="project-card" id={'project-'+project.slug} tabIndex={-1} key={project.slug}>
-            <div className="project-visual" aria-hidden="true"><div className="project-visual-top"><span>WORK / 0{i + 1}</span><span>↗</span></div>{project.image ? <img src={project.image} alt="" loading="lazy" /> : <div className="project-monogram">{project.title}</div>}<div className="visual-bottom">{project.category[lang]}</div></div>
+            <div className="project-visual" aria-hidden="true"><div className="project-visual-top"><span>WORK / 0{i + 1}</span><span>↗</span></div>{project.image ? <img src={project.image} alt="" loading="lazy" decoding="async" width={project.slug === "mapeia" ? 1280 : 1200} height={project.slug === "mapeia" ? 800 : 820} /> : <div className="project-monogram">{project.title}</div>}<div className="visual-bottom">{project.category[lang]}</div></div>
             <div className="project-body">
               <div className="project-meta"><span>{project.category[lang]}</span><span>0{i + 1} / 0{projects.length}</span></div>
               <h3><a className="project-preview-link" href={'/projetos/'+project.slug} onClick={event=>openCase(event,project.slug)}
