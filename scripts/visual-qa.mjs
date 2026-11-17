@@ -71,6 +71,15 @@ try {
   assert.equal(await desktopCase.locator('#case-title').evaluate(node => getComputedStyle(node).outlineStyle), 'none')
   await desktopCase.evaluate(() => document.fonts?.ready)
   await desktopCase.screenshot({ path:'visual-qa-artifacts/case-typeee-1440.png', fullPage:false })
+  await desktopCase.goto(base + '/#contact', { waitUntil:'domcontentloaded' })
+  await desktopCase.waitForFunction(() => {
+    const target = document.getElementById('contact')
+    if (!target) return false
+    const top = target.getBoundingClientRect().top
+    return window.scrollY > 50 && top < window.innerHeight * .5
+  }, { timeout: 10000 })
+  console.log('PASS direct hash navigation reveals contact after React mount')
+
   await desktopCase.close()
 } finally {
   await browser.close()
