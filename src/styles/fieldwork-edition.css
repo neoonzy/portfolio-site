@@ -51,7 +51,7 @@ a,button{touch-action:manipulation}
   margin-top:20px;
   max-width:600px;
   font:600 clamp(22px,2.65vw,40px)/1.18 var(--display);
-  letter-spacing:-.065em;
+  letter-spacing:-.038em;
   color:var(--field-ink);
 }
 .print-cover-statement-links{margin-top:clamp(22px,3vw,45px);gap:10px 24px}
@@ -126,7 +126,7 @@ a,button{touch-action:manipulation}
 
 /* Dark editorial chapter: work itself remains the color. */
 .projects-section{background:#171816;color:#f5f5ee;border-color:#171816}
-.projects-section .section-title{color:#f7f7f0}
+.projects-section .section-title{color:#f7f7f0;letter-spacing:-.062em;line-height:1.02}
 .projects-section .section-intro,.projects-section .eyebrow{color:#c1c3ba}
 .projects-section .project-view-tools{border-color:#66685e;color:#f5f5ee}
 .projects-section .project-view-switch{border-color:#686a61}
