@@ -36,11 +36,6 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
           </div>
 
           <div className="print-cover-lower">
-            <div className="print-cover-years">
-              <span data-physics-obstacle="projects">{pt ? 'PROJETOS / PROCESSOS' : 'WORK / PROCESS'}</span>
-              <strong>2024—<br/>2026</strong>
-              <a href="#projects">{pt ? 'VER TRABALHOS' : 'SELECTED WORK'} <span aria-hidden="true">↗</span></a>
-            </div>
             <div className="print-cover-statement">
               <span className="print-minilabel" data-physics-obstacle="about">/ {pt ? 'SOBRE' : 'ABOUT'}</span>
               <p>{c.heroText}</p>
@@ -68,6 +63,12 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
                 <span>{pt ? 'EXPLORAR PROJETO' : 'EXPLORE PROJECT'}</span>
               </div>
             </a>
+            <div className="print-cover-years">
+              <span data-physics-obstacle="projects">{pt ? 'PROJETOS / PROCESSOS' : 'WORK / PROCESS'}</span>
+              <strong>2024—<br/>2026</strong>
+              <a href="#projects">{pt ? 'VER TRABALHOS' : 'SELECTED WORK'} <span aria-hidden="true">↗</span></a>
+            </div>
+
 
           </div>
         </div>
