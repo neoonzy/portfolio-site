@@ -94,6 +94,44 @@ const notebook = [
     en:'Modeling a part is only the start. The workbench, material, print time and physical constraints ask questions a screen alone cannot answer.',
   },
 ]
+const career = [
+  {
+    date:'2026',pt:'DESIGNER · CINCODERS',en:'DESIGNER · CINCODERS',
+    place:'FÁBRICA DE SOFTWARE / UFPE',
+    ptDesc:'Desenho de interfaces, prototipação em Figma e colaboração em produtos digitais de impacto social.',
+    enDesc:'Interface design, Figma prototyping and collaboration on digital projects with social impact.',
+  },
+  {
+    date:'ATUAL',pt:'COORDENAÇÃO & COMUNICAÇÃO',en:'COORDINATION & COMMUNICATIONS',
+    place:'FEIRA AGROECOLÓGICA DA VÁRZEA',
+    ptDesc:'Comunicação visual, conteúdo e articulação de uma iniciativa comunitária de agroecologia.',
+    enDesc:'Visual communication, content and coordination of a community agroecology initiative.',
+  },
+  {
+    date:'2024—26',pt:'MONITOR · GREA3D',en:'LAB MONITOR · GREA3D',
+    place:'LABORATÓRIO DE ARTEFATOS 3D / UFPE',
+    ptDesc:'Impressão 3D, fabricação digital, manutenção de equipamentos e apoio a oficinas e atividades práticas.',
+    enDesc:'3D printing, digital fabrication, equipment maintenance and hands-on workshop support.',
+  },
+  {
+    date:'2025',pt:'SECRETARIA DE COMUNICAÇÃO',en:'COMMUNICATIONS SECRETARY',
+    place:'LASER / CIN—UFPE',
+    ptDesc:'Comunicação e divulgação de projetos da liga acadêmica de sistemas embarcados.',
+    enDesc:'Communications and outreach for the embedded systems academic league.',
+  },
+  {
+    date:'2024—25',pt:'MODELAGEM E PROTOTIPAGEM',en:'3D MODELING & PROTOTYPING',
+    place:'MONAN / UFPE',
+    ptDesc:'Desenvolvimento de modelos tridimensionais e protótipos físicos para um projeto interdisciplinar.',
+    enDesc:'3D models and physical prototypes for an interdisciplinary project.',
+  },
+  {
+    date:'2021—22',pt:'MONITOR DE ROBÓTICA',en:'EDUCATIONAL ROBOTICS MONITOR',
+    place:'INSTITUTO FEDERAL DO PIAUÍ',
+    ptDesc:'Apoio ao ensino de robótica e atividades práticas com estudantes.',
+    enDesc:'Hands-on teaching support for robotics and educational activities.',
+  },
+]
 const projectNumbers = projects.map((p,i)=>({ ...p, number: String(i+1).padStart(2,'0') }))
 
 function Frame({ children, title, number, side, className='' }) {
@@ -282,6 +320,13 @@ function About({lang,t,onGo}) {
       <div className="sp-about-text"><h1 id="sp-about-title">{t.aboutLead}</h1><p>{t.aboutP}</p><p>{t.aboutP2}</p><button className="sp-action" onClick={()=>onGo('contato')}>{rooms[5][lang]} <span>↗</span></button></div>
     </div>
     <div className="sp-transit"><span>{t.timeline}</span><div>{path.map((item,i)=><div key={item.place} className="sp-transit-stop"><i aria-hidden="true"/><span>{item.year}</span><strong>{item.place}</strong><small>{item.name}</small></div>)}</div></div>
+    <div className="sp-career">
+      <div className="sp-career-label"><span>{lang==='pt'?'FICHAS DE TRABALHO':'WORK RECORDS'}</span><span>01—06</span></div>
+      {career.map((item,i)=><details className="sp-career-item" key={i}>
+        <summary><span>{String(i+1).padStart(2,'0')}</span><strong>{item[lang]}</strong><span className="sp-career-date">{item.date}</span><span aria-hidden="true">＋</span></summary>
+        <div className="sp-career-content"><span>{item.place}</span><p>{item[lang+'Desc']}</p></div>
+      </details>)}
+    </div>
     <div className="sp-toolstrip"><span>{t.tools}</span><div>FIGMA <i/> REACT <i/> JAVASCRIPT <i/> MODELAGEM 3D <i/> IMPRESSÃO 3D <i/> FOTOGRAFIA <i/> CULTURA MAKER</div></div>
   </section>
 }
