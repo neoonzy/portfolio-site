@@ -1,6 +1,6 @@
 const translations = {
   pt: {
-    label: '04 / CADERNO DE PROCESSO',
+    label: '06 / CADERNO DE PROCESSO',
     title: ['O CAMINHO', 'IMPORTA.'],
     intro: 'Entre uma ideia e o resultado há escolhas, testes e mudanças de rota. Alguns recortes do que construo e aprendo.',
     open: 'VER BASTIDORES',
@@ -33,7 +33,7 @@ const translations = {
     footer: 'NOTAS DE TRABALHO / EM CONSTRUÇÃO',
   },
   en: {
-    label: '04 / PROCESS NOTEBOOK',
+    label: '06 / PROCESS NOTEBOOK',
     title: ['THE PROCESS', 'MATTERS.'],
     intro: 'Between an idea and an outcome lie choices, tests and changes of direction. A few glimpses of what I make and learn.',
     open: 'BEHIND THE SCENES',
@@ -85,7 +85,7 @@ export default function FieldNotes({ lang }) {
           {c.items.map((item) => <article className="note-card" key={item.index}>
             <div className="note-topline"><span>{item.index} / {c.items.length.toString().padStart(2, '0')}</span><span>{item.type}</span></div>
             {item.image ? (
-              <div className="note-image"><img src={item.image} loading="lazy" alt={item.alt} /></div>
+              <div className="note-image"><img src={item.image} loading="lazy" decoding="async" width="1200" height="820" alt={item.alt} /></div>
             ) : (
               <div className="note-placeholder" aria-label={lang === 'pt' ? 'Sem imagem do protótipo disponível' : 'Prototype image not yet available'}>
                 <span>WORKSHOP / OBJECT</span>

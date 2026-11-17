@@ -4,19 +4,7 @@
  * No serif display fonts, splash screens, parallax or decorative motion.
  * The Typeee embed is intentionally styled by experimental.css only.
  */
-:root {
-  --paper:#f8f8f7;
-  --surface:#ffffff;
-  --ink:#181818;
-  --ink-soft:#303030;
-  --muted:#5a5a58;
-  --rule:#cfcfcc;
-  --wash:#eeeeec;
-  --accent:#262626;
-  --display:'Space Grotesk',Arial,sans-serif;
-  --body:'Space Grotesk',Arial,sans-serif;
-  --mono:'IBM Plex Mono',ui-monospace,monospace;
-}
+/* Shared palette and typography tokens now live in global.css. */
 body { background:var(--paper); }
 .shell { width:min(calc(100% - 76px),1460px); }
 .header {

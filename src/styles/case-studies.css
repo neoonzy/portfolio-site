@@ -1,0 +1,43 @@
+/* Selected work case studies / same monochrome, type and line system. */
+.case-header{position:sticky;top:0;z-index:40;background:rgba(248,248,247,.97);border-bottom:1px solid #bcbcb9}
+.case-header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:65px;font:600 11px/1.45 var(--mono)}
+.case-header-inner>a{border-bottom:1px solid;padding:10px 0}
+.case-header-inner button{min-height:44px;padding:8px 13px;border:1px solid;background:transparent;font:inherit;cursor:pointer}
+.case-header-inner button:hover{background:#111;color:white}
+.case-page{background:var(--paper);color:var(--ink);min-height:100vh}
+.case-meta{display:flex;justify-content:space-between;gap:15px;padding:21px 0;border-bottom:1px solid #c5c5c2;font:600 11px/1.5 var(--mono)}
+.case-hero{display:grid;grid-template-columns:minmax(0,8fr) minmax(0,4fr);align-items:end;gap:28px;padding:clamp(65px,9vw,120px) 0 52px}
+.case-hero h1{font:700 clamp(62px,12vw,185px)/.9 var(--display);letter-spacing:-.105em;overflow-wrap:anywhere}
+.case-hero h1 span{color:#aaa}
+/* The heading is focused programmatically after SPA navigation; it is not a control. */
+.case-hero h1:focus{outline:none}
+.case-hero>p{font:500 clamp(21px,2.35vw,34px)/1.25 var(--display);letter-spacing:-.045em}
+.case-cover{display:grid;place-items:center;min-height:280px;background:#e5e5e1;border-top:1px solid #bdbdb9;border-bottom:1px solid #bdbdb9}
+.case-cover img{display:block;width:100%;max-height:700px;object-fit:contain;object-position:center}
+.case-placeholder{display:flex;flex-direction:column;justify-content:space-between;min-height:330px;width:100%;padding:22px;background:#dadad6;font:600 11px var(--mono)}
+.case-placeholder strong{align-self:center;font:700 clamp(100px,14vw,170px)/1 var(--display)}
+.case-toc{display:flex;flex-wrap:wrap;gap:15px 30px;align-items:center;padding:24px 0;border-bottom:1px solid #bbb;font:600 10px/1.5 var(--mono)}
+.case-toc>span{margin-right:auto;color:#60605d}
+.case-toc a{border-bottom:1px solid transparent;padding-bottom:7px}
+.case-toc a:hover{border-color:#111}
+.case-section{display:grid;grid-template-columns:3fr 9fr;gap:25px;padding:clamp(75px,9vw,145px) 0;border-bottom:1px solid #bcbcb9;scroll-margin-top:80px}
+.case-section>span{font:600 11px var(--mono);color:#5a5a56}
+.case-section>div{max-width:870px}
+.case-section h2{font:700 clamp(40px,6vw,84px)/1 var(--display);letter-spacing:-.08em;margin-bottom:36px}
+.case-section p{font:400 clamp(17px,1.7vw,22px)/1.65 var(--body);margin-bottom:30px;max-width:770px}
+.case-section h3{font:600 11px/1.5 var(--mono);margin:52px 0 18px}
+.case-steps{border-top:1px solid #bbb}
+.case-step{display:grid;grid-template-columns:35px 2fr 3fr;gap:15px;padding:25px 0;border-bottom:1px solid #c5c5c2}
+.case-step>span{font:600 11px var(--mono);color:#656560}
+.case-step h3{font:600 clamp(22px,2.4vw,32px)/1.2 var(--display);letter-spacing:-.055em;margin:0}
+.case-step p{font:400 16px/1.6 var(--body);margin:0}
+.case-section .case-disclaimer{font-size:13px;color:#5b5b58}
+.case-actions{display:flex;flex-wrap:wrap;gap:12px 24px;margin:45px 0 0}
+.case-actions a{min-height:48px;padding:13px 17px;border:1px solid #111;font:600 11px/1.5 var(--mono)}
+.case-actions .case-action-primary{background:#111;color:white}
+.case-actions a:hover{background:#e2e2de;color:#111}
+.case-bottom{display:flex;gap:18px;justify-content:space-between;flex-wrap:wrap;padding:45px 0 75px;font:600 11px/1.6 var(--mono)}
+.case-bottom a{border-bottom:1px solid;padding-bottom:7px}
+@media(max-width:900px){.case-hero{grid-template-columns:1fr}.case-hero>p{max-width:600px}.case-section{grid-template-columns:1fr;gap:30px}.case-steps .case-step{grid-template-columns:35px 1fr}.case-step p{grid-column:2}}
+@media(max-width:680px){.case-header-inner{min-height:56px}.case-header-inner>span{display:none}.case-hero{padding:54px 0 32px}.case-hero h1{font-size:clamp(45px,14vw,92px)}.case-hero>p{font-size:clamp(22px,6vw,38px)}.case-cover{min-height:150px}.case-placeholder{min-height:210px}.case-placeholder strong{font-size:110px}.case-toc>span{width:100%}.case-section{padding:68px 0}.case-section h2{font-size:clamp(36px,10vw,60px)}.case-step p{font-size:15px}.case-bottom{padding-bottom:45px}}
+@media(prefers-reduced-motion:reduce){.case-header{backdrop-filter:none}}

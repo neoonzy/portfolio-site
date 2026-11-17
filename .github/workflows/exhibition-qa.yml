@@ -1,0 +1,53 @@
+name: Arquivo Vivo — browser and accessibility checks
+on:
+  push:
+    branches: [feat/experiencia-arquivo-vivo]
+  pull_request:
+    branches: [main]
+jobs:
+  exhibition:
+    if: github.ref_name == 'feat/experiencia-arquivo-vivo' || github.head_ref == 'feat/experiencia-arquivo-vivo'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install and build
+        run: |
+          npm ci
+          npm test
+          npm run build
+      - name: Install browser dependencies
+        run: |
+          npm install --no-save playwright @playwright/cli
+          npx playwright install --with-deps chromium
+      - name: Serve local build
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/preview.log 2>&1 &
+          for i in {1..30}; do if curl -fsS http://127.0.0.1:4173/ > /dev/null; then break; fi; sleep 1; done
+          curl -fsS http://127.0.0.1:4173/ > /dev/null
+      - name: Test exhibition navigation
+        run: node scripts/exhibition-qa.mjs
+      - name: Playwright CLI snapshots
+        run: |
+          npx playwright-cli open http://127.0.0.1:4173/
+          npx playwright-cli resize 390 844
+          npx playwright-cli screenshot --filename=exhibition-artifacts/cli-entry-mobile.png
+          npx playwright-cli snapshot --filename=exhibition-artifacts/cli-entry-mobile.yml
+          npx playwright-cli goto http://127.0.0.1:4173/#obras
+          npx playwright-cli screenshot --filename=exhibition-artifacts/cli-works-mobile.png
+          npx playwright-cli resize 1440 900
+          npx playwright-cli goto http://127.0.0.1:4173/#constelacao
+          npx playwright-cli screenshot --filename=exhibition-artifacts/cli-atlas-desktop.png
+          npx playwright-cli close
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: arquivo-vivo-browser-qa
+          path: exhibition-artifacts/
+          if-no-files-found: ignore
+          retention-days: 7
