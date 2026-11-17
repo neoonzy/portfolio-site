@@ -132,6 +132,20 @@ body{margin:0;background:var(--sp-paper);color:var(--sp-ink)}
 .sp-inspector-next{min-height:43px;width:100%;padding:11px 0;border:0;border-top:1px solid #aaa;background:transparent;display:flex;align-items:center;justify-content:space-between;font:700 10px var(--sp-mono)}
 .sp-site-arquivo .sp-room-end:hover{color:var(--sp-yellow)}
 
+/* VISUAL ROLL / typographic film negatives, each one a genuine external work */
+.sp-visual-roll{margin-top:clamp(65px,9vw,135px);border-top:1px solid #d2d5f3;padding-top:16px}
+.sp-visual-roll-title{display:flex;justify-content:space-between;gap:20px;font:700 11px/1.5 var(--sp-mono);margin-bottom:25px}
+.sp-visual-roll-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding:16px 8px 26px;scrollbar-width:thin;scrollbar-color:#c2c8ed transparent}
+.sp-visual-roll-track a{scroll-snap-align:start;position:relative;flex:0 0 clamp(180px,18vw,290px);height:255px;padding:15px;background:#f2efe6;color:#1b1a19;border:1px solid #14151a;display:flex;flex-direction:column;justify-content:space-between;transform:rotate(var(--roll-rotate,-1deg));transition:transform .2s ease,box-shadow .2s ease}
+.sp-visual-roll-track a:nth-child(even){--roll-rotate:2deg;background:var(--sp-yellow)}
+.sp-visual-roll-track a:nth-child(3n){--roll-rotate:-3deg}
+.sp-visual-roll-track a:hover{transform:rotate(0deg) translateY(-5px);box-shadow:7px 9px 0 #0c1783}
+.sp-visual-roll-track a span,.sp-visual-roll-track a small{font:700 10px var(--sp-mono)}
+.sp-visual-roll-track a strong{font:700 clamp(100px,10vw,170px)/.85 var(--sp-display);letter-spacing:-.11em}
+.sp-visual-roll-track a i{position:absolute;bottom:16px;right:16px;font:700 28px var(--sp-mono);font-style:normal}
+.sp-visual-roll-all{display:inline-flex;align-items:center;min-height:44px;padding:10px 0;border-bottom:1px solid #f5f5ec;font:700 11px var(--sp-mono)}
+.sp-visual-roll-all:hover{color:var(--sp-yellow)}
+
 /* LAB / yellow experiment */
 .sp-site-laboratorio{background:var(--sp-yellow);color:#1b1a19}
 .sp-lab-heading{display:grid;grid-template-columns:2fr 1fr;gap:35px;align-items:end;margin:clamp(35px,6vw,90px) 0 45px}
@@ -290,6 +304,10 @@ body{margin:0;background:var(--sp-paper);color:var(--sp-ink)}
  .sp-inspector h2{font-size:clamp(48px,13vw,68px)}
  .sp-inspector-description{font-size:18px;line-height:1.4}
  .sp-site-arquivo .sp-room-end{margin-top:55px}
+ .sp-visual-roll{margin-top:65px}
+ .sp-visual-roll-track{margin:0 -16px;padding:15px 20px 26px}
+ .sp-visual-roll-track a{flex-basis:205px;height:235px}
+ .sp-visual-roll-track a strong{font-size:115px}
  .sp-lab-heading{display:block;margin:25px 0 35px}
  .sp-lab-heading h1{font-size:clamp(44px,12vw,70px)}
  .sp-lab-heading p{margin-top:20px;font-size:16px}
