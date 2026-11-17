@@ -98,7 +98,7 @@ body{margin:0;background:var(--sp-paper);color:var(--sp-ink)}
 /* ARCHIVE / movable working table */
 .sp-site-arquivo{background:#182ec4;color:#f5f5ec}
 .sp-archive-title{margin:clamp(25px,4vw,65px) 0 38px;display:flex;align-items:flex-end;justify-content:space-between;gap:32px}
-.sp-archive-title h1{font-size:clamp(46px,7.4vw,119px);max-width:10ch;line-height:.88}
+.sp-archive-title h1{font-size:clamp(52px,6.7vw,100px);max-width:14ch;line-height:.93}
 .sp-archive-title p{font:600 11px/1.7 var(--sp-mono);max-width:26ch;min-width:175px}
 .sp-archive-layout{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(320px,.78fr);gap:clamp(25px,4vw,70px);align-items:start}
 .sp-workbench{position:relative;min-height:620px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:clamp(12px,1.5vw,26px);padding:36px;background:repeating-linear-gradient(0deg,transparent 0 45px,rgba(255,255,255,.075) 46px 47px),repeating-linear-gradient(90deg,transparent 0 45px,rgba(255,255,255,.075) 46px 47px)}
@@ -131,6 +131,18 @@ body{margin:0;background:var(--sp-paper);color:var(--sp-ink)}
 .sp-inspector-links a:hover{background:var(--sp-yellow);color:#111}
 .sp-inspector-next{min-height:43px;width:100%;padding:11px 0;border:0;border-top:1px solid #aaa;background:transparent;display:flex;align-items:center;justify-content:space-between;font:700 10px var(--sp-mono)}
 .sp-site-arquivo .sp-room-end:hover{color:var(--sp-yellow)}
+
+/* Mobile project files are immediate, touch-native bottom sheets.
+   Desktop retains the pinned paper inspector beside the workbench. */
+.sp-project-sheet{position:fixed;inset:auto 0 0;width:100%;max-width:100%;max-height:min(85dvh,750px);margin:0;padding:0;border:2px solid #171717;border-bottom:0;background:#f4f1e8;color:#191919;overflow:auto;overscroll-behavior:contain}
+.sp-project-sheet::backdrop{background:rgba(8,12,58,.65)}
+.sp-project-sheet-inner{padding:0 22px 28px}
+.sp-project-sheet .sp-inspector-top{align-items:center;gap:10px}
+.sp-project-sheet .sp-inspector-close{min-height:42px;padding:8px 9px;background:#191919;color:white;border:1px solid #191919;font:700 10px var(--sp-mono)}
+.sp-project-sheet .sp-inspector-close:hover{background:var(--sp-blue);border-color:var(--sp-blue)}
+.sp-project-sheet h2{font-size:clamp(47px,10vw,75px);letter-spacing:-.07em}
+.sp-project-sheet .sp-inspector-description{font-size:clamp(17px,4vw,23px)}
+.sp-project-sheet .sp-inspector-links a{font-size:11px}
 
 /* VISUAL ROLL / typographic film negatives, each one a genuine external work */
 .sp-visual-roll{margin-top:clamp(65px,9vw,135px);border-top:1px solid #d2d5f3;padding-top:16px}
@@ -314,7 +326,13 @@ body{margin:0;background:var(--sp-paper);color:var(--sp-ink)}
  .sp-specimen{flex:0 0 min(72vw,295px);height:305px;transform:rotate(var(--tilt));scroll-snap-align:center;box-shadow:5px 6px 0 #101c73}
  .sp-specimen-name{font-size:27px}
  .sp-specimen-visual{min-height:200px}
- .sp-inspector{padding:0 16px 20px;box-shadow:6px 7px 0 #0b178e}
+ .sp-inspector{display:none}
+ .sp-project-sheet{border-width:2px;max-height:83dvh}
+ .sp-project-sheet-inner{padding:0 16px calc(20px + env(safe-area-inset-bottom))}
+ .sp-project-sheet .sp-inspector-top{margin:0 -16px 20px;padding:10px 16px;flex-wrap:wrap}
+ .sp-project-sheet .sp-inspector-description{margin:17px 0 24px}
+ .sp-project-sheet .sp-inspector-facts{padding:11px 0}
+
  .sp-inspector-top{margin:0 -16px 24px;padding:11px 14px}
  .sp-inspector h2{font-size:clamp(48px,13vw,68px)}
  .sp-inspector-description{font-size:18px;line-height:1.4}
