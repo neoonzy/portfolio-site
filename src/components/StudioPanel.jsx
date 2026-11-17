@@ -182,7 +182,7 @@ export default function StudioPanel({ lang }) {
                 inputMode="text" enterKeyHint="next"
                 className="typeee-input" placeholder={c.placeholder}
                 aria-describedby="typeee-preview-help"
-                onPaste={e => e.preventDefault()} onDrop={e => e.preventDefault()} />
+                name="typeee-practice" />
               <p id="typeee-preview-help" className="typeee-help">{c.help}</p>
             </div>
             <div className="typeee-arena-footer">
