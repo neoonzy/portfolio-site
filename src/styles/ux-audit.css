@@ -1,0 +1,107 @@
+/* UX edition 012: targeted, accessible refinements over the editorial design system. */
+:root{--ux-control-size:44px;--ux-mobile-section-space:clamp(68px,9vw,95px)}
+.print-index-entry{min-width:0}
+.print-index-entry:first-child .print-index-item{border-top:1px solid #ccc}
+.index-mobile-hint{display:none}
+.print-index-mobile-detail{display:none}
+.print-index-mobile-detail[hidden]{display:none!important}
+.case-study-link{font-weight:700!important;border-bottom:1px solid #181818!important}
+.project-card:focus{outline:none;scroll-margin-top:90px}
+.project-card:focus-visible{outline:2px solid #181818;outline-offset:5px}
+.project-links a{display:inline-flex;align-items:center;min-height:44px;padding-block:10px}
+.project-details summary,.note-details summary{min-height:44px;align-items:center}
+.project-view-switch button{min-height:44px;font-size:11px}
+.print-index-mobile-detail a{display:inline-flex;min-height:44px;align-items:center}
+.print-running-header,.print-index-header,.print-identity-caption{font-size:clamp(10px,.8vw,12px)}
+:focus-visible{outline:2px solid #111;outline-offset:3px}
+html{scroll-padding-top:85px}
+.section[id]{scroll-margin-top:85px}
+@media(max-width:900px){
+  .print-index-entry{border-bottom:0}
+}
+@media(max-width:680px){
+  .print-index-entry{border-bottom:1px solid #c5c5c1}
+  .print-index-item{border-bottom:0}
+  .index-mobile-hint{display:block;font:600 11px/1.5 var(--mono);letter-spacing:0;margin-top:9px;color:#5a5a57}
+  .print-index-mobile-detail:not([hidden]){display:block;padding:0 15px 22px 37px}
+  .print-index-mobile-detail p{font:400 15px/1.6 var(--body);margin:0 0 13px}
+  .print-index-mobile-detail a{font:700 12px/1.5 var(--mono);border-bottom:1px solid #111}
+  .print-index-detail{display:none}
+  .print-cover-lower{margin-top:clamp(80px,23vw,120px)!important}
+  .print-index{margin-top:clamp(68px,17vw,110px)!important}
+  .section{padding-block:var(--ux-mobile-section-space)!important}
+  .section-heading{margin-bottom:clamp(42px,9vw,60px)!important}
+  .editorial-interlude{padding-block:clamp(75px,16vw,105px)!important}
+  .print-running-header,.print-index-header{font-size:10px!important}
+  .print-identity-caption{font-size:11px!important;row-gap:12px!important}
+  .print-index-item strong{font-size:clamp(32px,9vw,46px)}
+  .project-view-switch button{font-size:11px;padding:10px 11px}
+  .project-links{gap:10px;flex-wrap:wrap}
+  .project-links a{font-size:12px}
+  .project-meta,.visual-bottom,.tag{font-size:12px}
+  .project-view-tools>span{font-size:11px;max-width:155px}
+  .notes-caption,.note-topline{font-size:11px}
+  .gallery-footer,.gallery-heading{font-size:11px}
+  .quick-nav-help{font-size:10px}
+  .case-study-link{order:-1}
+  html{scroll-padding-top:66px}
+  .section[id]{scroll-margin-top:66px}
+}
+@media(hover:none),(pointer:coarse){
+  .print-physics-reset{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
+  .print-index-item strong,.case-study-link{transition:none!important}
+}
+
+/* Search results distinguish sections from projects without introducing color noise. */
+.quick-nav-result-type{display:block;margin-top:6px;color:#6d6d69;font:600 10px/1.4 var(--mono);letter-spacing:.02em}
+.quick-nav-results button>strong{min-width:0}
+.quick-nav-search input{min-height:44px}
+.quick-nav-results button{min-height:64px}
+/* Visual gallery: additional embeds are mounted only on demand. */
+.gallery-controls{display:flex;justify-content:center;margin:42px 0 24px}
+.gallery-load-more{display:inline-flex;justify-content:space-between;align-items:center;gap:30px;min-height:48px;min-width:min(100%,300px);padding:13px 17px;background:transparent;color:#181818;border:1px solid #181818;font:600 12px/1.5 var(--mono);cursor:pointer}
+.gallery-load-more:hover,.gallery-load-more:focus-visible{background:#181818;color:#fff}
+.gallery-card iframe{background:#ecece9;content-visibility:auto}
+.gallery-footer a{display:inline-flex;min-height:40px;align-items:center}
+@media(max-width:680px){
+ .quick-nav-result-type{font-size:10px}
+ .gallery-controls{margin:28px 0 22px}
+ .gallery-load-more{width:100%}
+ .gallery-card iframe{height:clamp(250px,78vw,335px)}
+}
+
+/* A visible way to start the embedded Typeee on virtual keyboards. */
+.typeee-input-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:11px}
+.typeee-input-heading .typeee-typing-label{margin:0}
+.typeee-start{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 13px;border:1px solid currentColor;background:transparent;color:inherit;font:600 11px/1.5 var(--mono);cursor:pointer}
+.typeee-start:hover,.typeee-start:focus-visible{background:#e5e5e1;color:#111}
+.typeee-input{min-height:48px;font-size:16px!important}
+.case-cover{aspect-ratio:16/9;overflow:hidden}
+.case-cover>img{height:100%;object-fit:contain}
+.case-cover .case-placeholder{height:100%}
+@media(max-width:680px){
+  .typeee-input-heading{align-items:stretch}
+  .typeee-start{width:100%;justify-content:center}
+}
+
+/* The visual portfolio remains useful when Behance blocks its third-party iframe. */
+.behance-visual{min-height:clamp(265px,25vw,385px);background:#e8e8e5}
+.behance-teaser{display:flex;flex-direction:column;justify-content:space-between;min-height:clamp(265px,25vw,385px);padding:clamp(14px,2vw,24px);background:#e6e6e3;color:#181818}
+.behance-teaser-top,.behance-teaser-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;font:600 10px/1.5 var(--mono)}
+.behance-teaser>strong{font:700 clamp(100px,14vw,190px)/.9 var(--display);letter-spacing:-.1em;align-self:center}
+.behance-teaser-footer button{min-height:44px;min-width:138px;border:1px solid #111;background:#111;color:#fff;padding:9px 11px;font:600 10px/1.45 var(--mono);cursor:pointer}
+.behance-teaser-footer button:hover,.behance-teaser-footer button:focus-visible{background:#fff;color:#111}
+.behance-loaded-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 13px;background:#dfdfdc;color:#333;font:600 9px/1.35 var(--mono)}
+.behance-loaded-head button{min-height:36px;border:1px solid #111;background:transparent;color:#111;padding:6px 9px;cursor:pointer;font:600 9px var(--mono)}
+.behance-loaded-head button:hover{background:#111;color:#fff}
+.behance-visual iframe{display:block;width:100%;border:0;background:#eee;min-height:300px}
+@media(max-width:680px){
+  .behance-visual,.behance-teaser{min-height:clamp(235px,65vw,330px)}
+  .behance-teaser>strong{font-size:clamp(95px,24vw,150px)}
+  .behance-teaser-footer{flex-wrap:wrap}
+  .behance-teaser-footer button{flex:1;min-width:130px}
+  .behance-visual iframe{min-height:260px}
+}

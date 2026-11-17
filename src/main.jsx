@@ -11,6 +11,9 @@ import './styles/layout-grid-system.css'
 import './styles/editorial-shortcuts.css'
 import './styles/mobile-section-indicator.css'
 import './styles/mobile-nav-minimal.css'
+import './styles/case-studies.css'
+import './styles/ux-audit.css'
+import './styles/fieldwork-edition.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode><App /></React.StrictMode>
