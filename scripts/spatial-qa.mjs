@@ -39,7 +39,7 @@ try{
   await desktop.waitForSelector('.sp-site-caderno')
   await desktop.locator('.sp-book-navigation>button').last().click()
   assert.match(await desktop.locator('.sp-book-right h2').innerText(),/ARQUIVO/)
-  await desktop.keyboard.press('Escape')
+  await desktop.keyboard.press('m')
   await desktop.locator('.sp-map[open]').waitFor({state:'visible'})
   await desktop.screenshot({path:'spatial-qa/site-map-desktop.png',fullPage:false})
   await desktop.locator('.sp-map-inner>button').last().click()
