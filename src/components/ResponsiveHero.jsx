@@ -54,7 +54,7 @@ export default function ResponsiveHero({ lang, c, email, onPreviewEnter, onPrevi
               <div className="hero-focus-visual">
                 {selected.image
                   ? <img key={selected.slug} src={selected.image} alt=""
-                      width="1200" height="800" decoding="async" />
+                      width="1200" height="820" decoding="async" fetchPriority="high" loading="eager" />
                   : <span className="hero-focus-monogram" aria-hidden="true">{selected.title}</span>}
                 <span className="hero-focus-sticker" aria-hidden="true">↗</span>
               </div>
