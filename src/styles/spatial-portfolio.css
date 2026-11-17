@@ -286,7 +286,7 @@ body{margin:0;background:var(--sp-paper);color:var(--sp-ink)}
  .sp-brand{min-width:0;border-right:0;padding:7px 15px}
  .sp-brand-symbol{font-size:31px}
  .sp-header-actions .sp-lang{padding:0 13px;min-width:58px}
- .sp-header-actions .sp-map-button{min-width:112px;font-size:10px}
+ .sp-header-actions .sp-map-button{display:none}
  .sp-header-actions .sp-map-button>span{font-size:20px}
  .sp-room-head{font-size:9px;min-height:42px}
  .sp-room-head>span:last-of-type{max-width:52%}
@@ -396,7 +396,7 @@ body{margin:0;background:var(--sp-paper);color:var(--sp-ink)}
  .sp-map-bottom{font-size:9px;flex-wrap:wrap}
 }
 @media(max-width:355px){
- .sp-header-actions .sp-map-button{min-width:92px;padding-inline:8px}
+ .sp-header-actions .sp-lang{padding-inline:10px}
  .sp-mobile-dock button{font-size:8px}
  .sp-name-grid .print-wordmark.kinetic-wordmark{font-size:16.2vw}
  .sp-book-navigation>button{font-size:8px}
