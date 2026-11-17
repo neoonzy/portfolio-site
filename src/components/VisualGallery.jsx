@@ -55,7 +55,7 @@ export default function VisualGallery({ lang, c }) {
         ? <BehanceCard item={item} index={index} lang={lang} c={c} key={item.id} />
         : <a className="gallery-card gallery-mapeia" key={item.slug} href={item.url} target="_blank" rel="noopener noreferrer">
             <div className="gallery-heading"><span>{c.galleryCard} / {String(index+1).padStart(2,'0')}</span><span aria-hidden="true">↗</span></div>
-            <div className="gallery-preview"><img src={item.image} alt={item.alt[lang]} loading="lazy" decoding="async" /></div>
+            <div className="gallery-preview"><img src={item.image} alt={item.alt[lang]} loading="lazy" decoding="async" width="1280" height="800" /></div>
             <div className="gallery-footer"><strong>{item.title}</strong><span>{item.type[lang]} ↗</span></div>
           </a>)}
     </div>
