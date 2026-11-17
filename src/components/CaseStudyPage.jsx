@@ -35,7 +35,7 @@ export default function CaseStudyPage({ slug, lang, onBack, onLanguageChange }) 
           </div>
           <div className="case-cover">
             {project.image
-              ? <img src={project.image} alt={pt ? 'Prévia da interface de ' + project.title : project.title + ' interface preview'} decoding="async" />
+              ? <img src={project.image} alt={pt ? 'Prévia da interface de ' + project.title : project.title + ' interface preview'} decoding="async" width={project.slug === "mapeia" ? 1280 : 1200} height={project.slug === "mapeia" ? 800 : 820} />
               : <div className="case-placeholder"><span>WORKSHOP / OBJECT</span><strong>3D</strong><span>{pt ? 'REGISTROS FOTOGRÁFICOS EM ORGANIZAÇÃO' : 'PHOTOS TO BE DOCUMENTED'}</span></div>}
           </div>
           <nav className="case-toc" aria-label={pt ? 'Neste estudo' : 'In this case study'}>
