@@ -85,7 +85,7 @@ export default function FieldNotes({ lang }) {
           {c.items.map((item) => <article className="note-card" key={item.index}>
             <div className="note-topline"><span>{item.index} / {c.items.length.toString().padStart(2, '0')}</span><span>{item.type}</span></div>
             {item.image ? (
-              <div className="note-image"><img src={item.image} loading="lazy" alt={item.alt} /></div>
+              <div className="note-image"><img src={item.image} loading="lazy" decoding="async" width="1200" height="820" alt={item.alt} /></div>
             ) : (
               <div className="note-placeholder" aria-label={lang === 'pt' ? 'Sem imagem do protótipo disponível' : 'Prototype image not yet available'}>
                 <span>WORKSHOP / OBJECT</span>
