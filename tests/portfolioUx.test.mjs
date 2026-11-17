@@ -85,3 +85,31 @@ test('fonts are linked from HTML rather than imported from the main stylesheet',
   assert.doesNotMatch(source('src/styles/global.css'), /@import url\(['"]https:\/\/fonts.googleapis.com/)
   assert.match(source('index.html'), /fonts.googleapis.com\/css2/)
 })
+
+
+test('final editorial hero shows authentic work and preserves the kinetic name', () => {
+  const hero = source('src/components/ResponsiveHero.jsx')
+  assert.match(hero, /className="hero-focus"/)
+  assert.match(hero, /<KineticWordmark/)
+  assert.match(hero, /fetchPriority="high"/)
+  assert.match(hero, /data-physics-obstacle="projects"/)
+  assert.match(hero, /data-physics-obstacle="about"/)
+  const style = source('src/styles/fieldwork-edition.css')
+  assert.match(style, /--field-signal:#d9fb66/)
+  assert.match(style, /grid-template-columns:repeat\(var\(--site-columns\)/)
+  assert.doesNotMatch(style, /transition:\s*all/)
+})
+
+test('web interface guidelines: searchable input, paste, images and semantics', () => {
+  const quick = source('src/components/QuickNavigator.jsx')
+  assert.match(quick, /name="portfolio-search"/)
+  assert.match(quick, /spellCheck=\{false\}/)
+  const game = source('src/components/StudioPanel.jsx')
+  assert.doesNotMatch(game, /onPaste=\{[^}]*preventDefault/)
+  const app = source('src/App.jsx')
+  const img = source('src/components/CaseStudyPage.jsx')
+  assert.match(app, /loading="lazy" decoding="async" width=/)
+  assert.match(img, /decoding="async" width=/)
+  assert.match(source('index.html'), /data-type="service"/)
+  assert.match(source('index.html'), /meta name="theme-color" content="#f7f7f2"/)
+})
