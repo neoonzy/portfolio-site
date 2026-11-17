@@ -2,11 +2,11 @@ name: ATELIER — interaction and visual QA
 on:
   push:
     branches: [feat/atelier-spatial-experience]
-  pull_request:
-    branches: [main]
+concurrency:
+  group: atelier-six-rooms
+  cancel-in-progress: true
 jobs:
   spatial:
-    if: github.event_name == 'push' || github.head_ref == 'feat/atelier-spatial-experience'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
